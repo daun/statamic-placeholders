@@ -1,0 +1,66 @@
+{
+    "name": "daun/statamic-placeholder-images",
+    "description": "Generate low-quality image placeholders for lazyloading Statamic assets",
+    "keywords": [ "statamic", "image", "placeholder", "lqip", "blurhash", "thumbhash", "lazyloading" ],
+    "type": "statamic-addon",
+    "autoload": {
+        "psr-4": {
+            "Daun\\StatamicPlaceholders\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+          "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Philipp Daun",
+            "email": "post@philippdaun.net",
+            "homepage": "https://philippdaun.net"
+        }
+    ],
+    "support": {
+        "email": "post@philippdaun.net"
+    },
+    "extra": {
+        "statamic": {
+            "name": "Placeholder Images",
+            "description": "Generate low-quality image placeholders for lazyloading."
+        },
+        "laravel": {
+            "providers": [
+                "Daun\\StatamicPlaceholders\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "srwiez/thumbhash": "^1.2",
+        "kornrunner/blurhash": "^1.2",
+        "laravel/framework": "^9.0 || ^10.0",
+        "statamic/cms": "^4.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^2.9",
+        "laravel/pint": "^1.14",
+        "orchestra/testbench": "^8.21",
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^2.34",
+        "pestphp/pest-plugin-laravel": "^2.3"
+    },
+    "scripts": {
+        "format": "./vendor/bin/pint",
+        "lint": "./vendor/bin/pint --test",
+        "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
+        "test": "./vendor/bin/pest",
+        "test:coverage": "./vendor/bin/pest --coverage",
+        "test:ci": "./vendor/bin/pest --coverage-clover coverage.xml"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "pixelfear/composer-dist-plugin": true
+        }
+    }
+}
