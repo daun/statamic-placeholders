@@ -4,10 +4,12 @@ namespace Daun\StatamicPlaceholders\Commands;
 
 use Daun\StatamicPlaceholders\Commands\Concerns\HasOutputStyles;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
+use Daun\StatamicPlaceholders\Support\PlaceholderImageFieldtype;
 use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Asset;
+use Statamic\Facades\AssetContainer;
 
 class Generate extends Command
 {
@@ -30,14 +32,41 @@ class Generate extends Command
 
     public function handle(PlaceholderService $service): void
     {
-        $this->containers = collect($this->option('container') ?: $service->containers());
+        $this->container = $this->option('container');
         $this->force = $this->option('force');
         $this->sync = Queue::connection() === 'sync';
 
-        $assets = $this->containers->flatMap(fn ($container) => Asset::whereContainer($container));
+        if (! PlaceholderImageFieldtype::enabled()) {
+            $this->error('The placeholder feature is globally disabled from your config.');
+            return;
+        }
+
+        $this->containers = PlaceholderImageFieldtype::containers();
+        if ($this->containers->isEmpty()) {
+            $this->error('No containers are configured to generate placeholders.');
+            $this->newLine();
+            $this->line('Please add a `placeholder_image` field to at least one of your asset blueprints.');
+            return;
+        }
+
+        if ($this->container) {
+            $container = AssetContainer::find($this->container);
+            if ($container) {
+                $this->containers = collect($container);
+            } else {
+                $this->error("Asset container '{$this->container}' not found");
+                return;
+            }
+        }
+
+        $assets = $this->containers->flatMap(
+            fn($container) => Asset::whereContainer($container->handle())->filter(
+                fn($asset) => PlaceholderImageFieldtype::enabledForAsset($asset)
+            )
+        );
 
         if ($assets->isEmpty()) {
-            $this->line("No images found in containers: <file>{$this->containers->implode(', ')}</file>");
+            $this->line("No images found in containers: <name>{$this->containers->implode(', ')}</name>");
 
             return;
         }
@@ -56,30 +85,32 @@ class Generate extends Command
         $assetsToGenerate->each(function ($asset) use ($service) {
             if ($this->sync) {
                 $service->generate($asset);
-                $this->line("Generated placeholder of <file>{$asset->id()}</file>");
+                $this->line("Generated placeholder of <name>{$asset->id()}</name>");
             } else {
                 $service->dispatch($asset);
-                $this->line("Queued placeholder generation of <file>{$asset->id()}</file>");
+                $this->line("Queued placeholder generation of <name>{$asset->id()}</name>");
             }
+        })->whenNotEmpty(function () {
+            $this->newLine();
         });
 
         $assetsToRegenerate->each(function ($asset) use ($service) {
             if ($this->sync) {
                 $service->generate($asset);
-                $this->line("Regenerated placeholder of <file>{$asset->id()}</file>");
+                $this->line("Regenerated placeholder of <name>{$asset->id()}</name>");
             } else {
                 $service->dispatch($asset);
-                $this->line("Queued placeholder regeneration of <file>{$asset->id()}</file>");
+                $this->line("Queued placeholder regeneration of <name>{$asset->id()}</name>");
             }
         })->whenNotEmpty(function () {
             $this->newLine();
         });
 
         $assetsToSkip->each(function ($asset) {
-            $this->line("Skipped <file>{$asset->id()}</file>");
+            $this->line("Skipped <name>{$asset->id()}</name>");
+        })->whenNotEmpty(function () {
+            $this->newLine();
         });
-
-        $this->newLine();
 
         $generated = $assetsToGenerate->count() + $assetsToRegenerate->count();
         $skipped = $assetsToSkip->count();
