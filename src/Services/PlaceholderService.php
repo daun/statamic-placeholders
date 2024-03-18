@@ -126,7 +126,7 @@ class PlaceholderService
         $instance = $this->providers->findOrFail($provider);
 
         return Cache::rememberForever(
-            "asset-placeholder-uri--{$instance->handle}--{$hash}",
+            "asset-placeholder-uri--{$instance::$handle}--{$hash}",
             fn () => $instance->decode($hash, $width, $height)
         ) ?: null;
     }
@@ -140,10 +140,12 @@ class PlaceholderService
             return null;
         }
 
-        if ($hash = $this->loadHashFromAsset($asset, $provider)) {
+        $instance = $this->providers->findOrFail($provider);
+
+        if ($hash = $this->loadHashFromAsset($asset, $instance::$handle)) {
             return $hash;
         } else {
-            return $this->generateHashForAsset($asset, $provider);
+            return $this->generateHashForAsset($asset, $instance::$handle);
         }
     }
 
@@ -158,11 +160,11 @@ class PlaceholderService
 
         $instance = $this->providers->findOrFail($provider);
 
-        if ($hash = $this->loadHashForUrl($url, $provider)) {
+        if ($hash = $this->loadHashForUrl($url, $instance::$handle)) {
             return $hash;
         } else {
-            $hash = $this->generateHashForUrl($url, $provider);
-            Cache::set("asset-placeholder-hash--{$instance->handle}--{$url}", $hash);
+            $hash = $this->generateHashForUrl($url, $instance::$handle);
+            Cache::set("asset-placeholder-hash--{$instance::$handle}--{$url}", $hash);
         }
     }
 
@@ -177,8 +179,8 @@ class PlaceholderService
 
         $instance = $this->providers->findOrFail($provider);
 
-        if ($hash = $this->generateHashForBlob($asset->contents(), $provider)) {
-            $this->saveHashToAsset($asset, $hash, $provider);
+        if ($hash = $this->generateHashForBlob($asset->contents(), $instance::$handle)) {
+            $this->saveHashToAsset($asset, $hash, $instance::$handle);
 
             return $hash;
         } else {
@@ -223,7 +225,7 @@ class PlaceholderService
     {
         $instance = $this->providers->findOrFail($provider);
 
-        return Cache::get("asset-placeholder-hash--{$instance->handle}--{$url}");
+        return Cache::get("asset-placeholder-hash--{$instance::$handle}--{$url}");
     }
 
     /**
@@ -233,16 +235,16 @@ class PlaceholderService
     {
         $instance = $this->providers->findOrFail($provider);
 
-        return PlaceholderImageFieldtype::getPlaceholderHash($asset, $instance->name);
+        return PlaceholderImageFieldtype::getPlaceholderHash($asset, $instance::$handle);
     }
 
     /**
      * Save placeholder hash to asset metadata.
      */
-    protected function saveHashToAsset(Asset $asset, string $hash, string $provider): void
+    protected function saveHashToAsset(Asset $asset, string $hash, ?string $provider = null): void
     {
         $instance = $this->providers->findOrFail($provider);
-        PlaceholderImageFieldtype::addPlaceholderHash($asset, $hash, $instance->handle);
+        PlaceholderImageFieldtype::addPlaceholderHash($asset, $hash, $instance::$handle);
     }
 
     protected function fallback(): string

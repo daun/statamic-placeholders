@@ -58,7 +58,7 @@ class PlaceholderProviders
 
     public function default(): PlaceholderProvider
     {
-        return $this->providers->get($this->defaultProvider::$name) ?? $this->providers->first();
+        return $this->providers->get($this->defaultProvider::$handle) ?? $this->providers->first();
     }
 
     protected function getDefaultProvider(): string
@@ -78,7 +78,7 @@ class PlaceholderProviders
         return collect($this->coreProviders)
             ->concat($this->userProviders)
             ->filter(fn ($provider) => $this->isValidProvider($provider))
-            ->mapWithKeys(fn ($provider) => [$provider::$name => $this->app->make($provider)]);
+            ->mapWithKeys(fn ($provider) => [$provider::$handle => $this->app->make($provider)]);
     }
 
     protected function isValidProvider(string $class): bool
