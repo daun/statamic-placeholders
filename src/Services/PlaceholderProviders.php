@@ -9,7 +9,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
-class PlaceholderProviderService
+class PlaceholderProviders
 {
     protected array $coreProviders = [
         Providers\Thumbhash::class,

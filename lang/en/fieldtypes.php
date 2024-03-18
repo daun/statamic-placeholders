@@ -17,6 +17,13 @@ return [
                 'instructions' => 'Display a small preview of its generated placeholder image when editing an asset in the control panel.',
             ],
         ],
+        'field' => [
+            'generated' => 'Placeholder image generated',
+            'not_generated' => 'No placeholder generated',
+            'not_yet_generated' => 'Placeholder image will be generated on request',
+            'no_asset' => 'not an asset',
+            'no_image' => 'not an image',
+        ],
     ],
 
 ];

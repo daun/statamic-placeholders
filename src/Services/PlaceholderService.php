@@ -3,26 +3,33 @@
 namespace Daun\StatamicPlaceholders\Services;
 
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
+use Daun\StatamicPlaceholders\Support\PlaceholderImageFieldtype;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Statamic\Assets\Asset;
-use Statamic\Facades\AssetContainer;
 
 class PlaceholderService
 {
     public function __construct(
-        protected PlaceholderProviderService $providers,
+        protected PlaceholderProviders $providers,
         protected Application $app,
         protected Repository $config
     ) {
     }
 
     /**
+     * Whether the placeholder generation service is enabled.
+     */
+    public static function enabled(): bool
+    {
+        return PlaceholderImageFieldtype::enabled();
+    }
+
+    /**
      * Get an instance of the service managing placeholder providers.
      */
-    public function providers(): PlaceholderProviderService
+    public function providers(): PlaceholderProviders
     {
         return $this->providers;
     }
@@ -119,7 +126,7 @@ class PlaceholderService
         $instance = $this->providers->findOrFail($provider);
 
         return Cache::rememberForever(
-            "asset-placeholder-uri--{$instance->name}--{$hash}",
+            "asset-placeholder-uri--{$instance->handle}--{$hash}",
             fn () => $instance->decode($hash, $width, $height)
         ) ?: null;
     }
@@ -155,7 +162,7 @@ class PlaceholderService
             return $hash;
         } else {
             $hash = $this->generateHashForUrl($url, $provider);
-            Cache::set("asset-placeholder-hash--{$instance->name}--{$url}", $hash);
+            Cache::set("asset-placeholder-hash--{$instance->handle}--{$url}", $hash);
         }
     }
 
@@ -168,8 +175,10 @@ class PlaceholderService
             return null;
         }
 
+        $instance = $this->providers->findOrFail($provider);
+
         if ($hash = $this->generateHashForBlob($asset->contents(), $provider)) {
-            $this->saveHashToAsset($asset, $provider, $hash);
+            $this->saveHashToAsset($asset, $hash, $provider);
 
             return $hash;
         } else {
@@ -214,7 +223,7 @@ class PlaceholderService
     {
         $instance = $this->providers->findOrFail($provider);
 
-        return Cache::get("asset-placeholder-hash--{$instance->name}--{$url}");
+        return Cache::get("asset-placeholder-hash--{$instance->handle}--{$url}");
     }
 
     /**
@@ -224,44 +233,16 @@ class PlaceholderService
     {
         $instance = $this->providers->findOrFail($provider);
 
-        $data = $asset->get($this->namespace(), []);
-
-        return $data[$instance->name] ?? null;
+        return PlaceholderImageFieldtype::getPlaceholderHash($asset, $instance->name);
     }
 
     /**
      * Save placeholder hash to asset metadata.
      */
-    protected function saveHashToAsset(Asset $asset, string $provider, string $hash): void
+    protected function saveHashToAsset(Asset $asset, string $hash, string $provider): void
     {
         $instance = $this->providers->findOrFail($provider);
-
-        $data = $asset->get($this->namespace(), []);
-        $data[$instance->name] = $hash;
-        $asset->set($this->namespace(), $data);
-        $asset->saveQuietly();
-    }
-
-    /**
-     * Handle newly uploaded assets.
-     */
-    public function handleAssetUpload(Asset $asset): void
-    {
-        if ($this->config->get('placeholders.generate_on_upload')) {
-            $this->generateHashForAsset($asset);
-        }
-    }
-
-    public function supports(Asset $asset): bool
-    {
-        return $asset->isImage() && ! $asset->isSvg();
-    }
-
-    public function valid(Asset $asset): bool
-    {
-        return
-            $this->supports($asset) &&
-            in_array($asset->container()->handle(), $this->containers);
+        PlaceholderImageFieldtype::addPlaceholderHash($asset, $hash, $instance->handle);
     }
 
     protected function fallback(): string
@@ -269,17 +250,13 @@ class PlaceholderService
         return (string) $this->config->get('placeholders.fallback_uri', '');
     }
 
+    public function supports(Asset $asset): bool
+    {
+        return PlaceholderImageFieldtype::enabledForAsset($asset);
+    }
+
     public function containers(): array
     {
-        $allowed = $this->config->get('placeholders.containers', '*');
-        if (! $allowed) {
-            return [];
-        }
-
-        if ($allowed === '*' || $allowed === true) {
-            return AssetContainer::all()->map->handle()->all();
-        } else {
-            return Arr::wrap($allowed);
-        }
+        return PlaceholderImageFieldtype::containers()->all();
     }
 }

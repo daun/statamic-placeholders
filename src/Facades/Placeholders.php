@@ -6,7 +6,7 @@ use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Daun\StatamicPlaceholders\Services\PlaceholderProviderService providers()
+ * @method static \Daun\StatamicPlaceholders\Services\PlaceholderProviders providers()
  * @method static ?string uri(\Statamic\Assets\Asset|string $asset)
  * @method static ?string hash(\Statamic\Assets\Asset|string $asset)
  * @method static bool exists(\Statamic\Assets\Asset|string $asset)

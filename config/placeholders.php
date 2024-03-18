@@ -7,13 +7,27 @@ return [
     | Generate Placeholder Images for Assets
     |--------------------------------------------------------------------------
     |
-    | Add a `placeholder_image` field to an asset blueprint to generate a
-    | placeholder for any image uploaded to that container. Use the flag below
-    | to disable this feature without removing the field from the blueprint.
+    | You need to a `placeholder_image` field to an asset blueprint to generate
+    | placeholders for any image uploaded to that container. You can use the
+    | flag below to temporarily disable this feature without having to remove
+    | the field from your blueprints.
     |
     */
 
     'enabled' => env('PLACEHOLDER_IMAGES_ENABLED', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Generate Placeholders on Upload
+    |--------------------------------------------------------------------------
+    |
+    | By default, placeholders will be generated on upload, ensuring they are
+    | available on first use. You can opt out of this behavior here and have the
+    | placeholders generated on demand.
+    |
+    */
+
+    'generate_on_upload' => true,
 
     /*
     |--------------------------------------------------------------------------
