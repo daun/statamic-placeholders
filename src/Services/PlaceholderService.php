@@ -22,6 +22,11 @@ class PlaceholderService
     ) {
     }
 
+    public function providers(): PlaceholderProviderService
+    {
+        return $this->providers;
+    }
+
     /**
      * Get data uri of placeholder for given asset or url.
      */

@@ -21,17 +21,16 @@ class PlaceholderImage extends Fieldtype
 
     protected function configFieldItems(): array
     {
+        $providers = Placeholders::providers()->all();
+        $default = Placeholders::providers()->default();
+
         return [
             'placeholder_type' => [
                 'display' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.placeholder_type.display'),
                 'instructions' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.placeholder_type.instructions'),
                 'type' => 'select',
-                'default' => 'thumbhash',
-                'options' => [
-                    'thumbhash' => 'ThumbHash',
-                    'blurhash' => 'BlurHash',
-                    'average' => 'Average color',
-                ],
+                'default' => $default::$handle,
+                'options' => $providers->mapWithKeys(fn ($provider) => [$provider::$handle => $provider::$name])->all(),
             ],
             'generate_on_upload' => [
                 'display' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.generate_on_upload.display'),

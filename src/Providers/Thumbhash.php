@@ -9,7 +9,9 @@ use Thumbhash\Thumbhash as ThumbhashLib;
 
 class Thumbhash implements PlaceholderProvider
 {
-    public static string $name = 'thumbhash';
+    public static string $handle = 'thumbhash';
+
+    public static string $name = 'ThumbHash';
 
     protected int $maxThumbSize = 100;
 

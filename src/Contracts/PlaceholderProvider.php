@@ -4,6 +4,8 @@ namespace Daun\StatamicPlaceholders\Contracts;
 
 interface PlaceholderProvider
 {
+    public static string $handle;
+
     public static string $name;
 
     /**

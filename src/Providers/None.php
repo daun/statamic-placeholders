@@ -6,7 +6,9 @@ use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 
 class None implements PlaceholderProvider
 {
-    public static string $name = '';
+    public static string $handle = '';
+
+    public static string $name = 'None';
 
     public function encode(string $contents): ?string
     {

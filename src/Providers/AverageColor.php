@@ -7,7 +7,9 @@ use Daun\StatamicPlaceholders\Support\Imagick;
 
 class AverageColor implements PlaceholderProvider
 {
-    public static string $name = 'average';
+    public static string $handle = 'average';
+
+    public static string $handle = 'Average Color';
 
     public function encode(string $contents): ?string
     {

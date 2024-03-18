@@ -8,7 +8,9 @@ use kornrunner\Blurhash\Blurhash as BlurhashService;
 
 class Blurhash implements PlaceholderProvider
 {
-    public static string $name = 'blurhash';
+    public static string $handle = 'blurhash';
+
+    public static string $name = 'BlurHash';
 
     protected int $compX = 4;
 
