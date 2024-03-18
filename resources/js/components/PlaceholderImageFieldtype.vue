@@ -35,7 +35,7 @@
             </div>
             <div v-if="showPreview" class="mt-3">
                 <div class="flex">
-                    <img :src="uri" class="h-8 w-auto rounded" :class="{ 'opacity-25': showingPreview }" />
+                    <img :src="uri" class="btn btn-flat btn-sm p-0 overflow-hidden w-auto" :class="{ 'opacity-25': showingPreview }" />
                     <button @click="showingPreview = !showingPreview" type="button" class="btn btn-flat btn-sm ml-2">
                         <template v-if="showingPreview">
                             {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.hide_preview') }}
@@ -45,7 +45,20 @@
                         </template>
                     </button>
                 </div>
-                <img v-if="showingPreview" :src="uri" class="w-32 rounded-md mt-3" />
+                <div class="btn-group">
+                    <button @click="showingPreview = !showingPreview" type="button" class="btn p-0 overflow-hidden">
+                        <img :src="uri" class="h-9 w-auto" :class="{ 'opacity-25': showingPreview }" />
+                    </button>
+                    <button @click="showingPreview = !showingPreview" type="button" class="btn">
+                        <template v-if="showingPreview">
+                            {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.hide_preview') }}
+                        </template>
+                        <template v-else>
+                            {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.show_preview') }}
+                        </template>
+                    </button>
+                </div>
+                <img v-if="showingPreview" @click="showingPreview = !showingPreview" :src="uri" class="btn p-0 h-8 min-h-40 w-auto rounded-md mt-3" />
             </div>
             <!-- <div v-if="allowRegenerate" class="flex items-center mt-3">
                 <label for="upload-asset" class="help-block flex items-center cursor-pointer font-normal">
@@ -90,3 +103,5 @@ export default {
     }
 };
 </script>
+
+<style></style>
