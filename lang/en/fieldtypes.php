@@ -14,7 +14,7 @@ return [
             ],
             'preview_placeholder' => [
                 'display' => 'Show preview',
-                'instructions' => 'Display a small preview of the generated placeholder image.',
+                'instructions' => 'Display a small preview of its generated placeholder image when editing an asset in the control panel.',
             ],
         ],
     ],

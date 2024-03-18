@@ -7,7 +7,7 @@ use Daun\StatamicPlaceholders\Support\Dimensions;
 use Daun\StatamicPlaceholders\Support\Imagick;
 use Thumbhash\Thumbhash as ThumbhashLib;
 
-class Thumbhash implements PlaceholderProvider
+class Thumbhash extends PlaceholderProvider
 {
     public static string $handle = 'thumbhash';
 

@@ -4,7 +4,7 @@ namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 
-class None implements PlaceholderProvider
+class None extends PlaceholderProvider
 {
     public static string $handle = '';
 

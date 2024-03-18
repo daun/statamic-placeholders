@@ -12,10 +12,10 @@ use Illuminate\Support\Collection;
 class PlaceholderProviderService
 {
     protected array $coreProviders = [
-        Providers\None::class,
-        Providers\AverageColor::class,
-        Providers\Blurhash::class,
         Providers\Thumbhash::class,
+        Providers\Blurhash::class,
+        Providers\AverageColor::class,
+        Providers\None::class,
     ];
 
     protected array $userProviders;
@@ -75,7 +75,7 @@ class PlaceholderProviderService
 
     protected function makeProviders(): Collection
     {
-        return collect($this->providers)
+        return collect($this->coreProviders)
             ->concat($this->userProviders)
             ->filter(fn ($provider) => $this->isValidProvider($provider))
             ->mapWithKeys(fn ($provider) => [$provider::$name => $this->app->make($provider)]);
@@ -83,7 +83,11 @@ class PlaceholderProviderService
 
     protected function isValidProvider(string $class): bool
     {
-        if (! class_exists($class) || ! in_array(PlaceholderProvider::class, class_implements($class))) {
+        if (! class_exists($class)) {
+            throw new \Exception("Placeholder provider class not found: {$class}");
+        }
+
+        if (! is_a($class, PlaceholderProvider::class, true)) {
             throw new \Exception("Not a valid placeholder provider: {$class}");
         }
 

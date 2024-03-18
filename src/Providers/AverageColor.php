@@ -5,11 +5,11 @@ namespace Daun\StatamicPlaceholders\Providers;
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Support\Imagick;
 
-class AverageColor implements PlaceholderProvider
+class AverageColor extends PlaceholderProvider
 {
     public static string $handle = 'average';
 
-    public static string $handle = 'Average Color';
+    public static string $name = 'Average Color';
 
     public function encode(string $contents): ?string
     {

@@ -15,7 +15,7 @@ class PlaceholderImage extends Fieldtype
 
     protected $categories = ['media', 'special'];
 
-    protected $icon = 'image';
+    protected $icon = 'assets';
 
     protected $validatable = false;
 
@@ -32,7 +32,7 @@ class PlaceholderImage extends Fieldtype
                 'instructions' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.placeholder_type.instructions'),
                 'type' => 'select',
                 'default' => 'default',
-                'options' => $providers->prepend("Use global default ({$default::$name})", 'default')->all(),
+                'options' => $providers->prepend("Use site default ({$default::$name})", 'default')->all(),
             ],
             'generate_on_upload' => [
                 'display' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.generate_on_upload.display'),

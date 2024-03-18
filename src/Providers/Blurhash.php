@@ -6,7 +6,7 @@ use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Support\Dimensions;
 use kornrunner\Blurhash\Blurhash as BlurhashService;
 
-class Blurhash implements PlaceholderProvider
+class Blurhash extends PlaceholderProvider
 {
     public static string $handle = 'blurhash';
 
