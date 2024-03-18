@@ -39,7 +39,7 @@ return [
     |
     | The addon ships with a set of default placeholder providers to pick from:
     | 'thumbhash', 'blurhash' and 'average'. You can also provide your own
-    | types of placeholder by implementing the `PlaceholderProvider` interface
+    | types of placeholders by implementing the `PlaceholderProvider` interface
     | and adding the provider class to the list below.
     |
     */

@@ -10,9 +10,11 @@ use Statamic\Fields\Fieldtype;
 class PlaceholderImage extends Fieldtype
 {
     protected static $handle = 'placeholder_image';
+
     protected static $title = 'Placeholder Image';
 
     protected $categories = ['media', 'special'];
+
     protected $icon = 'image';
 
     protected $validatable = false;
@@ -59,7 +61,7 @@ class PlaceholderImage extends Fieldtype
 
         return [
             'is_asset' => (bool) $asset,
-            'is_supported' => $asset && $asset->isImage() && !$asset->isSvg(),
+            'is_supported' => $asset && $asset->isImage() && ! $asset->isSvg(),
         ];
     }
 

@@ -2,6 +2,8 @@
 
 namespace Daun\StatamicPlaceholders;
 
+use Daun\StatamicPlaceholders\Services\PlaceholderProviderService;
+use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Statamic\Events\AssetReuploaded;
 use Statamic\Events\AssetSaved;
 use Statamic\Events\AssetUploaded;
@@ -29,6 +31,7 @@ class ServiceProvider extends AddonServiceProvider
 
     public function register()
     {
-        $this->app->singleton(PlaceholderService::class, fn () => new PlaceholderService($this->app));
+        $this->app->singleton(PlaceholderProviderService::class, PlaceholderProviderService::class);
+        $this->app->singleton(PlaceholderService::class, PlaceholderService::class);
     }
 }

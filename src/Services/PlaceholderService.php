@@ -1,34 +1,25 @@
 <?php
 
-namespace Daun\StatamicPlaceholders;
+namespace Daun\StatamicPlaceholders\Services;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
-use Illuminate\Foundation\Application;
+use Daun\StatamicPlaceholders\Providers;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Statamic\Assets\Asset;
 use Statamic\Facades\AssetContainer;
+use Statamic\Facades\Blink;
 
 class PlaceholderService
 {
-    protected PlaceholderProvider $provider;
-
-    protected string $defaultProvider = 'thumbhash';
-
-    protected array $providers = [
-        Providers\None::class,
-        Providers\AverageColor::class,
-        Providers\Blurhash::class,
-        Providers\Thumbhash::class,
-    ];
-
-    protected array $containers = [];
-
     public function __construct(
-        protected Application $app
+        public PlaceholderProviderService $providers,
+        protected Application $app,
+        protected Repository $config
     ) {
-        $this->provider = $this->makeProvider();
-        $this->containers = $this->containers();
     }
 
     /**
@@ -223,7 +214,7 @@ class PlaceholderService
      */
     public function handleAssetUpload(Asset $asset): void
     {
-        if ($this->config('generate_on_upload')) {
+        if ($this->config->get('placeholders.generate_on_upload')) {
             $this->generateHashForAsset($asset);
         }
     }
@@ -240,42 +231,14 @@ class PlaceholderService
             in_array($asset->container()->handle(), $this->containers);
     }
 
-    public function namespace(): string
-    {
-        return $this->config('meta_namespace', 'lqip');
-    }
-
     protected function fallback(): string
     {
-        return $this->config('fallback_uri', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
-    }
-
-    protected function config(string $key, $default = null): mixed
-    {
-        return $this->app->config->get("placeholders.{$key}", $default);
-    }
-
-    protected function makeProvider(): PlaceholderProvider
-    {
-        $type = $this->config('placeholder_type', $this->defaultProvider);
-        $provider = null;
-
-        if (is_string($type) && class_exists($type)) {
-            $provider = $this->app->make($type);
-        } elseif (is_string($type) && array_key_exists($type, $this->providers)) {
-            $provider = $this->app->make($this->providers[$type]);
-        }
-
-        if (is_object($provider) && $provider instanceof PlaceholderProvider) {
-            return $provider;
-        } else {
-            throw new \Exception("Invalid placeholder provider: {$type}");
-        }
+        return $this->config->get('placeholders.fallback_uri', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
     }
 
     public function containers(): array
     {
-        $allowed = $this->config('containers', '*');
+        $allowed = $this->config->get('placeholders.containers', '*');
         if (! $allowed) {
             return [];
         }
