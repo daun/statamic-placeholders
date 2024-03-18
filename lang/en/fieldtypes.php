@@ -6,7 +6,7 @@ return [
         'config' => [
             'placeholder_type' => [
                 'display' => 'Placeholder type',
-                'instructions' => 'The type of placeholder to generate.',
+                'instructions' => 'The type of placeholder to generate. You can set the default type in `config/statamic/placeholders.php`.',
             ],
             'generate_on_upload' => [
                 'display' => 'Generate on upload',

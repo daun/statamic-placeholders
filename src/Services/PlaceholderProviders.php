@@ -15,7 +15,7 @@ class PlaceholderProviders
         Providers\Thumbhash::class,
         Providers\Blurhash::class,
         Providers\AverageColor::class,
-        Providers\None::class,
+        // Providers\None::class,
     ];
 
     protected array $userProviders;

@@ -31,8 +31,8 @@ class PlaceholderImage extends Fieldtype
                 'display' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.placeholder_type.display'),
                 'instructions' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.placeholder_type.instructions'),
                 'type' => 'select',
-                'default' => 'default',
-                'options' => $providers->prepend("Use site default ({$default::$name})", 'default')->all(),
+                'placeholder' => "Use site default ({$default::$name})",
+                'options' => $providers->prepend("Use site default ({$default::$name})", '')->all(),
             ],
             'generate_on_upload' => [
                 'display' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.generate_on_upload.display'),

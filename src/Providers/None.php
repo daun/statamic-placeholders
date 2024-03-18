@@ -6,7 +6,7 @@ use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 
 class None extends PlaceholderProvider
 {
-    public static string $handle = '';
+    public static string $handle = 'none';
 
     public static string $name = 'None';
 
