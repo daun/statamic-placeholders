@@ -22,7 +22,10 @@ return [
             'not_generated' => 'No placeholder generated',
             'not_yet_generated' => 'Placeholder image will be generated on request',
             'no_asset' => 'not an asset',
-            'no_image' => 'not an image',
+            'not_supported' => 'unsupported filetype',
+            'generate_on_save' => 'Generate placeholder on save',
+            'show_preview' => 'Show',
+            'hide_preview' => 'Hide',
         ],
     ],
 

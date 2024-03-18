@@ -38,7 +38,7 @@ class PlaceholderProviders
         return $this->providers;
     }
 
-    public function find(?string $needle): PlaceholderProvider
+    public function find(?string $needle): ?PlaceholderProvider
     {
         return $this->providers->first(
             fn ($provider) => in_array($needle, [$provider::class, $provider::$handle])

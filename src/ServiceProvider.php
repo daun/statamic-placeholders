@@ -29,9 +29,29 @@ class ServiceProvider extends AddonServiceProvider
         Tags\PlaceholderTag::class,
     ];
 
+    protected $vite = [
+        'input' => ['resources/js/addon.js'],
+        'publicDirectory' => 'resources/dist',
+    ];
+
     public function register()
+    {
+        $this->registerServices();
+        $this->registerAddonConfig();
+    }
+
+    protected function registerServices()
     {
         $this->app->singleton(PlaceholderProviders::class, PlaceholderProviders::class);
         $this->app->singleton(PlaceholderService::class, PlaceholderService::class);
+    }
+
+    protected function registerAddonConfig()
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/placeholders.php', 'mux');
+
+        $this->publishes([
+            __DIR__.'/../config/placeholders.php' => config_path('statamic/placeholders.php'),
+        ], 'statamic-placeholder-images-config');
     }
 }

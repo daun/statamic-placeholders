@@ -2,7 +2,7 @@
 
 Generate image placeholders of Statamic assets for smoother lazyloading.
 
-![Example image placeholders](assets/example-placeholder.png)
+![Example image placeholders](art/example-placeholder.png)
 
 ## ✨ Features
 

@@ -59,10 +59,21 @@ class PlaceholderImage extends Fieldtype
     public function preload()
     {
         $asset = $this->asset();
+        $supported = $asset && Placeholders::supports($asset);
+        $type = $this->config('placeholder_type', null);
+        $provider = Placeholders::providers()->find($type) ?? Placeholders::providers()->default();
+        $hash = $asset && Placeholders::exists($asset) ? Placeholders::hash($asset) : null;
+        $uri = $asset && Placeholders::exists($asset) ? Placeholders::uri($asset) : null;
 
         return [
             'is_asset' => (bool) $asset,
-            'is_supported' => $asset && $asset->isImage() && ! $asset->isSvg(),
+            'is_supported' => $supported,
+            'provider' => [
+                'handle' => $provider::$handle,
+                'name' => $provider::$name
+            ],
+            'hash' => $hash,
+            'uri' => $uri,
         ];
     }
 
