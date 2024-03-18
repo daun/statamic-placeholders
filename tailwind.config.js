@@ -1,17 +1,19 @@
 import statamicPreset from './vendor/statamic/cms/tailwind.config.js'
 
-console.log(statamicPreset)
-
 export default {
-    prefix: 'seo-',
+    // prefix: 'seo-',
     presets: [
         statamicPreset
     ],
     content: [
-        './resources/**/*.{html,js,vue,blade.php}',
-        './tests/**/*.{html,vue,blade.php}'
+        './resources/**/*.blade.php',
+        './resources/**/*.js',
+        './resources/**/*.vue',
     ],
+    theme: {
+        extend: {},
+    },
     corePlugins: {
-        // preflight: false,
+        preflight: false,
     },
 }
