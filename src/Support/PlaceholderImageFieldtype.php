@@ -11,14 +11,16 @@ use Statamic\Fields\Field;
 
 class PlaceholderImageFieldtype
 {
+    public static function containers(): Collection
+    {
+        return AssetContainerFacade::all()->filter(
+            fn (AssetContainer $container) => static::enabledForContainer($container)
+        );
+    }
+
     public static function enabled(): bool
     {
         return (bool) config('placeholders.enabled', true);
-    }
-
-    public static function generatesOnUpload(): bool
-    {
-        return (bool) config('placeholders.generate_on_upload', true);
     }
 
     public static function enabledForAsset(Asset $asset): bool
@@ -31,6 +33,11 @@ class PlaceholderImageFieldtype
         return static::hasPlaceholderField($container);
     }
 
+    public static function generatesOnUpload(): bool
+    {
+        return (bool) config('placeholders.generate_on_upload', true);
+    }
+
     public static function shouldGenerate(Asset $asset): bool
     {
         return static::enabled() && static::enabledForAsset($asset);
@@ -41,32 +48,37 @@ class PlaceholderImageFieldtype
         return (bool) static::getPlaceholderField($asset);
     }
 
-    public static function getPlaceholderField(Asset|AssetContainer|null $asset): ?string
+    public static function getPlaceholderField(Asset|AssetContainer|null $asset): ?Field
     {
         return $asset?->blueprint()->fields()->all()->first(
             fn (Field $field) => $field->type() === Fieldtype::handle()
-        )?->handle();
+        );
     }
 
-    public static function containers(): Collection
+    public static function getPlaceholderProvider(Asset|AssetContainer|null $asset): ?Field
     {
-        return AssetContainerFacade::all()->filter(
-            fn (AssetContainer $container) => static::enabledForContainer($container)
-        );
+        if ($field = static::getPlaceholderField($asset)) {
+            $provider = $field->config()['placeholder_type'] ?? null;
+        } else {
+            return [];
+        }
     }
 
     public static function loadPlaceholderData(Asset $asset): array
     {
-        $field = static::getPlaceholderField($asset);
-
-        return $asset->get($field, []);
+        if ($field = static::getPlaceholderField($asset)) {
+            return $asset->get($field->handle(), []);
+        } else {
+            return [];
+        }
     }
 
     public static function savePlaceholderData(Asset $asset, ?array $data): void
     {
-        $field = static::getPlaceholderField($asset);
-        $asset->set($field, $data);
-        $asset->saveQuietly();
+        if ($field = static::getPlaceholderField($asset)) {
+            $asset->set($field->handle(), $data);
+            $asset->saveQuietly();
+        }
     }
 
     public static function clearPlaceholderData(Asset $asset): void

@@ -19,14 +19,6 @@ class PlaceholderService
     }
 
     /**
-     * Whether the placeholder generation service is enabled.
-     */
-    public static function enabled(): bool
-    {
-        return PlaceholderImageFieldtype::enabled();
-    }
-
-    /**
      * Get an instance of the service managing placeholder providers.
      */
     public function providers(): PlaceholderProviders
