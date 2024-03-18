@@ -2,16 +2,12 @@
 
 namespace Daun\StatamicPlaceholders\Services;
 
-use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
-use Daun\StatamicPlaceholders\Providers;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Statamic\Assets\Asset;
 use Statamic\Facades\AssetContainer;
-use Statamic\Facades\Blink;
 
 class PlaceholderService
 {

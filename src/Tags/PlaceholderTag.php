@@ -54,7 +54,9 @@ class PlaceholderTag extends Tags
     public function generate($asset = null): array
     {
         $asset = $this->getAssetFromContext($asset);
-        if (!$asset) return [];
+        if (! $asset) {
+            return [];
+        }
 
         try {
             $muxId = $this->getMuxId($asset);
@@ -90,6 +92,7 @@ class PlaceholderTag extends Tags
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
         }
+
         return [];
     }
 
@@ -102,7 +105,9 @@ class PlaceholderTag extends Tags
     {
         $asset = $this->getAssetFromContext();
         $playbackId = $this->getPlaybackId($asset);
-        if (!$playbackId) return null;
+        if (! $playbackId) {
+            return null;
+        }
 
         if ($token = $this->getPlaybackToken($asset)) {
             $playbackId = "{$playbackId}?token={$token}";
@@ -147,7 +152,9 @@ class PlaceholderTag extends Tags
     {
         $asset = $this->getAssetFromContext();
         $playbackId = $this->getPlaybackId($asset);
-        if (!$playbackId) return null;
+        if (! $playbackId) {
+            return null;
+        }
 
         if ($token = $this->getPlaybackToken($asset)) {
             $playbackAttributes = ['playback-token' => $token];
@@ -213,6 +220,7 @@ class PlaceholderTag extends Tags
     public function thumbnail(): ?string
     {
         $params = collect($this->params->all())->except($this->assetParams)->all();
+
         return $this->getThumbnailUrl(null, $params);
     }
 
@@ -224,6 +232,7 @@ class PlaceholderTag extends Tags
     public function gif(): ?string
     {
         $params = collect($this->params->all())->except($this->assetParams)->all();
+
         return $this->getGifUrl(null, $params);
     }
 
@@ -235,6 +244,7 @@ class PlaceholderTag extends Tags
     public function placeholder(): ?string
     {
         $params = collect($this->params->all())->except($this->assetParams)->all();
+
         return $this->getPlaceholderUri(null, $params);
     }
 }

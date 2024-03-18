@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 
 class PlaceholderProviderService
 {
-    protected string $defaultProvider = Providers\Thumbhash::$name;
+    protected string $defaultProvider = Providers\Thumbhash::class;
 
     protected array $coreProviders = [
         Providers\None::class,
@@ -44,7 +44,7 @@ class PlaceholderProviderService
 
     public function default(): PlaceholderProvider
     {
-        return $this->providers->get($this->defaultProvider);
+        return $this->providers->get($this->defaultProvider::name);
     }
 
     protected function getUserProviders(): array
