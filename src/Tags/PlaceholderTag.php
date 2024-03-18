@@ -2,6 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\Tags;
 
+use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Tags\Concerns\GetsAssetFromContext;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Tags\Tags;
@@ -11,8 +12,6 @@ class PlaceholderTag extends Tags
     use GetsAssetFromContext;
 
     protected static $handle = 'placeholder';
-
-    protected $assetParams = ['src', 'path', 'asset'];
 
     /**
      * Tag {{ placeholder:[field] }}
@@ -26,9 +25,9 @@ class PlaceholderTag extends Tags
         $item = $this->context->value($tag);
 
         if ($this->isPair) {
-            return $this->generate($item);
+            return $this->data($item);
         } else {
-            return $this->getPlaybackId($item);
+            return $this->uri($item);
         }
     }
 
@@ -40,18 +39,38 @@ class PlaceholderTag extends Tags
     public function index()
     {
         if ($this->isPair) {
-            return $this->generate();
+            return $this->data();
         } else {
-            return $this->getPlaybackId();
+            return $this->uri();
         }
     }
 
     /**
-     * Tag {{ placeholder:generate }} ... {{ /placeholder:generate }}.
+     * Tag {{ placeholder:uri }}
      *
-     * Generate Mux playback id and make variables available within the pair.
+     * Return the placeholder data uri of an asset.
      */
-    public function generate($asset = null): array
+    public function uri(): ?string
+    {
+        return Placeholders::uri($this->getAssetFromContext());
+    }
+
+    /**
+     * Tag {{ placeholder:hash }}
+     *
+     * Return the placeholder hash of an asset.
+     */
+    public function hash(): ?string
+    {
+        return Placeholders::hash($this->getAssetFromContext());
+    }
+
+    /**
+     * Tag {{ placeholder:data }} ... {{ /placeholder:data }}.
+     *
+     * Generate placeholder and make variables available within the pair.
+     */
+    public function data($asset = null): array
     {
         $asset = $this->getAssetFromContext($asset);
         if (! $asset) {
@@ -59,29 +78,16 @@ class PlaceholderTag extends Tags
         }
 
         try {
-            $muxId = $this->getMuxId($asset);
-            $playbackId = $this->getPlaybackId($asset);
-            $playbackModifiers = $this->getDefaultPlaybackModifiers();
-            $playbackToken = $this->getPlaybackToken($asset, $playbackModifiers);
-            $playbackIdSigned = $playbackToken ? "{$playbackId}?token={$playbackToken}" : $playbackId;
-            $playbackUrl = $this->getPlaybackUrl($asset);
-            $public = $this->isPublic($asset);
-            $signed = $this->isSigned($asset);
-            $thumbnail = $this->getThumbnailUrl($asset);
-            $placeholder = $this->getPlaceholderUri($asset);
-            $gif = $this->getGifUrl($asset);
+            $hash = Placeholders::hash($asset);
+            $uri = Placeholders::uri($asset);
+            $exists = Placeholders::exists($asset);
+            // $provider = Placeholders::provider($asset);
 
             $data = [
-                'mux_id' => $muxId,
-                'playback_id' => $playbackId,
-                'playback_id_signed' => $playbackIdSigned,
-                'playback_url' => $playbackUrl,
-                'playback_token' => $playbackToken,
-                'public' => $public,
-                'signed' => $signed,
-                'thumbnail' => $thumbnail,
-                'placeholder' => $placeholder,
-                'gif' => $gif,
+                'hash' => $hash,
+                'uri' => $uri,
+                'exists' => $exists,
+                // 'provider' => $provider,
             ];
 
             if ($asset instanceof Augmentable) {
@@ -97,154 +103,25 @@ class PlaceholderTag extends Tags
     }
 
     /**
-     * Tag {{ placeholder:video }}
+     * Tag {{ placeholder:img }}
      *
-     * Return a rendered <mux-video> component of a video.
+     * Return a rendered <img> tag with a placeholder uri.
      */
-    public function video(): ?string
+    public function img(): ?string
     {
         $asset = $this->getAssetFromContext();
-        $playbackId = $this->getPlaybackId($asset);
-        if (! $playbackId) {
+        $provider = $this->params->get(['provider', 'type']);
+        $uri = Placeholders::uri($asset, $provider);
+        if (! $uri) {
             return null;
         }
 
-        if ($token = $this->getPlaybackToken($asset)) {
-            $playbackId = "{$playbackId}?token={$token}";
-        } else {
-            $playbackAttributes = $this->toHtmlAttributes($this->getDefaultPlaybackModifiers());
-        }
-
         $attributes = collect([
-            'playsinline' => true,
-            'preload' => 'metadata',
-            'poster' => $this->getThumbnailUrl($asset),
-            'width' => $asset->width(),
-            'height' => $asset->height(),
-        ])->merge(
-            $this->params->bool('background') ? [
-                'autoplay' => true,
-                'loop' => true,
-                'muted' => true,
-            ] : []
-        )->merge(
-            $playbackAttributes ?? []
-        )->merge(
-            collect($this->params->all())->except([...$this->assetParams, 'background', 'script'])
-        )->whereNotNull()->all();
+                'aria-hidden' => true,
+            ])->merge(
+                collect($this->params->all())->except([...$this->assetParams, 'provider', 'type'])
+            )->whereNotNull()->all();
 
-        $script = $this->params->bool('script')
-            ? '<script async src="https://unpkg.com/@mux/mux-video@0"></script>'
-            : '';
-
-        return vsprintf(
-            '<mux-video playback-id="%s" %s></mux-video> %s',
-            [$playbackId, $this->renderAttributes($attributes), $script]
-        );
-    }
-
-    /**
-     * Tag {{ placeholder:player }}
-     *
-     * Return a rendered <mux-player> component of a video.
-     */
-    public function player(): ?string
-    {
-        $asset = $this->getAssetFromContext();
-        $playbackId = $this->getPlaybackId($asset);
-        if (! $playbackId) {
-            return null;
-        }
-
-        if ($token = $this->getPlaybackToken($asset)) {
-            $playbackAttributes = ['playback-token' => $token];
-        } else {
-            $playbackAttributes = $this->toHtmlAttributes($this->getDefaultPlaybackModifiers());
-        }
-
-        $attributes = collect([
-            'preload' => 'metadata',
-            'width' => $asset->width(),
-            'height' => $asset->height(),
-        ])->merge(
-            $playbackAttributes
-        )->merge(
-            collect($this->params->all())->except([...$this->assetParams, 'script'])
-        )->whereNotNull()->all();
-
-        $script = $this->params->bool('script')
-            ? '<script async src="https://unpkg.com/@mux/mux-player@2"></script>'
-            : '';
-
-        return vsprintf(
-            '<mux-player playback-id="%s" %s></mux-player> %s',
-            [$playbackId, $this->renderAttributes($attributes), $script]
-        );
-    }
-
-    /**
-     * Tag {{ placeholder:id }}
-     *
-     * Return the mux id of a video.
-     */
-    public function id(): ?string
-    {
-        return $this->getMuxId();
-    }
-
-    /**
-     * Tag {{ placeholder:playback_id }}
-     *
-     * Return the playback id of a video.
-     */
-    public function playbackId(): ?string
-    {
-        return $this->getPlaybackId();
-    }
-
-    /**
-     * Tag {{ placeholder:playback_url }}
-     *
-     * Return the playback url of a video.
-     */
-    public function playbackUrl(): ?string
-    {
-        return $this->getPlaybackUrl();
-    }
-
-    /**
-     * Tag {{ placeholder:thumbnail [width] [height] [time] }}
-     *
-     * Return the thumbnail url of a video.
-     */
-    public function thumbnail(): ?string
-    {
-        $params = collect($this->params->all())->except($this->assetParams)->all();
-
-        return $this->getThumbnailUrl(null, $params);
-    }
-
-    /**
-     * Tag {{ placeholder:gif [width] [height] [start] [end] [fps] }}
-     *
-     * Return the animated GIF url of a video.
-     */
-    public function gif(): ?string
-    {
-        $params = collect($this->params->all())->except($this->assetParams)->all();
-
-        return $this->getGifUrl(null, $params);
-    }
-
-    /**
-     * Tag {{ placeholder:placeholder [time] }}
-     *
-     * Return a blurry placeholder data url of a video.
-     */
-    public function placeholder(): ?string
-    {
-        $params = collect($this->params->all())->except($this->assetParams)->all();
-
-        return $this->getPlaceholderUri(null, $params);
+        return vsprintf('<img src="%s" %s />', [$uri, $this->renderAttributes($attributes)]);
     }
 }
