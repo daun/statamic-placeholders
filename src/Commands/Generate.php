@@ -3,14 +3,11 @@
 namespace Daun\StatamicPlaceholders\Commands;
 
 use Daun\StatamicPlaceholders\Commands\Concerns\HasOutputStyles;
-use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholder;
-use Daun\StatamicPlaceholders\PlaceholderService;
+use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Asset;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class Generate extends Command
 {
@@ -30,12 +27,6 @@ class Generate extends Command
     protected $container;
 
     protected $containers;
-
-    protected function initialize(InputInterface $input, OutputInterface $output)
-    {
-        $this->sync = $this->isSync();
-        $this->registerStyles();
-    }
 
     public function handle(PlaceholderService $service): void
     {
@@ -67,7 +58,7 @@ class Generate extends Command
                 $service->generate($asset);
                 $this->line("Generated placeholder of <file>{$asset->id()}</file>");
             } else {
-                GeneratePlaceholder::dispatch($asset);
+                $service->dispatch($asset);
                 $this->line("Queued placeholder generation of <file>{$asset->id()}</file>");
             }
         });
@@ -77,7 +68,7 @@ class Generate extends Command
                 $service->generate($asset);
                 $this->line("Regenerated placeholder of <file>{$asset->id()}</file>");
             } else {
-                GeneratePlaceholder::dispatch($asset);
+                $service->dispatch($asset);
                 $this->line("Queued placeholder regeneration of <file>{$asset->id()}</file>");
             }
         })->whenNotEmpty(function () {

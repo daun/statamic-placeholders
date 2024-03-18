@@ -11,8 +11,6 @@ use Illuminate\Support\Collection;
 
 class PlaceholderProviderService
 {
-    protected string $defaultProvider = Providers\Thumbhash::class;
-
     protected array $coreProviders = [
         Providers\None::class,
         Providers\AverageColor::class,
@@ -24,10 +22,13 @@ class PlaceholderProviderService
 
     protected Collection $providers;
 
+    protected string $defaultProvider;
+
     public function __construct(
         protected Application $app,
         protected Repository $config
     ) {
+        $this->defaultProvider = $this->getDefaultProvider();
         $this->userProviders = $this->getUserProviders();
         $this->providers = $this->makeProviders();
     }
@@ -37,14 +38,34 @@ class PlaceholderProviderService
         return $this->providers;
     }
 
-    public function find(string $name, bool $fallback = true): ?PlaceholderProvider
+    public function find(?string $needle): PlaceholderProvider
     {
-        return $this->providers->get($name) ?? ($fallback ? $this->default() : null);
+        return $this->providers->first(
+            fn ($provider) => in_array($needle, [$provider::class, $provider::$handle])
+        );
+    }
+
+    public function findOrFail(?string $needle): PlaceholderProvider
+    {
+        if (! $needle) {
+            return $this->default();
+        } elseif ($provider = $this->find($needle)) {
+            return $provider;
+        } else {
+            throw new \Exception("Placeholder provider not found: {$needle}");
+        }
     }
 
     public function default(): PlaceholderProvider
     {
-        return $this->providers->get($this->defaultProvider::name);
+        return $this->providers->get($this->defaultProvider::$name) ?? $this->providers->first();
+    }
+
+    protected function getDefaultProvider(): string
+    {
+        $provider = $this->config->get('placeholders.default_provider', Providers\Thumbhash::class);
+
+        return $this->isValidProvider($provider) ? $provider : null;
     }
 
     protected function getUserProviders(): array
@@ -62,6 +83,10 @@ class PlaceholderProviderService
 
     protected function isValidProvider(string $class): bool
     {
-        return class_exists($class) && in_array(PlaceholderProvider::class, class_implements($class));
+        if (! class_exists($class) || ! in_array(PlaceholderProvider::class, class_implements($class))) {
+            throw new \Exception("Not a valid placeholder provider: {$class}");
+        }
+
+        return true;
     }
 }

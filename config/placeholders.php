@@ -13,24 +13,23 @@ return [
     |
     */
 
-    'placeholders' => [
-
-        'enabled' => env('PLACEHOLDER_IMAGES_ENABLED', true),
-
-    ],
+    'enabled' => env('PLACEHOLDER_IMAGES_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
-    | Fallback Placeholder
+    | Default Provider
     |--------------------------------------------------------------------------
     |
-    | The fallback placeholder to use when an image placeholder is not yet
-    | generated or has failed to generate. This can be a base64 encoded image
-    | or a remote URL. Defaults to a transparent gif.
+    | The default placeholder type to use. Each `placeholder_image` field can
+    | choose to either use this default provider or pick a different provider
+    | than the default. If you manually generate placeholders for URLs, this
+    |  default provider will also be used unless specified otherwise.
+    |
+    | Available options: Thumbhash, Blurhash, AverageColor
     |
     */
 
-    'fallback_uri' => 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
+    'default_provider' => Daun\StatamicPlaceholders\Providers\Thumbhash::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -47,6 +46,19 @@ return [
     'providers' => [
         // \App\Providers\CustomColorPlaceholder::class,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Fallback Placeholder
+    |--------------------------------------------------------------------------
+    |
+    | The fallback placeholder to use when an image placeholder is not yet
+    | generated or has failed to generate. This can be a base64 encoded image
+    | or a remote URL. Defaults to a transparent gif.
+    |
+    */
+
+    'fallback_uri' => 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
 
     /*
     |--------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\Jobs;
 
-use Daun\StatamicPlaceholders\PlaceholderService;
+use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +15,8 @@ class GeneratePlaceholderJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable;
 
     public function __construct(
-        protected Asset $asset
+        protected Asset $asset,
+        protected ?string $provider = null
     ) {
         $this->connection = Queue::connection();
         $this->queue = Queue::queue();
@@ -23,6 +24,6 @@ class GeneratePlaceholderJob implements ShouldQueue
 
     public function handle(PlaceholderService $service): void
     {
-        $service->generate($this->asset);
+        $service->generate($this->asset, $this->provider);
     }
 }

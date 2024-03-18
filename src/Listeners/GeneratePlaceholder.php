@@ -3,7 +3,7 @@
 namespace Daun\StatamicPlaceholders\Listeners;
 
 use Daun\StatamicPlaceholders\Listeners\Concerns\UsesAddonQueue;
-use Daun\StatamicPlaceholders\PlaceholderService;
+use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Statamic\Events\AssetReuploaded;
 use Statamic\Events\AssetSaved;
