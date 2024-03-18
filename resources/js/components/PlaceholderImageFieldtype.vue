@@ -34,9 +34,9 @@
                 </span>
             </div>
             <div v-if="showPreview" class="mt-3">
-                <div class="flex">
-                    <img :src="uri" class="btn btn-flat btn-sm p-0 overflow-hidden w-auto" :class="{ 'opacity-25': showingPreview }" />
-                    <button @click="showingPreview = !showingPreview" type="button" class="btn btn-flat btn-sm ml-2">
+                <div v-if="!showingPreview" class="flex gap-2">
+                    <img @click="showingPreview = !showingPreview" :src="uri" class="btn btn-flat btn-sm p-0 overflow-hidden w-auto" :class="{ 'opacity-25': showingPreview }" />
+                    <button @click="showingPreview = !showingPreview" type="button" class="btn btn-flat btn-sm">
                         <template v-if="showingPreview">
                             {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.hide_preview') }}
                         </template>
@@ -45,20 +45,21 @@
                         </template>
                     </button>
                 </div>
-                <div class="btn-group">
-                    <button @click="showingPreview = !showingPreview" type="button" class="btn p-0 overflow-hidden">
-                        <img :src="uri" class="h-9 w-auto" :class="{ 'opacity-25': showingPreview }" />
-                    </button>
-                    <button @click="showingPreview = !showingPreview" type="button" class="btn">
-                        <template v-if="showingPreview">
-                            {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.hide_preview') }}
-                        </template>
-                        <template v-else>
-                            {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.show_preview') }}
-                        </template>
-                    </button>
+                <div v-else class="flex flex-wrap gap-4">
+                    <div @click="showingPreview = false" class="grow-0 shrink-0 relative group inline-block">
+                        <img :src="uri" class="btn p-0 h-8 min-h-40 w-auto rounded-md" />
+                        <button
+                            aria-label="Hide Preview"
+                            class="btn-close absolute top-2 rtl:left-2.5 ltr:right-2.5 opacity-0 group-hover:opacity-100"
+                            style="--tw-bg-opacity: 0;"
+                        >×</button>
+                    </div>
+                    <div class="grow shrink basis-40 overflow-hidden text-xs text-gray-700 font-mono">
+                        <div v-if="provider">{{ provider.name }}</div>
+                        <div v-if="hash" title="hash" class="truncate">{{ hash }}</div>
+                        <div v-if="size">{{ size }}</div>
+                    </div>
                 </div>
-                <img v-if="showingPreview" @click="showingPreview = !showingPreview" :src="uri" class="btn p-0 h-8 min-h-40 w-auto rounded-md mt-3" />
             </div>
             <!-- <div v-if="allowRegenerate" class="flex items-center mt-3">
                 <label for="upload-asset" class="help-block flex items-center cursor-pointer font-normal">
@@ -99,6 +100,9 @@ export default {
         },
         provider() {
             return this.meta?.provider;
+        },
+        size() {
+            return this.meta?.size;
         }
     }
 };

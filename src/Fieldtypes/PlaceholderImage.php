@@ -4,6 +4,7 @@ namespace Daun\StatamicPlaceholders\Fieldtypes;
 
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
+use Illuminate\Support\Number;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Fields\Fieldtype;
 
@@ -58,12 +59,13 @@ class PlaceholderImage extends Fieldtype
 
     public function preload()
     {
+        $type = $this->config('placeholder_type');
         $asset = $this->asset();
         $supported = $asset && Placeholders::supports($asset);
-        $type = $this->config('placeholder_type', null);
         $provider = Placeholders::providers()->find($type) ?? Placeholders::providers()->default();
         $hash = $asset && Placeholders::exists($asset) ? Placeholders::hash($asset) : null;
         $uri = $asset && Placeholders::exists($asset) ? Placeholders::uri($asset) : null;
+        $size = $uri ? Number::fileSize(strlen($uri), 2) : null;
 
         return [
             'is_asset' => (bool) $asset,
@@ -74,6 +76,7 @@ class PlaceholderImage extends Fieldtype
             ],
             'hash' => $hash,
             'uri' => $uri,
+            'size' => $size,
         ];
     }
 
@@ -98,6 +101,6 @@ class PlaceholderImage extends Fieldtype
 
     public function augment($value)
     {
-        return Placeholders::generate($value);
+        return Placeholders::uri($value, $this->config('placeholder_type'));
     }
 }
