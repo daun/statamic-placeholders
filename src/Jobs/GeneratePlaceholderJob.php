@@ -15,8 +15,7 @@ class GeneratePlaceholderJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable;
 
     public function __construct(
-        protected Asset $asset,
-        protected ?string $provider = null
+        protected Asset $asset
     ) {
         $this->connection = Queue::connection();
         $this->queue = Queue::queue();
@@ -24,6 +23,6 @@ class GeneratePlaceholderJob implements ShouldQueue
 
     public function handle(PlaceholderService $service): void
     {
-        $service->generate($this->asset, $this->provider);
+        $service->generate($this->asset);
     }
 }

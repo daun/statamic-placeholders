@@ -5,7 +5,6 @@ namespace Daun\StatamicPlaceholders;
 use Daun\StatamicPlaceholders\Services\PlaceholderProviders;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Statamic\Events\AssetReuploaded;
-use Statamic\Events\AssetSaved;
 use Statamic\Events\AssetUploaded;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -16,7 +15,6 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $listen = [
-        // AssetSaved::class => [Listeners\GeneratePlaceholder::class],
         AssetUploaded::class => [Listeners\GeneratePlaceholder::class],
         AssetReuploaded::class => [Listeners\GeneratePlaceholder::class],
     ];
@@ -45,8 +43,8 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerServices()
     {
-        $this->app->singleton(PlaceholderProviders::class, PlaceholderProviders::class);
-        $this->app->singleton(PlaceholderService::class, PlaceholderService::class);
+        $this->app->singleton(PlaceholderProviders::class);
+        $this->app->singleton(PlaceholderService::class);
     }
 
     protected function registerAddonConfig()

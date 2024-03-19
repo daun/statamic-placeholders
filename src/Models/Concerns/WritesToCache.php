@@ -13,7 +13,7 @@ trait WritesToCache
 
     public function key(): ?string
     {
-        return "placeholder-hash--{$this->provider()::$handle}--{$this->identifier()}";
+        return "placeholder-hash--{$this->type()}--{$this->identifier()}";
     }
 
     public function exists(): bool

@@ -4,7 +4,6 @@ namespace Daun\StatamicPlaceholders\Models;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
-use Statamic\Contracts\Assets\Asset;
 
 abstract class Placeholder
 {
@@ -44,11 +43,19 @@ abstract class Placeholder
     }
 
     /**
-     * Get the placeholder provider instace to use.
+     * Get the placeholder provider instance to use.
      */
     public function provider(): PlaceholderProvider
     {
         return Placeholders::providers()->findOrFail($this->provider);
+    }
+
+    /**
+     * Get the placeholder type, i.e. the placeholder provider's handle.
+     */
+    public function type(): string
+    {
+        return $this->provider()::$handle;
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Daun\StatamicPlaceholders\Listeners;
 
-use Daun\StatamicPlaceholders\Listeners\Concerns\UsesAddonQueue;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,23 +11,21 @@ use Statamic\Events\AssetUploaded;
 
 class GeneratePlaceholder implements ShouldQueue
 {
-    use UsesAddonQueue;
-
-    public function __construct(
-        protected PlaceholderService $service
-    ) {
+    public function __construct(protected PlaceholderService $service)
+    {
     }
 
     public function handle(AssetSaved|AssetUploaded|AssetReuploaded $event)
     {
-        if (! PlaceholderField::shouldGenerate($event->asset)) {
-            return;
+        if ($this->shouldHandle($event->asset)) {
+            $this->service->dispatch($event->asset);
         }
+    }
 
-        if (! PlaceholderField::generatesOnUpload()) {
-            return;
-        }
-
-        $this->service->generate($event->asset);
+    protected function shouldHandle(mixed $asset)
+    {
+        return PlaceholderField::generatesOnUpload()
+            && PlaceholderField::shouldGenerate($asset)
+            && ! $this->service->exists($asset);
     }
 }

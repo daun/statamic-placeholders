@@ -2,6 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\Fieldtypes;
 
+use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
@@ -104,6 +105,10 @@ class PlaceholderFieldtype extends Fieldtype
 
     public function augment($value)
     {
-        return Placeholders::uri($this->asset(), $this->provider());
+        if ($asset = $this->asset()) {
+            return new AssetPlaceholder($asset);
+        } else {
+            return $value;
+        }
     }
 }

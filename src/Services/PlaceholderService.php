@@ -52,6 +52,14 @@ class PlaceholderService
     }
 
     /**
+     * Get the type of placeholder of the given asset, url or file blob.
+     */
+    public function type(mixed $input): string
+    {
+        return $this->make($input)->type();
+    }
+
+    /**
      * Check if a placeholder exists for the given asset, url or file blob.
      */
     public function exists(mixed $input, ?string $provider = null): bool

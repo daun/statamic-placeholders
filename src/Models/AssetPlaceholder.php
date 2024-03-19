@@ -10,6 +10,7 @@ class AssetPlaceholder extends Placeholder
 {
     public function __construct(protected Asset $asset)
     {
+        $this->provider = PlaceholderField::getProvider($asset);
     }
 
     public static function accepts(mixed $input): bool
