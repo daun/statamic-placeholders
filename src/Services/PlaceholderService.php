@@ -213,7 +213,7 @@ class PlaceholderService
     }
 
     /**
-     * Load placeholder hash from cachefor given url.
+     * Load placeholder hash from cache for given url.
      */
     protected function loadHashForUrl(string $url, ?string $provider = null): ?string
     {
