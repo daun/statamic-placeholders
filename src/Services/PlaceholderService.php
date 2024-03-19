@@ -26,19 +26,37 @@ class PlaceholderService
     }
 
     /**
-     * Make a new placeholder object.
+     * Make a new placeholder object from the given asset, url or file blob.
      */
-    public function make(Asset|string|null $input): Placeholder
+    public function make(mixed $input): Placeholder
     {
         return Placeholder::make($input);
     }
 
     /**
-     * Check if a placeholder exists for given asset or url.
+     * Get a placeholder data uri for the given asset, url or file blob.
+     * Ready to use as image source.
      */
-    public function exists(Asset|string $asset, ?string $provider = null): bool
+    public function uri(mixed $input, ?string $provider = null): ?string
     {
-        return $this->make($asset)->usingProvider($provider)->exists();
+        return $this->make($input)->usingProvider($provider)->uri();
+    }
+
+    /**
+     * Get a placeholder hash for the given asset, url or file blob.
+     * Short internal representation of a placeholder for efficient storage.
+     */
+    public function hash(mixed $input, ?string $provider = null): ?string
+    {
+        return $this->make($input)->usingProvider($provider)->hash();
+    }
+
+    /**
+     * Check if a placeholder exists for the given asset, url or file blob.
+     */
+    public function exists(mixed $input, ?string $provider = null): bool
+    {
+        return $this->make($input)->usingProvider($provider)->exists();
     }
 
     /**

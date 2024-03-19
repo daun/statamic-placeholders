@@ -23,7 +23,7 @@ abstract class Placeholder
     /**
      * Create a new placeholder instance from an asset, url or blob.
      */
-    public static function make(Asset|string|null $input): self
+    public static function make(mixed $input): self
     {
         $class = collect(static::$types)->first(
             fn ($type) => $type::accepts($input),
