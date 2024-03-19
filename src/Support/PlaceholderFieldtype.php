@@ -2,7 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\Support;
 
-use Daun\StatamicPlaceholders\Fieldtypes\PlaceholderImage as Fieldtype;
+use Daun\StatamicPlaceholders\Fieldtypes\Placeholder as Fieldtype;
 use Illuminate\Support\Collection;
 use Statamic\Assets\Asset;
 use Statamic\Assets\AssetContainer;
