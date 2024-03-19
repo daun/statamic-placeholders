@@ -7,7 +7,7 @@ Generate image placeholders of Statamic assets for smoother lazyloading.
 ## ✨ Features
 
 - Generate blurry image placeholders for assets
-- Supports [ThumbHash](https://evanw.github.io/thumbhash/), [BlurHash](https://blurha.sh/), and average color placeholders
+- Choose between [ThumbHash](https://evanw.github.io/thumbhash/), [BlurHash](https://blurha.sh/), Average Color placeholders
 - Console commands for batch generation
 
 ## Why Use Image Placeholders?
@@ -16,34 +16,124 @@ Low-Quality Image Placeholders (LQIP) are used to improve the perceived performa
 
 ## How It Works
 
-This addon will automatically generate a small blurry image placeholder for each asset that is uploaded to asset containers configured to use them. In your frontend views, you can access the image placeholder as a data URI string to display while the high-quality image is loading. See below for markup examples.
+The addon ships with a **Placeholder Image** fieldtype and will automatically generate a small blurry
+placeholder image for each asset with this fieldtype in its blueprint. In your frontend views, you
+can access the image placeholder as a data URI string to display while the high-quality image is
+loading. See below for markup examples.
 
 ## Placeholder Types
 
 The addon supports generating various types of image placeholders. The recommended type is `ThumbHash` which encodes most detail and supports transparent images.
 
-### ThumbHash
+- [**ThumbHash**](https://evanw.github.io/thumbhash/) is a newer image placeholder algorithm with improved color rendering and support for transparency
+- [**BlurHash**](https://blurha.sh/) is the original placeholder algorithm developed at Wolt, which has no support for alpha channels and will render transparency in black
+- **Average Color** calculates the average color of the image
 
-[ThumbHash](https://evanw.github.io/thumbhash/) is a newer image placeholder algorithm with improved color rendering and support for transparency.
+## Installation
 
-### BlurHash
-
-[BlurHash](https://blurha.sh/) is the original placeholder algorithm, developed at Wolt. It currently has no support for alpha channels and will render transparency in black.
-
-### Average color
-
-Calculates the average color of the image.
-
-## 🛠️ Installation
-
-Run the following command from your project root:
+Run the below command from your project root. Alternatively, you can search for this addon in the
+`Tools > Addons` section of the Statamic control panel and install it from there.
 
 ```sh
 composer require daun/statamic-placeholders
 ```
 
-Alternatively, you can search for this addon in the `Tools > Addons` section of
-the Statamic control panel and install it from there.
+## Add a Placeholder Field
+
+Add a new `placeholder` field to the blueprint of each asset container your want to generate
+placeholders for. Whenever a new image is uploaded to a container with this field in its blueprint,
+it will generate a placeholder. The title and handle of the field can be chosen freely:
+`placeholder`, `lqip`, `thumbhash`, ...
+
+```diff
+# resources/blueprints/assets/assets.yaml
+
+fields:
+  -
+    handle: alt
+    field:
+      type: text
+      display: Alt
++ -
++   handle: placeholder
++   field:
++     type: placeholder
++     display: Placeholder
+```
+
+## Choose a Placeholder Type
+
+By default, the addon will generate ThumbHash placeholders for all placeholder fields. Change the
+placeholder provider in `config/placeholders.php`, e.g. if you prefer BlurHash placeholders:
+
+```php
+return [
+    'default_provider' => Daun\StatamicPlaceholders\Providers\Blurhash::class
+];
+```
+
+To override the placeholder type for a specific field while keeping the default for other fields,
+you can set it on the field config:
+
+```diff
+# resources/blueprints/assets/assets.yaml
+
+fields:
++ -
++   handle: placeholder
++   field:
++     type: placeholder
++     display: Placeholder
+
+```
+
+### Configure Generation on Upload
+
+If you'd rather not pre-generate placeholders on upload but only generate them when
+displaying them in the frontend, you can configure that behavior in `config/placeholders.php`:
+
+```php
+return [
+    'generate_on_upload' => false
+];
+```
+
+## Display Placeholders in Your Frontend
+
+In your frontend templates, you can access the placeholder from the name of the new placeholder
+field. Assuming you've called it `placeholder` like in the example above, this is how you would
+render the placeholder:
+
+```antlers
+{{ asset url="/assets/image.jpg" }}
+  <figure>
+    <img src="{{ placeholder }}" aria-hidden="true">
+    <img src="{{ uri }}" alt="{{ alt }}">
+  </figure>
+{{ /asset }}
+```
+
+### Antlers Tags
+
+The addon also ships with a set of Antlers tags that allow rendering placeholders if you don't
+already have.
+
+## Generate Placeholders for Existing Assets
+
+For existing assets that were uploaded before the field was added, their placeholders will be
+generated on request, i.e. whenever they are displayed in the frontend. To speed things up a bit,
+you can generate any missing placeholders for existing assets by running the following command:
+
+```sh
+# Generate placeholders for existing assets
+php please placeholders:generate
+```
+
+## Queueing
+
+If your site is configured to use queues, the placeholders will also be generated asynchronously
+using your configured queue driver. If required, you can specify a custom queue and driver in
+`config/placeholders.php`
 
 ## License
 
