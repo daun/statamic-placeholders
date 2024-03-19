@@ -54,7 +54,11 @@ class PlaceholderTags extends Tags
      */
     public function uri(): ?string
     {
-        return Placeholders::uri($this->getAssetFromContext());
+        if ($asset = $this->getAssetFromContext()) {
+            return Placeholders::uri($asset);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -64,7 +68,11 @@ class PlaceholderTags extends Tags
      */
     public function hash(): ?string
     {
-        return Placeholders::hash($this->getAssetFromContext());
+        if ($asset = $this->getAssetFromContext()) {
+            return Placeholders::hash($asset);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -112,6 +120,10 @@ class PlaceholderTags extends Tags
     public function img(): ?string
     {
         $asset = $this->getAssetFromContext();
+        if (! $asset) {
+            return '';
+        }
+
         $provider = $this->params->get(['provider', 'type']);
         $uri = Placeholders::uri($asset, $provider);
         if (! $uri) {
