@@ -8,6 +8,7 @@ Generate image placeholders of Statamic assets for smoother lazyloading.
 
 - Generate blurry image placeholders for assets
 - Choose between [ThumbHash](https://evanw.github.io/thumbhash/), [BlurHash](https://blurha.sh/), Average Color placeholders
+- Generate placeholders on upload or on demand
 - Console commands for batch generation
 
 ## Why Use Image Placeholders?
@@ -26,7 +27,7 @@ loading. See below for markup examples.
 The addon supports generating various types of image placeholders. The recommended type is `ThumbHash` which encodes most detail and supports transparent images.
 
 - [**ThumbHash**](https://evanw.github.io/thumbhash/) is a newer algorithm with improved color rendering and support for transparency
-- [**BlurHash**](https://blurha.sh/) is the original algorithm developed at Wolt, which has no support for alpha channels and will render transparency in black
+- [**BlurHash**](https://blurha.sh/) is the original algorithm which has no support for alpha channels and will render transparency in black
 - **Average Color** calculates the average color of the image
 
 ## Installation
@@ -43,7 +44,7 @@ composer require daun/statamic-placeholders
 Add a new `placeholder` field to the blueprint of each asset container your want to generate
 placeholders for. Whenever a new image is uploaded to a container with this field in its blueprint,
 it will generate a placeholder. The title and handle of the field can be chosen freely:
-`placeholder`, `lqip`, `thumbhash`, ...
+`placeholder`, `lqip`, `thumbhash` ...
 
 ```diff
 # resources/blueprints/assets/assets.yaml
@@ -59,6 +60,30 @@ fields:
 +   field:
 +     type: placeholder
 +     display: Placeholder
+```
+
+The field will display a small placeholder preview in the asset edit form.
+
+<img src="art/fieldtype-generated-contracted.png" width="450" alt="Placeholder fieldtype in edit form">
+
+Clicking the placeholder reveals details about it like type, size and hash.
+
+<img src="art/fieldtype-generated-expanded.png" width="450" alt="Expanded placeholder fieldtype in edit form">
+
+You can disable the preview and show a short status message instead by adjusting the field config.
+
+<img src="art/fieldtype-generated-hidden.png" width="450" alt="Text-only placeholder fieldtype in edit form">
+
+```diff
+# resources/blueprints/assets/assets.yaml
+
+fields:
+  -
+    handle: placeholder
+    field:
+      type: placeholder
+      display: Placeholder
++     show_preview: false
 ```
 
 ## Choose a Placeholder Type
