@@ -4,6 +4,7 @@ namespace Daun\StatamicPlaceholders\Tags;
 
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Tags\Concerns\GetsAssetFromContext;
+use Daun\StatamicPlaceholders\Tags\Concerns\GetsUrlFromContext;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Tags\Concerns\RendersAttributes;
 use Statamic\Tags\Tags;
@@ -11,6 +12,7 @@ use Statamic\Tags\Tags;
 class PlaceholderTags extends Tags
 {
     use GetsAssetFromContext;
+    use GetsUrlFromContext;
     use RendersAttributes;
 
     protected static $handle = 'placeholder';
@@ -54,11 +56,10 @@ class PlaceholderTags extends Tags
      */
     public function uri(): ?string
     {
-        if ($asset = $this->getAssetFromContext()) {
-            return Placeholders::uri($asset);
-        } else {
-            return null;
-        }
+        return Placeholders::uri(
+            $this->getAssetFromContext() ?? $this->getUrlFromContext(),
+            $this->params->get('type')
+        );
     }
 
     /**
@@ -68,11 +69,10 @@ class PlaceholderTags extends Tags
      */
     public function hash(): ?string
     {
-        if ($asset = $this->getAssetFromContext()) {
-            return Placeholders::hash($asset);
-        } else {
-            return null;
-        }
+        return Placeholders::hash(
+            $this->getAssetFromContext() ?? $this->getUrlFromContext(),
+            $this->params->get('type')
+        );
     }
 
     /**
@@ -82,22 +82,21 @@ class PlaceholderTags extends Tags
      */
     public function data($asset = null): array
     {
-        $asset = $this->getAssetFromContext($asset);
+        $asset = $this->getAssetFromContext($asset) ?? $this->getUrlFromContext($asset);
         if (! $asset) {
             return [];
         }
 
         try {
-            $hash = Placeholders::hash($asset);
-            $uri = Placeholders::uri($asset);
-            $exists = Placeholders::exists($asset);
-            // $provider = Placeholders::provider($asset);
+            $provider = $this->params->get('type');
+            $placeholder = Placeholders::make($asset, $provider);
 
             $data = [
-                'hash' => $hash,
-                'uri' => $uri,
-                'exists' => $exists,
-                // 'provider' => $provider,
+                'hash' => $placeholder->hash(),
+                'uri' => $placeholder->uri(),
+                'placeholder' => $placeholder->uri(),
+                'exists' => $placeholder->exists(),
+                'type' => $placeholder->type(),
             ];
 
             if ($asset instanceof Augmentable) {
@@ -119,12 +118,12 @@ class PlaceholderTags extends Tags
      */
     public function img(): ?string
     {
-        $asset = $this->getAssetFromContext();
+        $asset = $this->getAssetFromContext() ?? $this->getUrlFromContext();
         if (! $asset) {
             return '';
         }
 
-        $provider = $this->params->get(['provider', 'type']);
+        $provider = $this->params->get('type');
         $uri = Placeholders::uri($asset, $provider);
         if (! $uri) {
             return null;
@@ -133,7 +132,11 @@ class PlaceholderTags extends Tags
         $attributes = collect([
             'aria-hidden' => true,
         ])->merge(
-            collect($this->params->all())->except([...$this->assetParams, 'provider', 'type'])
+            collect($this->params->all())->except([
+                ...$this->assetParams,
+                ...$this->urlParams,
+                'type'
+            ])
         )->whereNotNull()->all();
 
         return vsprintf('<img src="%s" alt="" %s />', [$uri, $this->renderAttributes($attributes)]);

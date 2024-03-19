@@ -13,11 +13,11 @@ abstract class Placeholder
         BlobPlaceholder::class,
     ];
 
-    protected ?string $provider;
+    protected ?string $provider = null;
 
-    protected ?string $hash;
+    protected ?string $hash = null;
 
-    protected ?string $uri;
+    protected ?string $uri = null;
 
     /**
      * Create a new placeholder instance from an asset, url or blob.
