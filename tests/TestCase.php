@@ -12,8 +12,8 @@ use Tests\Concerns\ResolvesStatamicConfig;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    use ResolvesStatamicConfig;
     use InteractsWithViews;
+    use ResolvesStatamicConfig;
 
     protected function getPackageProviders($app)
     {

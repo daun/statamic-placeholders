@@ -28,6 +28,15 @@ class PlaceholderField
         return $asset->isImage() && ! $asset->isSvg() && static::hasField($asset);
     }
 
+    public static function ensureEnabledForAsset(Asset $asset): bool
+    {
+        if (static::enabledForAsset($asset)) {
+            return true;
+        } else {
+            throw new \Exception('This asset does not have a placeholder field in its blueprint.');
+        }
+    }
+
     public static function enabledForContainer(AssetContainer $container): bool
     {
         return static::hasField($container);

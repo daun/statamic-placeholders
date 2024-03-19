@@ -38,6 +38,7 @@ class Generate extends Command
 
         if (! PlaceholderField::enabled()) {
             $this->error('The placeholder feature is globally disabled from your config.');
+
             return;
         }
 
@@ -46,6 +47,7 @@ class Generate extends Command
             $this->error('No containers are configured to generate placeholders.');
             $this->newLine();
             $this->line('Please add a `placeholder` field to at least one of your asset blueprints.');
+
             return;
         }
 
@@ -55,13 +57,14 @@ class Generate extends Command
                 $this->containers = collect($container);
             } else {
                 $this->error("Asset container '{$this->container}' not found");
+
                 return;
             }
         }
 
         $assets = $this->containers->flatMap(
-            fn($container) => Asset::whereContainer($container->handle())->filter(
-                fn($asset) => PlaceholderField::enabledForAsset($asset)
+            fn ($container) => Asset::whereContainer($container->handle())->filter(
+                fn ($asset) => PlaceholderField::enabledForAsset($asset)
             )
         );
 

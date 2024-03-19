@@ -131,10 +131,10 @@ class PlaceholderTags extends Tags
         }
 
         $attributes = collect([
-                'aria-hidden' => true,
-            ])->merge(
-                collect($this->params->all())->except([...$this->assetParams, 'provider', 'type'])
-            )->whereNotNull()->all();
+            'aria-hidden' => true,
+        ])->merge(
+            collect($this->params->all())->except([...$this->assetParams, 'provider', 'type'])
+        )->whereNotNull()->all();
 
         return vsprintf('<img src="%s" alt="" %s />', [$uri, $this->renderAttributes($attributes)]);
     }

@@ -62,7 +62,7 @@ class PlaceholderFieldtype extends Fieldtype
     public function preload()
     {
         $asset = $this->asset();
-        $supported = $asset && Placeholders::supports($asset);
+        $supported = $asset && PlaceholderField::enabledForAsset($asset);
         $provider = Placeholders::providers()->find($this->provider()) ?? Placeholders::providers()->default();
         $exists = $asset && Placeholders::exists($asset, $provider::$handle);
         $hash = $exists ? Placeholders::hash($asset, $provider::$handle) : null;
@@ -75,7 +75,7 @@ class PlaceholderFieldtype extends Fieldtype
             'generate_on_upload' => PlaceholderField::generatesOnUpload(),
             'provider' => [
                 'handle' => $provider::$handle,
-                'name' => $provider::$name
+                'name' => $provider::$name,
             ],
             'hash' => $hash,
             'uri' => $uri,
