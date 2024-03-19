@@ -70,7 +70,7 @@ class Placeholder extends Fieldtype
         $exists = $asset && Placeholders::exists($asset, $provider::$handle);
         $hash = $exists ? Placeholders::hash($asset, $provider::$handle) : null;
         $uri = $exists ? Placeholders::uri($asset, $provider::$handle) : null;
-        $size = $uri ? Number::fileSize(strlen($uri), 2) : null;
+        $size = $uri ? Number::fileSize(strlen(base64_decode($uri)), 1) : null;
 
         return [
             'is_asset' => (bool) $asset,
