@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Daun\StatamicPlaceholders\ServiceProvider as AddonServiceProvider;
+use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
@@ -12,6 +13,7 @@ use Tests\Concerns\ResolvesStatamicConfig;
 abstract class TestCase extends OrchestraTestCase
 {
     use ResolvesStatamicConfig;
+    use InteractsWithViews;
 
     protected function getPackageProviders($app)
     {
