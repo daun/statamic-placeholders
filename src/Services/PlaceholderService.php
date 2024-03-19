@@ -132,6 +132,7 @@ class PlaceholderService
             return null;
         }
 
+        $provider ??= PlaceholderImageFieldtype::getPlaceholderProvider($asset);
         $instance = $this->providers->findOrFail($provider);
 
         if ($hash = $this->loadHashFromAsset($asset, $instance::$handle)) {
@@ -169,6 +170,7 @@ class PlaceholderService
             return null;
         }
 
+        $provider ??= PlaceholderImageFieldtype::getPlaceholderProvider($asset);
         $instance = $this->providers->findOrFail($provider);
 
         if ($hash = $this->generateHashForBlob($asset->contents(), $instance::$handle)) {
@@ -225,6 +227,7 @@ class PlaceholderService
      */
     protected function loadHashFromAsset(Asset $asset, ?string $provider = null): ?string
     {
+        $provider ??= PlaceholderImageFieldtype::getPlaceholderProvider($asset);
         $instance = $this->providers->findOrFail($provider);
 
         return PlaceholderImageFieldtype::getPlaceholderHash($asset, $instance::$handle);

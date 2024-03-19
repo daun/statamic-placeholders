@@ -26,7 +26,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $tags = [
-        Tags\PlaceholderTag::class,
+        Tags\PlaceholderTags::class,
     ];
 
     protected $vite = [

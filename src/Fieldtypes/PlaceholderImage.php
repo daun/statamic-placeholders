@@ -48,6 +48,11 @@ class PlaceholderImage extends Fieldtype
         ];
     }
 
+    public function provider(): ?string
+    {
+        return $this->config('placeholder_type');
+    }
+
     protected function asset(): ?Asset
     {
         if ($this->field?->parent() instanceof Asset) {
@@ -59,12 +64,12 @@ class PlaceholderImage extends Fieldtype
 
     public function preload()
     {
-        $type = $this->config('placeholder_type');
         $asset = $this->asset();
         $supported = $asset && Placeholders::supports($asset);
-        $provider = Placeholders::providers()->find($type) ?? Placeholders::providers()->default();
-        $hash = $asset && Placeholders::exists($asset) ? Placeholders::hash($asset) : null;
-        $uri = $asset && Placeholders::exists($asset) ? Placeholders::uri($asset) : null;
+        $provider = Placeholders::providers()->find($this->provider()) ?? Placeholders::providers()->default();
+        $exists = $asset && Placeholders::exists($asset, $provider::$handle);
+        $hash = $exists ? Placeholders::hash($asset, $provider::$handle) : null;
+        $uri = $exists ? Placeholders::uri($asset, $provider::$handle) : null;
         $size = $uri ? Number::fileSize(strlen($uri), 2) : null;
 
         return [
@@ -101,6 +106,6 @@ class PlaceholderImage extends Fieldtype
 
     public function augment($value)
     {
-        return Placeholders::uri($value, $this->config('placeholder_type'));
+        return Placeholders::uri($this->asset(), $this->provider());
     }
 }

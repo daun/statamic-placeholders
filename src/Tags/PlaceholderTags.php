@@ -5,11 +5,13 @@ namespace Daun\StatamicPlaceholders\Tags;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Tags\Concerns\GetsAssetFromContext;
 use Statamic\Contracts\Data\Augmentable;
+use Statamic\Tags\Concerns\RendersAttributes;
 use Statamic\Tags\Tags;
 
-class PlaceholderTag extends Tags
+class PlaceholderTags extends Tags
 {
     use GetsAssetFromContext;
+    use RendersAttributes;
 
     protected static $handle = 'placeholder';
 

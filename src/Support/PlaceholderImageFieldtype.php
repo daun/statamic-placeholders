@@ -55,12 +55,12 @@ class PlaceholderImageFieldtype
         );
     }
 
-    public static function getPlaceholderProvider(Asset|AssetContainer|null $asset): ?Field
+    public static function getPlaceholderProvider(Asset|AssetContainer|null $asset): ?string
     {
         if ($field = static::getPlaceholderField($asset)) {
-            $provider = $field->config()['placeholder_type'] ?? null;
+            return $field->fieldtype()->provider();
         } else {
-            return [];
+            return null;
         }
     }
 
