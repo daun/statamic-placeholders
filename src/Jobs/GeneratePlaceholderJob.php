@@ -12,7 +12,7 @@ use Statamic\Assets\Asset;
 
 class GeneratePlaceholderJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
         protected Asset $asset
