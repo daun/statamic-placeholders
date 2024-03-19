@@ -64,15 +64,15 @@ fields:
 
 The field will display a small placeholder preview in the asset edit form.
 
-<img src="art/fieldtype-generated-contracted.png" width="450" alt="Placeholder fieldtype in edit form">
+![Placeholder fieldtype in edit form](art/fieldtype-embedded-contracted.png)
 
 Clicking the placeholder reveals details about it like type, size and hash.
 
-<img src="art/fieldtype-generated-expanded.png" width="450" alt="Expanded placeholder fieldtype in edit form">
+![Expanded placeholder fieldtype in edit form](art/fieldtype-embedded-expanded.png)
 
 You can disable the preview and show a short status message instead by adjusting the field config.
 
-<img src="art/fieldtype-generated-hidden.png" width="450" alt="Text-only placeholder fieldtype in edit form">
+![Text-only placeholder fieldtype in edit form](art/fieldtype-embedded-hidden.png)
 
 ```diff
 # resources/blueprints/assets/assets.yaml
