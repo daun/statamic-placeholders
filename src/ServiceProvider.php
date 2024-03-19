@@ -22,7 +22,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $fieldtypes = [
-        Fieldtypes\Placeholder::class,
+        Fieldtypes\PlaceholderFieldtype::class,
     ];
 
     protected $tags = [

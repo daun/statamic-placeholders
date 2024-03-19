@@ -4,12 +4,12 @@ namespace Daun\StatamicPlaceholders\Fieldtypes;
 
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
-use Daun\StatamicPlaceholders\Support\PlaceholderFieldtype;
+use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Illuminate\Support\Number;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Fields\Fieldtype;
 
-class Placeholder extends Fieldtype
+class PlaceholderFieldtype extends Fieldtype
 {
     protected static $handle = 'placeholder';
 
@@ -72,7 +72,7 @@ class Placeholder extends Fieldtype
         return [
             'is_asset' => (bool) $asset,
             'is_supported' => $supported,
-            'generate_on_upload' => PlaceholderFieldtype::generatesOnUpload(),
+            'generate_on_upload' => PlaceholderField::generatesOnUpload(),
             'provider' => [
                 'handle' => $provider::$handle,
                 'name' => $provider::$name

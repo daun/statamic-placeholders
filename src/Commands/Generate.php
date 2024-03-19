@@ -4,7 +4,7 @@ namespace Daun\StatamicPlaceholders\Commands;
 
 use Daun\StatamicPlaceholders\Commands\Concerns\HasOutputStyles;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
-use Daun\StatamicPlaceholders\Support\PlaceholderFieldtype;
+use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
@@ -36,12 +36,12 @@ class Generate extends Command
         $this->force = $this->option('force');
         $this->sync = Queue::connection() === 'sync';
 
-        if (! PlaceholderFieldtype::enabled()) {
+        if (! PlaceholderField::enabled()) {
             $this->error('The placeholder feature is globally disabled from your config.');
             return;
         }
 
-        $this->containers = PlaceholderFieldtype::containers();
+        $this->containers = PlaceholderField::containers();
         if ($this->containers->isEmpty()) {
             $this->error('No containers are configured to generate placeholders.');
             $this->newLine();
@@ -61,7 +61,7 @@ class Generate extends Command
 
         $assets = $this->containers->flatMap(
             fn($container) => Asset::whereContainer($container->handle())->filter(
-                fn($asset) => PlaceholderFieldtype::enabledForAsset($asset)
+                fn($asset) => PlaceholderField::enabledForAsset($asset)
             )
         );
 
