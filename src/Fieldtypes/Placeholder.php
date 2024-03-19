@@ -40,6 +40,7 @@ class Placeholder extends Fieldtype
                 'display' => __('statamic-placeholders::fieldtypes.placeholder.config.preview_placeholder.display'),
                 'instructions' => __('statamic-placeholders::fieldtypes.placeholder.config.preview_placeholder.instructions'),
                 'type' => 'toggle',
+                'default' => true,
             ],
         ];
     }
