@@ -183,7 +183,7 @@ class PlaceholderService
     }
 
     /**
-     * Generate placeholder hash for given url point to a file.
+     * Generate placeholder hash for given url pointing to an image file.
      */
     protected function generateHashForUrl(string $url, ?string $provider = null): ?string
     {
