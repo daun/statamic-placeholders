@@ -55,8 +55,8 @@ fields:
 +     display: Placeholder
 ```
 
-The field will display a small placeholder preview in the asset edit form. Clicking the placeholder
-will reveal details about it like type, size and hash.
+The field will display a small placeholder preview in the asset edit form. Clicking it reveals
+details about it like type, size and hash.
 
 ![Placeholder fieldtype in edit form](art/fieldtype-embedded-contracted.png)
 
