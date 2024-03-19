@@ -55,6 +55,6 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->publishes([
             __DIR__.'/../config/placeholders.php' => config_path('placeholders.php'),
-        ], 'statamic-placeholders-config');
+        ], 'statamic-placeholders');
     }
 }
