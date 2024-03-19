@@ -6,11 +6,7 @@ return [
         'config' => [
             'placeholder_type' => [
                 'display' => 'Placeholder type',
-                'instructions' => 'The type of placeholder to generate. You can set the default type in `config/statamic/placeholders.php`.',
-            ],
-            'generate_on_upload' => [
-                'display' => 'Generate on upload',
-                'instructions' => 'Generate the placeholder image directly when uploading an asset. If disabled, placeholders will only be generated when requested.',
+                'instructions' => 'The type of placeholder to generate. You can set the default type in `config/placeholders.php`.',
             ],
             'preview_placeholder' => [
                 'display' => 'Show preview',
@@ -20,7 +16,8 @@ return [
         'field' => [
             'generated' => 'Placeholder generated',
             'not_generated' => 'No placeholder',
-            'not_yet_generated' => 'Will be generated on request',
+            'not_yet_generated' => 'Not yet generated',
+            'generated_on_request' => 'Will be generated on request',
             'no_asset' => 'not an asset',
             'not_supported' => 'unsupported filetype',
             'generate_on_save' => 'Generate on save',

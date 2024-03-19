@@ -39,11 +39,11 @@ return [
     | than the default. If you manually generate placeholders for URLs, this
     |  default provider will also be used unless specified otherwise.
     |
-    | Available options: Thumbhash, Blurhash, AverageColor
+    | Available options: 'thumbhash', 'blurhash', 'average'
     |
     */
 
-    'default_provider' => Daun\StatamicPlaceholders\Providers\Thumbhash::class,
+    'default_provider' => 'thumbhash',
 
     /*
     |--------------------------------------------------------------------------

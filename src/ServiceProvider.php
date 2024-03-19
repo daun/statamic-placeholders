@@ -51,10 +51,10 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerAddonConfig()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/placeholders.php', 'mux');
+        $this->mergeConfigFrom(__DIR__.'/../config/placeholders.php', 'placeholders');
 
         $this->publishes([
-            __DIR__.'/../config/placeholders.php' => config_path('statamic/placeholders.php'),
+            __DIR__.'/../config/placeholders.php' => config_path('placeholders.php'),
         ], 'statamic-placeholders-config');
     }
 }

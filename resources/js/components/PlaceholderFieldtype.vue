@@ -16,7 +16,12 @@
             <div class="help-block flex items-center mb-3">
                 <svg-icon name="close" class="h-4" />
                 <span class="ml-2">
-                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_yet_generated') }}
+                    <template v-if="generateOnUpload">
+                        {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_yet_generated') }}
+                    </template>
+                    <template v-else>
+                        {{ __('statamic-placeholders::fieldtypes.placeholder.field.generated_on_request') }}
+                    </template>
                 </span>
             </div>
             <!-- <div v-if="allowGenerate" class="flex items-center">
@@ -81,7 +86,13 @@ export default {
     },
     computed: {
         allowGenerate() {
-            return this.config?.generate_on_upload;
+            return this.config?.allow_generate;
+        },
+        allowRegenerate() {
+            return this.config?.allow_regenerate ?? this.config?.allow_generate;
+        },
+        generateOnUpload() {
+            return this.meta?.generate_on_upload;
         },
         showPreview() {
             return this.config?.preview_placeholder;

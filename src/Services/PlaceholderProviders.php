@@ -20,16 +20,16 @@ class PlaceholderProviders
 
     protected array $userProviders;
 
-    protected Collection $providers;
-
     protected string $defaultProvider;
+
+    protected Collection $providers;
 
     public function __construct(
         protected Application $app,
         protected Repository $config
     ) {
-        $this->defaultProvider = $this->getDefaultProvider();
         $this->userProviders = $this->getUserProviders();
+        $this->defaultProvider = $this->getDefaultProvider();
         $this->providers = $this->makeProviders();
     }
 
@@ -58,14 +58,16 @@ class PlaceholderProviders
 
     public function default(): PlaceholderProvider
     {
-        return $this->providers->get($this->defaultProvider::$handle) ?? $this->providers->first();
+        if ($provider = $this->find($this->defaultProvider)) {
+            return $provider;
+        } else {
+            throw new \Exception("Placeholder provider not found: {$this->defaultProvider}");
+        }
     }
 
     protected function getDefaultProvider(): string
     {
-        $provider = $this->config->get('placeholders.default_provider', Providers\Thumbhash::class);
-
-        return $this->isValidProvider($provider) ? $provider : null;
+        return $this->config->get('placeholders.default_provider', 'thumbhash');
     }
 
     protected function getUserProviders(): array
@@ -76,7 +78,7 @@ class PlaceholderProviders
     protected function makeProviders(): Collection
     {
         return collect($this->coreProviders)
-            ->concat($this->userProviders)
+            ->concat($this->getUserProviders())
             ->filter(fn ($provider) => $this->isValidProvider($provider))
             ->mapWithKeys(fn ($provider) => [$provider::$handle => $this->app->make($provider)]);
     }
