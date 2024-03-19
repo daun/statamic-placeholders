@@ -24,8 +24,9 @@ class GeneratePlaceholder implements ShouldQueue
 
     protected function shouldHandle(mixed $asset)
     {
-        return PlaceholderField::generatesOnUpload()
-            && PlaceholderField::shouldGenerate($asset)
+        return PlaceholderField::enabled()
+            && PlaceholderField::enabledForAsset($asset)
+            && PlaceholderField::generatesOnUpload()
             && ! $this->service->exists($asset);
     }
 }

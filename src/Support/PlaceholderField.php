@@ -47,11 +47,6 @@ class PlaceholderField
         return (bool) config('placeholders.generate_on_upload', true);
     }
 
-    public static function shouldGenerate(Asset $asset): bool
-    {
-        return static::enabled() && static::enabledForAsset($asset);
-    }
-
     public static function hasField(Asset|AssetContainer $asset): bool
     {
         return (bool) static::getField($asset);
