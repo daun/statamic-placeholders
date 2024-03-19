@@ -25,8 +25,8 @@ loading. See below for markup examples.
 
 The addon supports generating various types of image placeholders. The recommended type is `ThumbHash` which encodes most detail and supports transparent images.
 
-- [**ThumbHash**](https://evanw.github.io/thumbhash/) is a newer image placeholder algorithm with improved color rendering and support for transparency
-- [**BlurHash**](https://blurha.sh/) is the original placeholder algorithm developed at Wolt, which has no support for alpha channels and will render transparency in black
+- [**ThumbHash**](https://evanw.github.io/thumbhash/) is a newer algorithm with improved color rendering and support for transparency
+- [**BlurHash**](https://blurha.sh/) is the original algorithm developed at Wolt, which has no support for alpha channels and will render transparency in black
 - **Average Color** calculates the average color of the image
 
 ## Installation
@@ -63,14 +63,18 @@ fields:
 
 ## Choose a Placeholder Type
 
+### Default Placeholder Type
+
 By default, the addon will generate ThumbHash placeholders for all placeholder fields. Change the
 placeholder provider in `config/placeholders.php`, e.g. if you prefer BlurHash placeholders:
 
 ```php
 return [
-    'default_provider' => Daun\StatamicPlaceholders\Providers\Blurhash::class
+    'default_provider' => 'blurhash'
 ];
 ```
+
+### Field Placeholder Type
 
 To override the placeholder type for a specific field while keeping the default for other fields,
 you can set it on the field config:
@@ -79,44 +83,58 @@ you can set it on the field config:
 # resources/blueprints/assets/assets.yaml
 
 fields:
-+ -
-+   handle: placeholder
-+   field:
-+     type: placeholder
-+     display: Placeholder
-
-```
-
-### Configure Generation on Upload
-
-If you'd rather not pre-generate placeholders on upload but only generate them when
-displaying them in the frontend, you can configure that behavior in `config/placeholders.php`:
-
-```php
-return [
-    'generate_on_upload' => false
-];
+  -
+    handle: placeholder
+    field:
+      type: placeholder
+      display: Placeholder
++     placeholder_type: blurhash
 ```
 
 ## Display Placeholders in Your Frontend
 
 In your frontend templates, you can access the placeholder from the name of the new placeholder
 field. Assuming you've called it `placeholder` like in the example above, this is how you would
-render the placeholder:
+render the placeholder.
+
+### Markup
 
 ```antlers
 {{ asset url="/assets/image.jpg" }}
   <figure>
-    <img src="{{ placeholder }}" aria-hidden="true">
-    <img src="{{ uri }}" alt="{{ alt }}">
+    <img src="{{ placeholder }}" aria-hidden="true" alt="">
+    <img src="{{ url }}" loading="lazy" width="{{ width }}" height="{{ height }}" alt="{{ alt }}">
   </figure>
 {{ /asset }}
 ```
 
-### Antlers Tags
+### Styling
 
-The addon also ships with a set of Antlers tags that allow rendering placeholders if you don't
-already have.
+```css
+figure,
+figure img {
+  position: relative;
+}
+figure img[aria-hidden='true'] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+```
+
+## Configure Generation on Upload
+
+Placeholders are generated on upload so they're ready to go when displaying a page. If you'd rather
+generate them just-in-time, you can configure that behavior in `config/placeholders.php`:
+
+```php
+return [
+    'generate_on_upload' => false
+];
+```
 
 ## Generate Placeholders for Existing Assets
 

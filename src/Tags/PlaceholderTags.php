@@ -136,6 +136,6 @@ class PlaceholderTags extends Tags
                 collect($this->params->all())->except([...$this->assetParams, 'provider', 'type'])
             )->whereNotNull()->all();
 
-        return vsprintf('<img src="%s" %s />', [$uri, $this->renderAttributes($attributes)]);
+        return vsprintf('<img src="%s" alt="" %s />', [$uri, $this->renderAttributes($attributes)]);
     }
 }
