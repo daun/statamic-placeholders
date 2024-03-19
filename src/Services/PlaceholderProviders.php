@@ -24,10 +24,8 @@ class PlaceholderProviders
 
     protected Collection $providers;
 
-    public function __construct(
-        protected Application $app,
-        protected Repository $config
-    ) {
+    public function __construct(protected Application $app, protected Repository $config)
+    {
         $this->userProviders = $this->getUserProviders();
         $this->defaultProvider = $this->getDefaultProvider();
         $this->providers = $this->makeProviders();
