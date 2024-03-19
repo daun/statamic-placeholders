@@ -2,47 +2,23 @@
 
 namespace Daun\StatamicPlaceholders\Data;
 
+use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
-use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
-use Daun\StatamicPlaceholders\Support\PlaceholderField;
-use Illuminate\Support\Number;
+use Illuminate\Support\Str;
 use Statamic\Contracts\Assets\Asset;
-use Statamic\Fields\Fieldtype;
 
-class Placeholder
+abstract class Placeholder
 {
     protected ?string $provider;
 
-    public function __construct(
-        protected string $hash,
-        protected string $blob
-    ) {
-
-    }
-
-    public static function make(Asset|string|null $asset): self
+    public static function make(Asset|string|null $input): self
     {
         return match(true) {
-            $asset instanceof Asset => static::fromAsset($asset),
-            is_string($asset) => static::fromUrl($asset),
-            default => static::fromBlob($asset),
+            $input instanceof Asset => new AssetPlaceholder($input),
+            Str::isUrl($input, ['http', 'https']) => new UrlPlaceholder($input),
+            is_string($input) && strlen($input) => new Placeholder($input),
+            default => new EmptyPlaceholder()
         };
-    }
-
-    public static function fromBlob(string $blob): self
-    {
-        return new self($blob);
-    }
-
-    public static function fromAsset(Asset $asset): self
-    {
-        return new self($asset->contents());
-    }
-
-    public static function fromUrl(string $url): self
-    {
-        $blob = @file_get_contents($url);
-        return new self($blob);
     }
 
     public function usingProvider(?string $provider = null): self
@@ -52,8 +28,29 @@ class Placeholder
         return $this;
     }
 
+    public function provider(): PlaceholderProvider
+    {
+        return Placeholders::providers()->findOrFail($this->provider);
+    }
+
+    abstract public function contents(): ?string;
+
     public function hash(): ?string
     {
-        return Placeholders::hash($this->blob, $this->provider);
+        if ($contents = $this->contents()) {
+            return $this->provider()->encode($contents);
+        } else {
+            return null;
+        }
+    }
+
+    public function uri(): string
+    {
+        return $this->provider()->decode($this->hash()) ?? static::fallback();
+    }
+
+    public static function fallback(): string
+    {
+        return (string) config('placeholders.fallback_uri', '');
     }
 }
