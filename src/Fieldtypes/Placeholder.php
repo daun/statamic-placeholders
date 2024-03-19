@@ -8,9 +8,9 @@ use Illuminate\Support\Number;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Fields\Fieldtype;
 
-class PlaceholderImage extends Fieldtype
+class Placeholder extends Fieldtype
 {
-    protected static $handle = 'placeholder_image';
+    protected static $handle = 'placeholder';
 
     protected static $title = 'Placeholder Image';
 
@@ -29,20 +29,20 @@ class PlaceholderImage extends Fieldtype
 
         return [
             'placeholder_type' => [
-                'display' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.placeholder_type.display'),
-                'instructions' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.placeholder_type.instructions'),
+                'display' => __('statamic-placeholders::fieldtypes.placeholder.config.placeholder_type.display'),
+                'instructions' => __('statamic-placeholders::fieldtypes.placeholder.config.placeholder_type.instructions'),
                 'type' => 'select',
                 'placeholder' => "Use site default ({$default::$name})",
                 'options' => $providers->prepend("Use site default ({$default::$name})", '')->all(),
             ],
             'generate_on_upload' => [
-                'display' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.generate_on_upload.display'),
-                'instructions' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.generate_on_upload.instructions'),
+                'display' => __('statamic-placeholders::fieldtypes.placeholder.config.generate_on_upload.display'),
+                'instructions' => __('statamic-placeholders::fieldtypes.placeholder.config.generate_on_upload.instructions'),
                 'type' => 'toggle',
             ],
             'preview_placeholder' => [
-                'display' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.preview_placeholder.display'),
-                'instructions' => __('statamic-placeholder-images::fieldtypes.placeholder_image.config.preview_placeholder.instructions'),
+                'display' => __('statamic-placeholders::fieldtypes.placeholder.config.preview_placeholder.display'),
+                'instructions' => __('statamic-placeholders::fieldtypes.placeholder.config.preview_placeholder.instructions'),
                 'type' => 'toggle',
             ],
         ];

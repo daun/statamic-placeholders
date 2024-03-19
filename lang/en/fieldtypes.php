@@ -2,7 +2,7 @@
 
 return [
 
-    'placeholder_image' => [
+    'placeholder' => [
         'config' => [
             'placeholder_type' => [
                 'display' => 'Placeholder type',

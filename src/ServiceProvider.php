@@ -22,7 +22,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $fieldtypes = [
-        Fieldtypes\PlaceholderImage::class,
+        Fieldtypes\Placeholder::class,
     ];
 
     protected $tags = [
@@ -55,6 +55,6 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->publishes([
             __DIR__.'/../config/placeholders.php' => config_path('statamic/placeholders.php'),
-        ], 'statamic-placeholder-images-config');
+        ], 'statamic-placeholders-config');
     }
 }

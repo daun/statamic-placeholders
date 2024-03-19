@@ -9,7 +9,7 @@ use Statamic\Assets\AssetContainer;
 use Statamic\Facades\AssetContainer as AssetContainerFacade;
 use Statamic\Fields\Field;
 
-class PlaceholderImageFieldtype
+class PlaceholderFieldtype
 {
     public static function containers(): Collection
     {

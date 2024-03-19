@@ -60,8 +60,8 @@ abstract class TestCase extends OrchestraTestCase
     protected function registerStatamicAddon($app)
     {
         $app->make(Manifest::class)->manifest = [
-            'daun/statamic-placeholder-images' => [
-                'id' => 'daun/statamic-placeholder-images',
+            'daun/statamic-placeholders' => [
+                'id' => 'daun/statamic-placeholders',
                 'namespace' => 'Daun\\StatamicPlaceholders',
             ],
         ];

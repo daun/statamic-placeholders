@@ -1,5 +1,5 @@
 {
-    "name": "daun/statamic-placeholder-images",
+    "name": "daun/statamic-placeholders",
     "description": "Generate low-quality image placeholders for lazyloading Statamic assets",
     "keywords": [ "statamic", "image", "placeholder", "lqip", "blurhash", "thumbhash", "lazyloading" ],
     "type": "statamic-addon",

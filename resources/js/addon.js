@@ -1,3 +1,3 @@
-import PlaceholderImageFieldtype from './components/PlaceholderImageFieldtype.vue'
+import PlaceholderFieldtype from './components/PlaceholderFieldtype.vue'
 
-Statamic.$components.register('placeholder_image-fieldtype', PlaceholderImageFieldtype)
+Statamic.$components.register('placeholder-fieldtype', PlaceholderFieldtype)

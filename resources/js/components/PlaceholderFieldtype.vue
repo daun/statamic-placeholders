@@ -3,12 +3,12 @@
         <div v-if="!isAsset || !isSupported" class="help-block flex items-center mb-3">
             <svg-icon name="hidden" class="h-4" />
             <span class="ml-2">
-                {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.not_generated') }}:
+                {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_generated') }}:
                 <template v-if="!isSupported">
-                    {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.not_supported') }}
+                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_supported') }}
                 </template>
                 <template v-else>
-                    {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.no_asset') }}
+                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.no_asset') }}
                 </template>
             </span>
         </div>
@@ -16,13 +16,13 @@
             <div class="help-block flex items-center mb-3">
                 <svg-icon name="close" class="h-4" />
                 <span class="ml-2">
-                    {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.not_yet_generated') }}
+                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_yet_generated') }}
                 </span>
             </div>
             <!-- <div v-if="allowGenerate" class="flex items-center">
                 <label for="upload-asset" class="flex items-center cursor-pointer">
                     <input type="checkbox" name="remember" id="generate-placeholder" v-model="value.generate">
-                    <span class="ml-2">{{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.generate_on_save') }}</span>
+                    <span class="ml-2">{{ __('statamic-placeholders::fieldtypes.placeholder.field.generate_on_save') }}</span>
                 </label>
             </div> -->
         </div>
@@ -30,7 +30,7 @@
             <div v-if="!showPreview" class="help-block flex items-center">
                 <svg-icon name="synchronize" class="h-4" />
                 <span :title="this.value.id" class="ml-2">
-                    {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.generated') }}
+                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.generated') }}
                 </span>
             </div>
             <div v-if="showPreview" class="mt-3">
@@ -38,10 +38,10 @@
                     <img @click="showingPreview = !showingPreview" :src="uri" class="btn btn-flat btn-sm p-0 overflow-hidden w-auto" :class="{ 'opacity-25': showingPreview }" />
                     <button @click="showingPreview = !showingPreview" type="button" class="btn btn-flat btn-sm">
                         <template v-if="showingPreview">
-                            {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.hide_preview') }}
+                            {{ __('statamic-placeholders::fieldtypes.placeholder.field.hide_preview') }}
                         </template>
                         <template v-else>
-                            {{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.show_preview') }}
+                            {{ __('statamic-placeholders::fieldtypes.placeholder.field.show_preview') }}
                         </template>
                     </button>
                 </div>
@@ -64,7 +64,7 @@
             <!-- <div v-if="allowRegenerate" class="flex items-center mt-3">
                 <label for="upload-asset" class="help-block flex items-center cursor-pointer font-normal">
                     <input type="checkbox" name="remember" id="upload-asset" v-model="value.upload">
-                    <span class="ml-2">{{ __('statamic-placeholder-images::fieldtypes.placeholder_image.field.reupload_on_save') }}</span>
+                    <span class="ml-2">{{ __('statamic-placeholders::fieldtypes.placeholder.field.reupload_on_save') }}</span>
                 </label>
             </div> -->
         </div>

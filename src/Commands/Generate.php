@@ -4,7 +4,7 @@ namespace Daun\StatamicPlaceholders\Commands;
 
 use Daun\StatamicPlaceholders\Commands\Concerns\HasOutputStyles;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
-use Daun\StatamicPlaceholders\Support\PlaceholderImageFieldtype;
+use Daun\StatamicPlaceholders\Support\PlaceholderFieldtype;
 use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
@@ -36,16 +36,16 @@ class Generate extends Command
         $this->force = $this->option('force');
         $this->sync = Queue::connection() === 'sync';
 
-        if (! PlaceholderImageFieldtype::enabled()) {
+        if (! PlaceholderFieldtype::enabled()) {
             $this->error('The placeholder feature is globally disabled from your config.');
             return;
         }
 
-        $this->containers = PlaceholderImageFieldtype::containers();
+        $this->containers = PlaceholderFieldtype::containers();
         if ($this->containers->isEmpty()) {
             $this->error('No containers are configured to generate placeholders.');
             $this->newLine();
-            $this->line('Please add a `placeholder_image` field to at least one of your asset blueprints.');
+            $this->line('Please add a `placeholder` field to at least one of your asset blueprints.');
             return;
         }
 
@@ -61,7 +61,7 @@ class Generate extends Command
 
         $assets = $this->containers->flatMap(
             fn($container) => Asset::whereContainer($container->handle())->filter(
-                fn($asset) => PlaceholderImageFieldtype::enabledForAsset($asset)
+                fn($asset) => PlaceholderFieldtype::enabledForAsset($asset)
             )
         );
 

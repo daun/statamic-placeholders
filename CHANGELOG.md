@@ -4,4 +4,4 @@
 
 * Initial release
 
-[1.0.0]: https://github.com/daun/statamic-placeholder-images/releases/tag/1.0.0
+[1.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/1.0.0

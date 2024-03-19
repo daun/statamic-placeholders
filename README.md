@@ -39,7 +39,7 @@ Calculates the average color of the image.
 Run the following command from your project root:
 
 ```sh
-composer require daun/statamic-placeholder-images
+composer require daun/statamic-placeholders
 ```
 
 Alternatively, you can search for this addon in the `Tools > Addons` section of

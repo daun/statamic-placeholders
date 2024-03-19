@@ -7,14 +7,14 @@ return [
     | Generate Placeholder Images for Assets
     |--------------------------------------------------------------------------
     |
-    | You need to a `placeholder_image` field to an asset blueprint to generate
+    | You need to a `placeholder` field to an asset blueprint to generate
     | placeholders for any image uploaded to that container. You can use the
     | flag below to temporarily disable this feature without having to remove
     | the field from your blueprints.
     |
     */
 
-    'enabled' => env('PLACEHOLDER_IMAGES_ENABLED', true),
+    'enabled' => env('PLACEHOLDERS_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | Default Provider
     |--------------------------------------------------------------------------
     |
-    | The default placeholder type to use. Each `placeholder_image` field can
+    | The default placeholder type to use. Each `placeholder` field can
     | choose to either use this default provider or pick a different provider
     | than the default. If you manually generate placeholders for URLs, this
     |  default provider will also be used unless specified otherwise.

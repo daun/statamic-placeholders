@@ -3,7 +3,7 @@
 namespace Daun\StatamicPlaceholders\Services;
 
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
-use Daun\StatamicPlaceholders\Support\PlaceholderImageFieldtype;
+use Daun\StatamicPlaceholders\Support\PlaceholderFieldtype;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Cache;
@@ -132,7 +132,7 @@ class PlaceholderService
             return null;
         }
 
-        $provider ??= PlaceholderImageFieldtype::getPlaceholderProvider($asset);
+        $provider ??= PlaceholderFieldtype::getPlaceholderProvider($asset);
         $instance = $this->providers->findOrFail($provider);
 
         if ($hash = $this->loadHashFromAsset($asset, $instance::$handle)) {
@@ -170,7 +170,7 @@ class PlaceholderService
             return null;
         }
 
-        $provider ??= PlaceholderImageFieldtype::getPlaceholderProvider($asset);
+        $provider ??= PlaceholderFieldtype::getPlaceholderProvider($asset);
         $instance = $this->providers->findOrFail($provider);
 
         if ($hash = $this->generateHashForBlob($asset->contents(), $instance::$handle)) {
@@ -227,10 +227,10 @@ class PlaceholderService
      */
     protected function loadHashFromAsset(Asset $asset, ?string $provider = null): ?string
     {
-        $provider ??= PlaceholderImageFieldtype::getPlaceholderProvider($asset);
+        $provider ??= PlaceholderFieldtype::getPlaceholderProvider($asset);
         $instance = $this->providers->findOrFail($provider);
 
-        return PlaceholderImageFieldtype::getPlaceholderHash($asset, $instance::$handle);
+        return PlaceholderFieldtype::getPlaceholderHash($asset, $instance::$handle);
     }
 
     /**
@@ -239,7 +239,7 @@ class PlaceholderService
     protected function saveHashToAsset(Asset $asset, string $hash, ?string $provider = null): void
     {
         $instance = $this->providers->findOrFail($provider);
-        PlaceholderImageFieldtype::addPlaceholderHash($asset, $hash, $instance::$handle);
+        PlaceholderFieldtype::addPlaceholderHash($asset, $hash, $instance::$handle);
     }
 
     protected function fallback(): string
@@ -249,11 +249,11 @@ class PlaceholderService
 
     public function supports(Asset $asset): bool
     {
-        return PlaceholderImageFieldtype::enabledForAsset($asset);
+        return PlaceholderFieldtype::enabledForAsset($asset);
     }
 
     public function containers(): array
     {
-        return PlaceholderImageFieldtype::containers()->all();
+        return PlaceholderFieldtype::containers()->all();
     }
 }
