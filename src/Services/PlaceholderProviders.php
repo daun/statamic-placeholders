@@ -26,7 +26,7 @@ class PlaceholderProviders
 
     protected function providers(): Collection
     {
-        return ($this->providers ??= $this->makeProviders());
+        return $this->providers ??= $this->makeProviders();
     }
 
     public function all(): Collection
