@@ -7,6 +7,7 @@ use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Statamic\Assets\AssetContainer;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Asset as AssetFacade;
@@ -17,19 +18,17 @@ class Generate extends Command
     use HasOutputStyles;
     use RunsInPlease;
 
-    protected $signature = 'placeholders:generate
+    protected $signature = 'statamic:placeholders:generate
                         {--container= : Limit the command to a specific asset container}
                         {--force : Regenerate placeholders even if they already exist}';
 
     protected $description = 'Generate placeholder images';
 
-    protected $sync;
+    protected $container;
 
     protected $force;
 
-    protected $container;
-
-    protected $containers;
+    protected $sync;
 
     public function handle(PlaceholderService $service): void
     {
@@ -43,44 +42,23 @@ class Generate extends Command
             return;
         }
 
-        $this->containers = AssetContainerFacade::all()
-            ->filter(fn (AssetContainer $container) => PlaceholderField::existsInBlueprint($container))
-            ->keyBy->handle();
+        $containers = $this->getContainers();
 
-        if ($this->containers->isEmpty()) {
-            $this->error('No containers are configured to generate placeholders.');
-            $this->newLine();
-            $this->line('Please add a `placeholder` field to at least one of your asset blueprints.');
-
-            return;
-        }
-
-        if ($this->container) {
-            $container = AssetContainerFacade::find($this->container);
-            if ($container && PlaceholderField::existsInBlueprint($container)) {
-                $this->containers = collect($container);
-            } elseif ($container) {
-                $this->error("Asset container '{$this->container}' is not configured to generate placeholders.");
-
-                return;
-            } else {
-                $this->error("Asset container '{$this->container}' not found");
-
-                return;
-            }
-        }
-
-        $assets = $this->containers->flatMap(
+        $assets = $containers->flatMap(
             fn ($container) => AssetFacade::whereContainer($container->handle())->filter(
                 fn ($asset) => PlaceholderField::supportsAssetType($asset)
             )
         );
 
-        if ($assets->isEmpty()) {
-            $this->line("No images found in containers: <name>{$this->containers->implode(', ')}</name>");
-
-            return;
+        if ($assets->count()) {
+            $this->generatePlaceholdersForAssets($assets, $service);
+        } else {
+            $this->line("No images found in containers: <name>{$containers->implode(', ')}</name>");
         }
+    }
+
+    protected function generatePlaceholdersForAssets(Collection $assets, PlaceholderService $service): void
+    {
 
         $assetGroups = $assets->mapToGroups(function ($asset) use ($service) {
             $exists = $service->exists($asset);
@@ -131,5 +109,36 @@ class Generate extends Command
         } else {
             $this->info("<success>✓ Queued {$generated} images for placeholder generation, skipped {$skipped} images</success>");
         }
+    }
+
+    protected function getContainers(): Collection
+    {
+        // Container argument passed in? Get the specified container
+
+        if ($this->container) {
+            $container = AssetContainerFacade::find($this->container);
+            if ($container && PlaceholderField::existsInBlueprint($container)) {
+                return collect($container);
+            } elseif ($container) {
+                $this->error("Asset container '{$this->container}' is not configured to generate placeholders.");
+            } else {
+                $this->error("Asset container '{$this->container}' not found");
+            }
+            return collect();
+        }
+
+        // Otherwise: get all containers with a placeholder field
+
+        $containers = AssetContainerFacade::all()
+            ->filter(fn (AssetContainer $container) => PlaceholderField::existsInBlueprint($container))
+            ->keyBy->handle();
+
+        if ($containers->isEmpty()) {
+            $this->error('No containers are configured to generate placeholders.');
+            $this->newLine();
+            $this->line('Please add a `placeholder` field to at least one of your asset blueprints.');
+        }
+
+        return $containers;
     }
 }
