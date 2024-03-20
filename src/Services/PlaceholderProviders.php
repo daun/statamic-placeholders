@@ -18,27 +18,25 @@ class PlaceholderProviders
         // Providers\None::class,
     ];
 
-    protected array $userProviders;
-
-    protected string $defaultProvider;
-
-    protected Collection $providers;
+    protected ?Collection $providers;
 
     public function __construct(protected Application $app, protected Repository $config)
     {
-        $this->userProviders = $this->getUserProviders();
-        $this->defaultProvider = $this->getDefaultProvider();
-        $this->providers = $this->makeProviders();
+    }
+
+    protected function providers(): Collection
+    {
+        return ($this->providers ??= $this->makeProviders());
     }
 
     public function all(): Collection
     {
-        return $this->providers;
+        return $this->providers();
     }
 
     public function find(?string $needle): ?PlaceholderProvider
     {
-        return $this->providers->first(
+        return $this->providers()->first(
             fn ($provider) => in_array($needle, [$provider::class, $provider::$handle])
         );
     }
@@ -56,19 +54,19 @@ class PlaceholderProviders
 
     public function default(): PlaceholderProvider
     {
-        if ($provider = $this->find($this->defaultProvider)) {
+        if ($provider = $this->find($this->defaultProvider())) {
             return $provider;
         } else {
-            throw new \Exception("Placeholder provider not found: {$this->defaultProvider}");
+            throw new \Exception("Placeholder provider not found: {$this->defaultProvider()}");
         }
     }
 
-    protected function getDefaultProvider(): string
+    protected function defaultProvider(): string
     {
         return $this->config->get('placeholders.default_provider', 'thumbhash');
     }
 
-    protected function getUserProviders(): array
+    protected function userProviders(): array
     {
         return Arr::wrap($this->config->get('placeholders.providers', []));
     }
@@ -76,7 +74,7 @@ class PlaceholderProviders
     protected function makeProviders(): Collection
     {
         return collect($this->coreProviders)
-            ->concat($this->getUserProviders())
+            ->concat($this->userProviders())
             ->filter(fn ($provider) => $this->isValidProvider($provider))
             ->mapWithKeys(fn ($provider) => [$provider::$handle => $this->app->make($provider)]);
     }
