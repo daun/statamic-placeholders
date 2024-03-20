@@ -8,6 +8,7 @@ use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Statamic\Assets\Asset;
 use Statamic\Assets\AssetContainer;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Asset as AssetFacade;
@@ -20,7 +21,8 @@ class Generate extends Command
 
     protected $signature = 'statamic:placeholders:generate
                         {--container= : Limit the command to a specific asset container}
-                        {--force : Regenerate placeholders even if they already exist}';
+                        {--force : Regenerate placeholders even if they already exist}
+                        {--queue : Queue the placeholder generation}';
 
     protected $description = 'Generate placeholder images';
 
@@ -28,87 +30,76 @@ class Generate extends Command
 
     protected $force;
 
-    protected $sync;
+    protected $shouldQueue;
 
-    public function handle(PlaceholderService $service): void
+    public function handle(PlaceholderService $service)
     {
+        if (! PlaceholderService::enabled()) {
+            $this->components->error('The placeholder feature is disabled from <info>config/placeholders.php</info>.');
+            return 1;
+        }
+
         $this->container = $this->option('container');
         $this->force = $this->option('force');
-        $this->sync = Queue::connection() === 'sync';
+        $this->shouldQueue = $this->option('queue');
 
-        if (! PlaceholderService::enabled()) {
-            $this->error('The placeholder feature is globally disabled from your config.');
-
-            return;
+        if ($this->shouldQueue && Queue::connection() === 'sync') {
+            $this->components->error('The queue connection is set to "sync". Queueing will be disabled.');
+            $this->shouldQueue = false;
         }
 
         $containers = $this->getContainers();
+        if ($containers->count()) {
+            $containers->each(function ($container) use ($service) {
+                $this->generatePlaceholders($container, $service);
+                $this->newLine();
+            });
 
-        $assets = $containers->flatMap(
-            fn ($container) => AssetFacade::whereContainer($container->handle())->filter(
-                fn ($asset) => PlaceholderField::supportsAssetType($asset)
-            )
-        );
-
-        if ($assets->count()) {
-            $this->generatePlaceholdersForAssets($assets, $service);
-        } else {
-            $this->line("No images found in containers: <name>{$containers->implode(', ')}</name>");
+            $this->components->info(
+                $this->shouldQueue
+                    ? 'All placeholders have been queued for generation.'
+                    : 'All placeholders have been generated.'
+            );
         }
+
+        return 0;
     }
 
-    protected function generatePlaceholdersForAssets(Collection $assets, PlaceholderService $service): void
+    protected function generate(PlaceholderService $service): void
     {
-
-        $assetGroups = $assets->mapToGroups(function ($asset) use ($service) {
-            $exists = $service->exists($asset);
-            $action = ! $exists ? 'generate' : ($this->force ? 'regenerate' : 'skip');
-
-            return [$action => $asset];
-        });
-
-        $assetsToGenerate = $assetGroups->get('generate', collect());
-        $assetsToRegenerate = $assetGroups->get('regenerate', collect());
-        $assetsToSkip = $assetGroups->get('skip', collect());
-
-        $assetsToGenerate->each(function ($asset) use ($service) {
-            if ($this->sync) {
-                $service->generate($asset);
-                $this->line("Generated placeholder of <name>{$asset->id()}</name>");
-            } else {
-                $service->dispatch($asset);
-                $this->line("Queued placeholder generation of <name>{$asset->id()}</name>");
-            }
-        })->whenNotEmpty(function () {
+        $this->getContainers()->each(function ($container) use ($service) {
+            $this->generatePlaceholders($container, $service);
             $this->newLine();
         });
+    }
 
-        $assetsToRegenerate->each(function ($asset) use ($service) {
-            if ($this->sync) {
-                $service->generate($asset);
-                $this->line("Regenerated placeholder of <name>{$asset->id()}</name>");
-            } else {
-                $service->dispatch($asset);
-                $this->line("Queued placeholder regeneration of <name>{$asset->id()}</name>");
-            }
-        })->whenNotEmpty(function () {
-            $this->newLine();
-        });
+    protected function generatePlaceholders(AssetContainer $container, PlaceholderService $service): void
+    {
+        $assets = AssetFacade::whereContainer($container->handle())
+            ->filter(fn ($asset) => PlaceholderField::supportsAssetType($asset));
 
-        $assetsToSkip->each(function ($asset) {
-            $this->line("Skipped <name>{$asset->id()}</name>");
-        })->whenNotEmpty(function () {
-            $this->newLine();
-        });
-
-        $generated = $assetsToGenerate->count() + $assetsToRegenerate->count();
-        $skipped = $assetsToSkip->count();
-
-        if ($this->sync) {
-            $this->info("<success>✓ Generated {$generated} placeholders, skipped {$skipped} images</success>");
+        if (! $assets->count()) {
+            $this->components->info("No images found in container <info>{$container->title()}</info>");
+            return;
         } else {
-            $this->info("<success>✓ Queued {$generated} images for placeholder generation, skipped {$skipped} images</success>");
+            $this->components->info("Generating placeholders for container <info>{$container->title()}</info>");
         }
+
+        $assets->each(function (Asset $asset) use ($service) {
+            $exists = $service->exists($asset);
+            $name = "<bold>{$asset->path()}</bold>";
+            if ($exists && ! $this->force) {
+                $this->components->twoColumnDetail($name, '<exists>✓ Found</exists>');
+                return;
+            }
+            if ($this->shouldQueue) {
+                $service->dispatch($asset, $this->force);
+                $this->components->twoColumnDetail($name, '<success>✓ Queued</success>');
+            } else {
+                $service->generate($asset, $this->force);
+                $this->components->twoColumnDetail($name, '<success>✓ Generated</success>');
+            }
+        });
     }
 
     protected function getContainers(): Collection
@@ -120,9 +111,9 @@ class Generate extends Command
             if ($container && PlaceholderField::existsInBlueprint($container)) {
                 return collect($container);
             } elseif ($container) {
-                $this->error("Asset container '{$this->container}' is not configured to generate placeholders.");
+                $this->components->error("Asset container '{$this->container}' is not configured to generate placeholders.");
             } else {
-                $this->error("Asset container '{$this->container}' not found");
+                $this->components->error("Asset container '{$this->container}' not found");
             }
             return collect();
         }
@@ -131,10 +122,11 @@ class Generate extends Command
 
         $containers = AssetContainerFacade::all()
             ->filter(fn (AssetContainer $container) => PlaceholderField::existsInBlueprint($container))
+            ->sortBy('title')
             ->keyBy->handle();
 
         if ($containers->isEmpty()) {
-            $this->error('No containers are configured to generate placeholders.');
+            $this->components->error('No containers are configured to generate placeholders.');
             $this->newLine();
             $this->line('Please add a `placeholder` field to at least one of your asset blueprints.');
         }

@@ -17,6 +17,7 @@ trait HasOutputStyles
     {
         $this->output->getFormatter()->setStyle('bold', new OutputFormatterStyle(options: ['bold']));
         $this->output->getFormatter()->setStyle('success', new OutputFormatterStyle('green', options: ['bold']));
+        $this->output->getFormatter()->setStyle('exists', new OutputFormatterStyle('blue', options: ['bold']));
         $this->output->getFormatter()->setStyle('name', new OutputFormatterStyle('blue'));
     }
 }

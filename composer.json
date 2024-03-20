@@ -38,7 +38,7 @@
         "php": "^8.1",
         "srwiez/thumbhash": "^1.2",
         "kornrunner/blurhash": "^1.2",
-        "laravel/framework": "^9.0 || ^10.0",
+        "laravel/framework": "^9.21 || ^10.0",
         "statamic/cms": "^4.0"
     },
     "require-dev": {

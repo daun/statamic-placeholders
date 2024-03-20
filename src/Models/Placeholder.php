@@ -89,17 +89,7 @@ abstract class Placeholder
      */
     final public function hash(): ?string
     {
-        if ($hash = $this->load()) {
-            return $hash;
-        }
-
-        if ($this->generates() && ($hash = $this->encode())) {
-            $this->save($hash);
-
-            return $hash;
-        }
-
-        return null;
+        return $this->load() ?: $this->generate() ?: null;
     }
 
     /**
@@ -121,9 +111,17 @@ abstract class Placeholder
     /**
      * Generate and return the placeholder hash.
      */
-    final public function generate(): ?string
+    final public function generate(bool $force = false): ?string
     {
-        return $this->hash();
+        $shouldGenerate = $this->generates() && (! $this->exists() || $force);
+        if ($shouldGenerate) {
+            $hash = $this->encode();
+            $this->save($hash);
+
+            return $hash;
+        } else {
+            return $this->load();
+        }
     }
 
     /**

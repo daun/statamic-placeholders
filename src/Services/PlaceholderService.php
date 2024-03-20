@@ -78,16 +78,16 @@ class PlaceholderService
     /**
      * Generate a placeholder for the given asset or url. Returns the generated hash.
      */
-    public function generate(Asset $asset): ?string
+    public function generate(Asset $asset, bool $force = false): ?string
     {
-        return $this->make($asset)->generate();
+        return $this->make($asset)->generate($force);
     }
 
     /**
      * Dispatch an asynchronous job to generate a placeholder for the given asset.
      */
-    public function dispatch(Asset $asset): void
+    public function dispatch(Asset $asset, bool $force = false): void
     {
-        GeneratePlaceholderJob::dispatch($asset);
+        GeneratePlaceholderJob::dispatch($asset, $force);
     }
 }

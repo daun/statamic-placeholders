@@ -12,10 +12,11 @@ use Statamic\Assets\Asset;
 
 class GeneratePlaceholderJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable;
 
     public function __construct(
-        protected Asset $asset
+        protected Asset $asset,
+        protected bool $force = false
     ) {
         $this->connection = Queue::connection();
         $this->queue = Queue::queue();
@@ -23,6 +24,6 @@ class GeneratePlaceholderJob implements ShouldQueue
 
     public function handle(PlaceholderService $service): void
     {
-        $service->generate($this->asset);
+        $service->generate($this->asset, $this->force);
     }
 }
