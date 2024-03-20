@@ -16,10 +16,10 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $listen = [
         AssetUploaded::class => [
-            Listeners\GeneratePlaceholder::class
+            Listeners\GeneratePlaceholder::class,
         ],
         AssetReuploaded::class => [
-            Listeners\GeneratePlaceholder::class
+            Listeners\GeneratePlaceholder::class,
         ],
     ];
 

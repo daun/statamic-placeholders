@@ -2,8 +2,8 @@
 
 namespace Daun\StatamicPlaceholders\Tags\Concerns;
 
-use Statamic\Fields\Value;
 use Illuminate\Support\Str;
+use Statamic\Fields\Value;
 
 trait GetsUrlFromContext
 {
@@ -24,7 +24,7 @@ trait GetsUrlFromContext
 
         if (Str::isUrl($url, ['http', 'https'])) {
             return $url;
-        } else if ($url) {
+        } elseif ($url) {
             throw new \Exception("Invalid URL: {$url}");
         } else {
             return null;

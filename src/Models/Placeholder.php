@@ -5,6 +5,10 @@ namespace Daun\StatamicPlaceholders\Models;
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 
+/**
+ * Abstract placeholder class.
+ * Manages placeholder generation and storage.
+ */
 abstract class Placeholder
 {
     protected static array $types = [
@@ -131,7 +135,6 @@ abstract class Placeholder
     protected function save(string $hash): void
     {
         /* not implemented */
-
     }
 
     /**

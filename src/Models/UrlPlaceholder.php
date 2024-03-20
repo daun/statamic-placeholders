@@ -5,6 +5,10 @@ namespace Daun\StatamicPlaceholders\Models;
 use Daun\StatamicPlaceholders\Models\Concerns\WritesToCache;
 use Illuminate\Support\Str;
 
+/**
+ * A placeholder for a URL pointing to an image.
+ * Reads and writes the placeholder hash to the cache, keyed by the url.
+ */
 class UrlPlaceholder extends Placeholder
 {
     use WritesToCache;

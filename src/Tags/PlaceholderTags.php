@@ -135,7 +135,7 @@ class PlaceholderTags extends Tags
             collect($this->params->all())->except([
                 ...$this->assetParams,
                 ...$this->urlParams,
-                'type'
+                'type',
             ])
         )->whereNotNull()->all();
 
