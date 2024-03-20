@@ -1,3 +1,11 @@
+.antlers.json
+.DS_Store
+.idea
+.env
+.phpunit.result.cache
+# composer.lock
+coverage
 node_modules
+tests/fixtures/content/*.yaml
+tests/fixtures/users/*.yaml
 vendor
-mix-manifest.json
