@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 
 beforeEach(function () {
     $this->providers = $this->app->make(PlaceholderProviders::class);
-    $this->defaultProvider = Thumbhash::class;;
+    $this->defaultProvider = Thumbhash::class;
     $this->coreProviders = collect([
         Providers\Thumbhash::class,
         Providers\Blurhash::class,
@@ -42,8 +42,8 @@ test('returns null for nonexisting providers', function () {
 });
 
 test('can fail for nonexisting providers', function () {
-    expect(fn() => $this->providers->findOrFail('blurhash'))->not->toThrow(\Exception::class);
-    expect(fn() => $this->providers->findOrFail('doesntexist'))->toThrow(\Exception::class);
+    expect(fn () => $this->providers->findOrFail('blurhash'))->not->toThrow(\Exception::class);
+    expect(fn () => $this->providers->findOrFail('doesntexist'))->toThrow(\Exception::class);
 });
 
 test('falls back to default provider', function () {
@@ -64,17 +64,18 @@ test('reads user providers', function () {
 
 test('fails for missing user providers', function () {
     config(['placeholders.providers' => ['\Missing\Provider\Class']]);
-    expect(fn() => $this->providers->all())->toThrow(\Exception::class);
+    expect(fn () => $this->providers->all())->toThrow(\Exception::class);
 });
 
 test('fails for invalid user providers', function () {
     config(['placeholders.providers' => [InvalidProvider::class]]);
-    expect(fn() => $this->providers->all())->toThrow(\Exception::class);
+    expect(fn () => $this->providers->all())->toThrow(\Exception::class);
 });
 
 class TestProvider extends PlaceholderProvider
 {
     public static string $handle = 'test';
+
     public static string $name = 'Test';
 
     public function encode(string $contents): ?string
@@ -91,5 +92,6 @@ class TestProvider extends PlaceholderProvider
 class InvalidProvider
 {
     public static string $handle = 'invalid';
+
     public static string $name = 'Invalid';
 }
