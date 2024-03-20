@@ -32,7 +32,8 @@ trait DealsWithAssets
 
     protected function tearDownAssetTest(): void
     {
-        File::deleteDirectory($this->getTempDirectory());
+        $this->initializeDirectory($this->getTempDirectory());
+        File::put($this->getTempDirectory('.gitkeep'), '');
         Stache::clear();
     }
 
