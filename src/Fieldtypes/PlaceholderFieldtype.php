@@ -5,7 +5,6 @@ namespace Daun\StatamicPlaceholders\Fieldtypes;
 use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
-use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Illuminate\Support\Number;
 use Statamic\Contracts\Assets\Asset;

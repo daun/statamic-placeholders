@@ -36,6 +36,7 @@ class Generate extends Command
     {
         if (! $service->enabled()) {
             $this->components->error('The placeholder feature is disabled from <info>config/placeholders.php</info>.');
+
             return 1;
         }
 
@@ -80,6 +81,7 @@ class Generate extends Command
 
         if (! $assets->count()) {
             $this->components->info("No images found in container <info>{$container->title()}</info>");
+
             return;
         } else {
             $this->components->info("Generating placeholders for container <info>{$container->title()}</info>");
@@ -90,6 +92,7 @@ class Generate extends Command
             $name = "<bold>{$asset->path()}</bold>";
             if ($exists && ! $this->force) {
                 $this->components->twoColumnDetail($name, '<exists>✓ Found</exists>');
+
                 return;
             }
             if ($this->shouldQueue) {
@@ -115,6 +118,7 @@ class Generate extends Command
             } else {
                 $this->components->error("Asset container '{$this->container}' not found");
             }
+
             return collect();
         }
 
