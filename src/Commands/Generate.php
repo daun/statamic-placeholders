@@ -7,9 +7,10 @@ use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Console\Command;
+use Statamic\Assets\AssetContainer;
 use Statamic\Console\RunsInPlease;
-use Statamic\Facades\Asset;
-use Statamic\Facades\AssetContainer;
+use Statamic\Facades\Asset as AssetFacade;
+use Statamic\Facades\AssetContainer as AssetContainerFacade;
 
 class Generate extends Command
 {
@@ -42,7 +43,10 @@ class Generate extends Command
             return;
         }
 
-        $this->containers = PlaceholderField::containers();
+        $this->containers = AssetContainerFacade::all()
+            ->filter(fn (AssetContainer $container) => PlaceholderField::existsInBlueprint($container))
+            ->keyBy->handle();
+
         if ($this->containers->isEmpty()) {
             $this->error('No containers are configured to generate placeholders.');
             $this->newLine();
@@ -52,9 +56,13 @@ class Generate extends Command
         }
 
         if ($this->container) {
-            $container = AssetContainer::find($this->container);
-            if ($container) {
+            $container = AssetContainerFacade::find($this->container);
+            if ($container && PlaceholderField::existsInBlueprint($container)) {
                 $this->containers = collect($container);
+            } elseif ($container) {
+                $this->error("Asset container '{$this->container}' is not configured to generate placeholders.");
+
+                return;
             } else {
                 $this->error("Asset container '{$this->container}' not found");
 
@@ -63,8 +71,8 @@ class Generate extends Command
         }
 
         $assets = $this->containers->flatMap(
-            fn ($container) => Asset::whereContainer($container->handle())->filter(
-                fn ($asset) => PlaceholderField::enabledForAsset($asset)
+            fn ($container) => AssetFacade::whereContainer($container->handle())->filter(
+                fn ($asset) => PlaceholderField::supportsAssetType($asset)
             )
         );
 

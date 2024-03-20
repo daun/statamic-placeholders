@@ -8,7 +8,7 @@ class PlaceholderData
 {
     public static function load(Asset $asset): array
     {
-        if ($field = PlaceholderField::getField($asset)) {
+        if ($field = PlaceholderField::getFromBlueprint($asset)) {
             return $asset->get($field->handle(), []);
         } else {
             return [];
@@ -17,7 +17,7 @@ class PlaceholderData
 
     public static function save(Asset $asset, ?array $data): void
     {
-        if ($field = PlaceholderField::getField($asset)) {
+        if ($field = PlaceholderField::getFromBlueprint($asset)) {
             $asset->set($field->handle(), $data);
             $asset->saveQuietly();
         }

@@ -65,7 +65,7 @@ class PlaceholderFieldtype extends Fieldtype
     {
         $asset = $this->asset();
         $enabled = PlaceholderService::enabled();
-        $supported = $asset && PlaceholderField::enabledForAsset($asset);
+        $supported = $asset && PlaceholderField::supportsAssetType($asset);
         $provider = Placeholders::providers()->find($this->provider()) ?? Placeholders::providers()->default();
         $exists = $supported && Placeholders::exists($asset, $provider::$handle);
         $hash = $exists ? Placeholders::hash($asset, $provider::$handle) : null;

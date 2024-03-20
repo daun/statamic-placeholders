@@ -19,7 +19,9 @@ class AssetPlaceholder extends Placeholder
 
     public static function accepts(mixed $input): bool
     {
-        return ($input instanceof Asset) && PlaceholderField::ensureEnabledForAsset($input);
+        return ($input instanceof Asset)
+            && PlaceholderField::supportsAssetType($input)
+            && PlaceholderField::assertExistsInBlueprint($input);
     }
 
     protected function load(): ?string
