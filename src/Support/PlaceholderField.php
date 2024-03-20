@@ -18,11 +18,6 @@ class PlaceholderField
         );
     }
 
-    public static function enabled(): bool
-    {
-        return (bool) config('placeholders.enabled', true);
-    }
-
     public static function enabledForAsset(Asset $asset): bool
     {
         return $asset->isImage() && ! $asset->isSvg() && static::hasField($asset);

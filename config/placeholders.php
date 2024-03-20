@@ -9,8 +9,8 @@ return [
     |
     | You need to a `placeholder` field to an asset blueprint to generate
     | placeholders for any image uploaded to that container. You can use the
-    | flag below to temporarily disable this feature without having to remove
-    | the field from your blueprints.
+    | flag below to disable generating placeholders without having to remove
+    | the field from your blueprints, e.g. temporarily for development.
     |
     */
 

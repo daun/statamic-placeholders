@@ -5,6 +5,7 @@ namespace Daun\StatamicPlaceholders\Fieldtypes;
 use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
+use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Illuminate\Support\Number;
 use Statamic\Contracts\Assets\Asset;
@@ -63,14 +64,16 @@ class PlaceholderFieldtype extends Fieldtype
     public function preload()
     {
         $asset = $this->asset();
+        $enabled = PlaceholderService::enabled();
         $supported = $asset && PlaceholderField::enabledForAsset($asset);
         $provider = Placeholders::providers()->find($this->provider()) ?? Placeholders::providers()->default();
-        $exists = $asset && Placeholders::exists($asset, $provider::$handle);
+        $exists = $supported && Placeholders::exists($asset, $provider::$handle);
         $hash = $exists ? Placeholders::hash($asset, $provider::$handle) : null;
         $uri = $exists ? Placeholders::uri($asset, $provider::$handle) : null;
         $size = $uri ? Number::fileSize(strlen(base64_decode($uri)), 1) : null;
 
         return [
+            'enabled' => $enabled,
             'is_asset' => (bool) $asset,
             'is_supported' => $supported,
             'generate_on_upload' => PlaceholderField::generatesOnUpload(),

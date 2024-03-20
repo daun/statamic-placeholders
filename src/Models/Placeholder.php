@@ -4,6 +4,7 @@ namespace Daun\StatamicPlaceholders\Models;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
+use Daun\StatamicPlaceholders\Services\PlaceholderService;
 
 /**
  * Abstract placeholder class.
@@ -39,7 +40,7 @@ abstract class Placeholder
     /**
      * Set the placeholder provider to use.
      */
-    public function usingProvider(?string $provider = null): self
+    final public function usingProvider(?string $provider = null): self
     {
         $this->provider = $provider;
 
@@ -49,7 +50,7 @@ abstract class Placeholder
     /**
      * Get the placeholder provider instance to use.
      */
-    public function provider(): PlaceholderProvider
+    final public function provider(): PlaceholderProvider
     {
         return Placeholders::providers()->findOrFail($this->provider);
     }
@@ -57,7 +58,7 @@ abstract class Placeholder
     /**
      * Get the placeholder type, i.e. the placeholder provider's handle.
      */
-    public function type(): string
+    final public function type(): string
     {
         return $this->provider()::$handle;
     }
@@ -68,9 +69,17 @@ abstract class Placeholder
     abstract public static function accepts(mixed $input): bool;
 
     /**
+     * Whether this placeholder should generate missing placeholders.
+     */
+    final public static function generates(): bool
+    {
+        return PlaceholderService::enabled();
+    }
+
+    /**
      * Get a data uri for this placeholder.
      */
-    public function uri(): string
+    final public function uri(): string
     {
         return $this->provider()->decode($this->hash()) ?? static::fallback();
     }
@@ -78,17 +87,19 @@ abstract class Placeholder
     /**
      * Get the placeholder hash. Generates and saves if not found.
      */
-    public function hash(): ?string
+    final public function hash(): ?string
     {
         if ($hash = $this->load()) {
             return $hash;
-        } elseif ($hash = $this->encode()) {
+        }
+
+        if ($this->generates() && ($hash = $this->encode())) {
             $this->save($hash);
 
             return $hash;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -110,7 +121,7 @@ abstract class Placeholder
     /**
      * Generate and return the placeholder hash.
      */
-    public function generate(): ?string
+    final public function generate(): ?string
     {
         return $this->hash();
     }
@@ -140,7 +151,7 @@ abstract class Placeholder
     /**
      * Convert the blob contents to a placeholder hash.
      */
-    protected function encode(): ?string
+    final protected function encode(): ?string
     {
         if ($contents = $this->contents()) {
             return $this->provider()->encode($contents);

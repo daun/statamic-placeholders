@@ -36,7 +36,7 @@ class Generate extends Command
         $this->force = $this->option('force');
         $this->sync = Queue::connection() === 'sync';
 
-        if (! PlaceholderField::enabled()) {
+        if (! PlaceholderService::enabled()) {
             $this->error('The placeholder feature is globally disabled from your config.');
 
             return;

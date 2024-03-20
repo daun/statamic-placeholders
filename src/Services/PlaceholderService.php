@@ -18,6 +18,14 @@ class PlaceholderService
     }
 
     /**
+     * Whether the placeholder feature is enabled.
+     */
+    public static function enabled(): bool
+    {
+        return (bool) config('placeholders.enabled', true);
+    }
+
+    /**
      * Get an instance of the service managing placeholder providers.
      */
     public function providers(): PlaceholderProviders
