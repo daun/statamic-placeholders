@@ -64,7 +64,7 @@ class PlaceholderFieldtype extends Fieldtype
     public function preload()
     {
         $asset = $this->asset();
-        $enabled = PlaceholderService::enabled();
+        $enabled = Placeholders::enabled();
         $supported = $asset && PlaceholderField::supportsAssetType($asset);
         $provider = Placeholders::providers()->find($this->provider()) ?? Placeholders::providers()->default();
         $exists = $supported && Placeholders::exists($asset, $provider::$handle);

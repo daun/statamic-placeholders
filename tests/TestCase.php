@@ -8,17 +8,37 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
 use Statamic\Statamic;
+use Tests\Concerns\DealsWithAssets;
+use Tests\Concerns\PreventSavingStacheItemsToDisk;
 use Tests\Concerns\ResolvesStatamicConfig;
+use Wilderborn\Partyline\ServiceProvider as PartyLineServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
     use InteractsWithViews;
     use ResolvesStatamicConfig;
+    use DealsWithAssets;
+    use PreventSavingStacheItemsToDisk;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setUpAssetTest();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->tearDownAssetTest();
+
+        parent::tearDown();
+    }
 
     protected function getPackageProviders($app)
     {
         return [
             AddonServiceProvider::class,
+            PartyLineServiceProvider::class,
             StatamicServiceProvider::class,
         ];
     }
@@ -47,7 +67,13 @@ abstract class TestCase extends OrchestraTestCase
         $app['config']->set('statamic.users.repository', 'file');
 
         // Assume pro edition for our tests
-        // $app['config']->set('statamic.editions.pro', true);
+        $app['config']->set('statamic.editions.pro', true);
+
+        // Set specific config for asset tests
+        $this->resolveApplicationConfigurationForAssetTest($app);
+
+        // Set specific stache stores for asset tests
+        $this->resolveStacheStoresForAssetTest($app);
     }
 
     protected function getEnvironmentSetUp($app): void

@@ -18,13 +18,13 @@ class GeneratePlaceholder implements ShouldQueue
     public function handle(AssetSaved|AssetUploaded|AssetReuploaded $event)
     {
         if ($this->shouldHandle($event->asset)) {
-            $this->service->dispatch($event->asset);
+            $this->service->generate($event->asset);
         }
     }
 
     protected function shouldHandle(mixed $asset)
     {
-        return PlaceholderService::enabled()
+        return $this->service->enabled()
             && PlaceholderField::supportsAssetType($asset)
             && PlaceholderField::existsInBlueprint($asset)
             && PlaceholderField::generatesOnUpload()

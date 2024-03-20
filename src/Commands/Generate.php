@@ -34,7 +34,7 @@ class Generate extends Command
 
     public function handle(PlaceholderService $service)
     {
-        if (! PlaceholderService::enabled()) {
+        if (! $service->enabled()) {
             $this->components->error('The placeholder feature is disabled from <info>config/placeholders.php</info>.');
             return 1;
         }

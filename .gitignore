@@ -5,6 +5,6 @@
 .phpunit.result.cache
 .vscode
 node_modules
-tests/fixtures/content/*.yaml
-tests/fixtures/users/*.yaml
+tests/__fixtures__/content/*.yaml
+tests/__fixtures__/users/*.yaml
 vendor

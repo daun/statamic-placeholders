@@ -4,7 +4,6 @@ namespace Daun\StatamicPlaceholders\Models;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
-use Daun\StatamicPlaceholders\Services\PlaceholderService;
 
 /**
  * Abstract placeholder class.
@@ -73,7 +72,7 @@ abstract class Placeholder
      */
     final public static function generates(): bool
     {
-        return PlaceholderService::enabled();
+        return Placeholders::enabled();
     }
 
     /**

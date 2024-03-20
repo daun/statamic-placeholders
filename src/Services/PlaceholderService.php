@@ -20,7 +20,7 @@ class PlaceholderService
     /**
      * Whether the placeholder feature is enabled.
      */
-    public static function enabled(): bool
+    public function enabled(): bool
     {
         return (bool) config('placeholders.enabled', true);
     }

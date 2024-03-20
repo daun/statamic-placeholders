@@ -43,7 +43,7 @@ expect()->extend('toBeOne', function () {
 
 function fixtures_path(...$paths): string
 {
-    return join_paths(__DIR__, 'fixtures', ...$paths);
+    return join_paths(__DIR__, '__fixtures__', ...$paths);
 }
 
 function statamic_package_path(...$paths): string
