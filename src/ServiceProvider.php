@@ -39,6 +39,14 @@ class ServiceProvider extends AddonServiceProvider
         'publicDirectory' => 'resources/dist',
     ];
 
+    public function provides(): array
+    {
+        return [
+            PlaceholderProviders::class,
+            PlaceholderService::class,
+        ];
+    }
+
     public function register()
     {
         $this->registerServices();

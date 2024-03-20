@@ -1,16 +1,12 @@
 <?php
 
-use Daun\StatamicLatte\ServiceProvider;
-use Illuminate\Support\Facades\View;
+use Daun\StatamicPlaceholders\Services\PlaceholderProviders;
+use Daun\StatamicPlaceholders\Services\PlaceholderService;
 
-test('adds addon view namespace', function () {
-    $namespaces = View::getFinder()->getHints();
-    expect($namespaces)->toHaveKey(ServiceProvider::$temporaryViewNamespace);
+test('binds provider service', function () {
+    expect($this->app[PlaceholderProviders::class])->toBeInstanceOf(PlaceholderProviders::class);
 });
 
-test('installs default extensions', function () {
-    /** @var \Latte\Engine $engine */
-    $engine = $this->app->get('latte.engine');
-    $extensions = collect($engine->getExtensions())->map(fn ($extension) => get_class($extension));
-    expect($extensions)->toContain(...ServiceProvider::$defaultExtensions);
+test('binds placeholder service', function () {
+    expect($this->app[PlaceholderService::class])->toBeInstanceOf(PlaceholderService::class);
 });
