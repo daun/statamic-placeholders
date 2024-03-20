@@ -15,10 +15,10 @@ use Wilderborn\Partyline\ServiceProvider as PartyLineServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    use InteractsWithViews;
-    use ResolvesStatamicConfig;
     use DealsWithAssets;
+    use InteractsWithViews;
     use PreventSavingStacheItemsToDisk;
+    use ResolvesStatamicConfig;
 
     protected function setUp(): void
     {

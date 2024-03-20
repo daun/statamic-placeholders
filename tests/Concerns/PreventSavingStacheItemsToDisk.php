@@ -31,6 +31,7 @@ trait PreventSavingStacheItemsToDisk
     protected function fakeStacheDirectory()
     {
         $this->fakeStacheDirectory ??= fixtures_path('dev-null');
+
         return $this->fakeStacheDirectory;
     }
 }

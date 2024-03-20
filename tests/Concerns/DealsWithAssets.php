@@ -46,7 +46,7 @@ trait DealsWithAssets
     {
         $app['config']->set('statamic.stache.stores.collections.directory', $this->getTempDirectory('content/collections'));
         $app['config']->set('statamic.stache.stores.entries.directory', $this->getTempDirectory('content/collections'));
-        $app['config']->set('statamic.stache.stores.asset-containers.directory', $this->getTempDirectory( 'content/assets'));
+        $app['config']->set('statamic.stache.stores.asset-containers.directory', $this->getTempDirectory('content/assets'));
 
         Statamic::booted(function () {
             Blueprint::setDirectory($this->getTempDirectory('resources/blueprints'));
@@ -90,7 +90,7 @@ trait DealsWithAssets
 
     public function getTestFilesDirectory(...$paths): string
     {
-        return  fixtures_path('tmp', 'testfiles', ...$paths);
+        return fixtures_path('tmp', 'testfiles', ...$paths);
     }
 
     public function getTestJpg(): string
@@ -126,14 +126,16 @@ trait DealsWithAssets
         $duplicateImagePath = $this->createFileDuplicate($testImagePath);
 
         $file = new UploadedFile($duplicateImagePath, $filename);
-        $path = ltrim('/' . $file->getClientOriginalName(), '/');
+        $path = ltrim('/'.$file->getClientOriginalName(), '/');
+
         return $this->assetContainer->makeAsset($path)->upload($file);
     }
 
     protected function createFileDuplicate(string $path): string
     {
-        $duplicate = preg_replace('/(\.[^.]+)$/', '-' . Carbon::now()->timestamp . '$1', $path);
+        $duplicate = preg_replace('/(\.[^.]+)$/', '-'.Carbon::now()->timestamp.'$1', $path);
         File::copy($path, $duplicate);
+
         return $duplicate;
     }
 
