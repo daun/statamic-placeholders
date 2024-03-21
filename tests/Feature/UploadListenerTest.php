@@ -29,7 +29,7 @@ test('does not generate placeholders by default', function () {
 });
 
 test('generates placeholders in enabled containers', function () {
-    $this->setPlaceholderEnabledAssetContainerBlueprint();
+    $this->addPlaceholderFieldToAssetBlueprint();
 
     $asset = $this->makeEmptyAsset('file.jpg');
 
@@ -42,7 +42,7 @@ test('generates placeholders in enabled containers', function () {
 });
 
 test('generates no placeholders for existing assets', function () {
-    $this->setPlaceholderEnabledAssetContainerBlueprint();
+    $this->addPlaceholderFieldToAssetBlueprint();
 
     $asset = $this->makeEmptyAsset('file.jpg');
 
@@ -55,7 +55,7 @@ test('generates no placeholders for existing assets', function () {
 });
 
 test('generates no placeholders for unsupported assets', function () {
-    $this->setPlaceholderEnabledAssetContainerBlueprint();
+    $this->addPlaceholderFieldToAssetBlueprint();
 
     $txt = $this->makeEmptyAsset('file.txt');
     $svg = $this->makeEmptyAsset('file.svg');

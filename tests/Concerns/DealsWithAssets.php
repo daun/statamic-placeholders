@@ -102,14 +102,15 @@ trait DealsWithAssets
         return [$content, $expected];
     }
 
-    public function uploadTestImageToTestContainer(?string $testImagePath = null, ?string $filename = 'test.jpg')
+    public function uploadTestImageToTestContainer(string $image, ?string $filename = null)
     {
-        $testImagePath ??= $this->getTestJpg();
+        $path = $this->getTestFilesDirectory($image);
+        $filename ??= basename($path);
 
         // Duplicate file because in Statamic 3.4 the source asset is deleted after upload
-        $duplicateImagePath = $this->createFileDuplicate($testImagePath);
+        $duplicate = $this->createFileDuplicate($path);
 
-        $file = new UploadedFile($duplicateImagePath, $filename);
+        $file = new UploadedFile($duplicate, $filename);
         $path = ltrim('/'.$file->getClientOriginalName(), '/');
 
         return $this->assetContainer->makeAsset($path)->upload($file);
@@ -134,9 +135,11 @@ trait DealsWithAssets
             ->setHandle($this->assetContainer->handle())
             ->setNamespace('assets')
             ->save();
+
+        Stache::clear();
     }
 
-    protected function setDefaultAssetContainerBlueprint()
+    protected function restoreDefaultAssetBlueprint()
     {
         $this->setAssetContainerBlueprint([
             'alt' => [
@@ -145,7 +148,7 @@ trait DealsWithAssets
         ]);
     }
 
-    protected function setPlaceholderEnabledAssetContainerBlueprint()
+    protected function addPlaceholderFieldToAssetBlueprint()
     {
         $this->setAssetContainerBlueprint([
             'alt' => [

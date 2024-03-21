@@ -9,7 +9,7 @@ use Statamic\Contracts\Data\Augmentable;
 use Statamic\Tags\Concerns\RendersAttributes;
 use Statamic\Tags\Tags;
 
-class PlaceholderTags extends Tags
+class PlaceholderTag extends Tags
 {
     use GetsAssetFromContext;
     use GetsUrlFromContext;
