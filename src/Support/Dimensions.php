@@ -6,6 +6,9 @@ class Dimensions
 {
     public static function contain(int $width, int $height, int $max): array
     {
+        $width = $width ?: $max;
+        $height = $height ?: $width ?: $max;
+
         $ratio = $width / $height;
         if ($width >= $height) {
             $width = $max;

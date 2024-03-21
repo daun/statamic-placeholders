@@ -2,11 +2,19 @@
 
 namespace Daun\StatamicPlaceholders\Contracts;
 
+use Daun\StatamicPlaceholders\Services\ImageManager;
+
 abstract class PlaceholderProvider
 {
     public static string $handle;
 
     public static string $name;
+
+    protected int $maxThumbSize = 100;
+
+    public function __construct(protected ImageManager $manager)
+    {
+    }
 
     /**
      * Generate a placeholder string from the contents of an image file.
@@ -23,4 +31,24 @@ abstract class PlaceholderProvider
      * @return ?string The generated data URI
      */
     abstract public function decode(string $placeholder, int $width = 0, int $height = 0): ?string;
+
+    /**
+     * Scale down the image to thumbnail size for faster processing.
+     *
+     * @param  string  $contents  The contents of the image file
+     * @return string The contents of the thumbnail
+     */
+    protected function thumb(string $contents): string
+    {
+        $thumb = $this->manager->make($contents)
+            ->resize($this->maxThumbSize, $this->maxThumbSize, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->encode();
+
+        $result = (string) $thumb;
+        $thumb->destroy();
+
+        return $result;
+    }
 }

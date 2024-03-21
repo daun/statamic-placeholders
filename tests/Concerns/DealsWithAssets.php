@@ -39,7 +39,7 @@ trait DealsWithAssets
 
     protected function resolveApplicationConfigurationForAssetTest($app)
     {
-        $app['config']->set('statamic.assets.image_manipulation.driver', 'imagick');
+        $app['config']->set('statamic.assets.image_manipulation.driver', 'gd');
         $app['config']->set('statamic.assets.image_manipulation.secure', false);
     }
 
@@ -94,29 +94,11 @@ trait DealsWithAssets
         return fixtures_path('tmp', 'testfiles', ...$paths);
     }
 
-    public function getTestJpg(): string
+    public function getTestFileData(string $filename): array
     {
-        return $this->getTestFilesDirectory('test.jpg');
-    }
-
-    public function getSmallTestJpg(): string
-    {
-        return $this->getTestFilesDirectory('test.small.jpg');
-    }
-
-    public function getTestSvg(): string
-    {
-        return $this->getTestFilesDirectory('test.svg');
-    }
-
-    public function getZeroWidthTestSvg(): string
-    {
-        return $this->getTestFilesDirectory('test.zerowidth.svg');
-    }
-
-    public function getTestGif(): string
-    {
-        return $this->getTestFilesDirectory('test.gif');
+        $content = file_get_contents(fixtures_path("testfiles/{$filename}"));
+        $expected = json_decode(file_get_contents(snapshots_path("placeholders/{$filename}.json")), true);
+        return [$content, $expected];
     }
 
     public function uploadTestImageToTestContainer(?string $testImagePath = null, ?string $filename = 'test.jpg')

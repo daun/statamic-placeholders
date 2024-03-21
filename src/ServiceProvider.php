@@ -2,6 +2,7 @@
 
 namespace Daun\StatamicPlaceholders;
 
+use Daun\StatamicPlaceholders\Services\ImageManager;
 use Daun\StatamicPlaceholders\Services\PlaceholderProviders;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Statamic\Events\AssetReuploaded;
@@ -39,14 +40,6 @@ class ServiceProvider extends AddonServiceProvider
         'publicDirectory' => 'resources/dist',
     ];
 
-    public function provides(): array
-    {
-        return [
-            PlaceholderProviders::class,
-            PlaceholderService::class,
-        ];
-    }
-
     public function register()
     {
         $this->registerServices();
@@ -56,7 +49,10 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerServices()
     {
         $this->app->singleton(PlaceholderProviders::class);
+
         $this->app->singleton(PlaceholderService::class);
+
+        $this->app->singleton(ImageManager::class);
     }
 
     protected function registerAddonConfig()
@@ -66,5 +62,14 @@ class ServiceProvider extends AddonServiceProvider
         $this->publishes([
             __DIR__.'/../config/placeholders.php' => config_path('placeholders.php'),
         ], 'statamic-placeholders');
+    }
+
+    public function provides(): array
+    {
+        return [
+            PlaceholderProviders::class,
+            PlaceholderService::class,
+            ImageManager::class,
+        ];
     }
 }

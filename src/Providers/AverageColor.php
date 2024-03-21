@@ -3,7 +3,6 @@
 namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
-use Daun\StatamicPlaceholders\Support\Imagick;
 
 class AverageColor extends PlaceholderProvider
 {
@@ -14,7 +13,8 @@ class AverageColor extends PlaceholderProvider
     public function encode(string $contents): ?string
     {
         try {
-            $rgba = $this->calculateAverage($contents);
+            $thumb = $this->thumb($contents);
+            $rgba = $this->calculateAverage($thumb);
 
             return $this->rgbaToHex($rgba);
         } catch (\Exception $e) {
@@ -33,66 +33,29 @@ class AverageColor extends PlaceholderProvider
             return null;
         }
 
-        [$r, $g, $b, $a] = $rgba;
-
-        return $this->rgbaToDataUri($r, $g, $b, $a);
+        return $this->rgbaToDataUri($rgba);
     }
 
     protected function calculateAverage(?string $contents): array
     {
-        if (! $contents) {
-            return [];
-        }
-
-        if (Imagick::installed()) {
-            $image = new \Imagick();
-            $image->readImageBlob($contents);
-            $image->resizeImage(1, 1, \Imagick::FILTER_LANCZOS, 1);
-            $pixel = $image->getImagePixelColor(0, 0);
-            $rgba = $pixel->getColor(2);
-            $image->destroy();
-
-            return array_slice(array_values($rgba), 0, 4);
+        if ($contents) {
+            $pixel = $this->manager->make($contents)->resize(1, 1);
+            $color = $pixel->pickColor(0, 0);
+            $pixel->destroy();
+            return $color;
         } else {
-            $image = @imagecreatefromstring($contents);
-            $image = imagescale($image, 1, 1);
-            $rgba = imagecolorsforindex($image, imagecolorat($image, 0, 0));
-            imagedestroy($image);
-
-            return array_slice(array_values($rgba), 0, 4);
+            return [];
         }
     }
 
-    protected function rgbaToDataUri(int $r, int $g, int $b, int $a): string
+    protected function rgbaToDataUri(array $rgba): string
     {
-        if (Imagick::installed()) {
-            $alpha = $a / 255;
-            $imagick = new \Imagick();
-            $imagick->newImage(1, 1, new \ImagickPixel("rgba($r, $g, $b, $alpha)"));
-            $imagick->setImageFormat('png');
-            $contents = $imagick->getImageBlob();
-            $imagick->clear();
-            $imagick->destroy();
-        } else {
-            $image = imagecreatetruecolor(1, 1);
-            imagefill($image, 0, 0, imagecolorallocate($image, $r, $g, $b));
-            ob_start();
-            imagepng($image);
-            $contents = ob_get_contents();
-            ob_end_clean();
-            imagedestroy($image);
-        }
-
-        $data = base64_encode($contents);
-
-        return "data:image/png;base64,{$data}";
+        return (string) $this->manager->canvas(1, 1, $rgba)->encode('data-url');
     }
 
     protected function rgbaToHex(array $rgba): string
     {
-        [$r, $g, $b, $a] = $rgba;
-
-        return sprintf('#%02X%02X%02X%02X', $r, $g, $b, $a);
+        return vsprintf('#%02X%02X%02X%02X', $rgba);
     }
 
     protected function hexToRgba(string $hex): array

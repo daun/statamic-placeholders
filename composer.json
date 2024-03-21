@@ -36,18 +36,19 @@
     },
     "require": {
         "php": "^8.1",
-        "srwiez/thumbhash": "^1.2",
+        "intervention/image": "^2.7",
         "kornrunner/blurhash": "^1.2",
         "laravel/framework": "^9.21 || ^10.0",
+        "srwiez/thumbhash": "^1.2",
         "statamic/cms": "^4.0"
     },
     "require-dev": {
         "larastan/larastan": "^2.9",
         "laravel/pint": "^1.14",
-        "orchestra/testbench": "^8.21",
         "mockery/mockery": "^1.6",
-        "pestphp/pest": "^2.34",
-        "pestphp/pest-plugin-laravel": "^2.3"
+        "orchestra/testbench": "^8.21",
+        "pestphp/pest-plugin-laravel": "^2.3",
+        "pestphp/pest": "^2.34"
     },
     "scripts": {
         "format": "./vendor/bin/pint",

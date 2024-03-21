@@ -16,22 +16,22 @@ class Blurhash extends PlaceholderProvider
 
     protected int $compY = 3;
 
-    protected int $maxInputSize = 200;
-
-    protected int $calcSize = 200;
+    protected int $calcSize = 50;
 
     public function encode(string $contents): ?string
     {
         try {
-            $pixels = $this->generatePixelMatrixFromImage($contents);
+            $thumb = $this->thumb($contents);
+            $pixels = $this->extractPixels($thumb);
         } catch (\Throwable $th) {
         }
+
         if (! count($pixels ?? [])) {
             return null;
         }
 
+        return BlurhashService::encode($pixels, $this->compX, $this->compY);
         try {
-            return BlurhashService::encode($pixels, $this->compX, $this->compY);
         } catch (\Exception $e) {
             throw new \Exception("Error encoding blurhash: {$e->getMessage()}");
         }
@@ -43,76 +43,61 @@ class Blurhash extends PlaceholderProvider
             return null;
         }
 
-        $width = $width ?: $this->calcSize;
-        $height = $height ?: $this->calcSize;
+        [$width, $height] = Dimensions::contain($width, $height, $this->calcSize);
 
         try {
-            [$calcWidth, $calcHeight] = Dimensions::contain($width, $height, $this->calcSize);
-            $pixels = BlurhashService::decode($hash, $calcWidth, $calcHeight);
+            $pixels = BlurhashService::decode($hash, $width, $height);
         } catch (\Exception $e) {
             throw new \Exception("Error decoding blurhash: {$e->getMessage()}");
         }
 
-        $image = $this->generateImageFromPixelMatrix($pixels, $width, $height);
-        $data = base64_encode($image);
-
-        return "data:image/png;base64,{$data}";
+       return $this->recreateImage($pixels, $width, $height);
     }
 
-    protected function generatePixelMatrixFromImage(?string $contents): array
+    protected function extractPixels(?string $contents): array
     {
         if (! $contents) {
             return [];
         }
 
-        $image = imagecreatefromstring($contents);
-        [$width, $height] = Dimensions::contain(imagesx($image), imagesy($image), $this->maxInputSize);
-        $image = imagescale($image, $width, $height);
+        $image = $this->manager->make($contents);
+        $width = $image->width();
+        $height = $image->height();
 
         $pixels = [];
         for ($y = 0; $y < $height; $y++) {
             $row = [];
             for ($x = 0; $x < $width; $x++) {
-                $index = imagecolorat($image, $x, $y);
-                $colors = imagecolorsforindex($image, $index);
-                $r = max(0, min(255, $colors['red']));
-                $g = max(0, min(255, $colors['green']));
-                $b = max(0, min(255, $colors['blue']));
+                [$r, $g, $b] = $image->pickColor($x, $y);
                 $row[] = [$r, $g, $b];
             }
             $pixels[] = $row;
         }
 
+        $image->destroy();
+
         return $pixels;
     }
 
-    protected function generateImageFromPixelMatrix(array $pixels, int $width, int $height): string
+    protected function recreateImage(array $pixels, int $width, int $height): ?string
     {
         if (! $pixels || ! count($pixels)) {
-            return '';
+            return null;
         }
 
-        [$calcWidth, $calcHeight] = Dimensions::contain($width, $height, $this->calcSize);
-        $image = imagecreatetruecolor($calcWidth, $calcHeight);
-        for ($y = 0; $y < $calcHeight; $y++) {
-            for ($x = 0; $x < $calcWidth; $x++) {
+        [$width, $height] = Dimensions::contain($width, $height, $this->calcSize);
+
+        $image = $this->manager->canvas($width, $height);
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 [$r, $g, $b] = $pixels[$y][$x];
-                $r = max(0, min(255, $r));
-                $g = max(0, min(255, $g));
-                $b = max(0, min(255, $b));
-                $allocate = imagecolorallocate($image, $r, $g, $b);
-                imagesetpixel($image, $x, $y, $allocate);
+                $rgb = [max(0, min(255, $r)), max(0, min(255, $g)), max(0, min(255, $b))];
+                $image->pixel($rgb, $x, $y);
             }
         }
 
-        $image = imagescale($image, $width, -1);
-
-        ob_start();
-        imagepng($image);
-        $contents = ob_get_contents();
-        ob_end_clean();
-        imagedestroy($image);
-
-        return $contents;
+        $uri = (string) $image->encode('data-url');
+        $image->destroy();
+        return $uri;
     }
 }
