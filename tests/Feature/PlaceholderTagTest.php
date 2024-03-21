@@ -6,13 +6,11 @@ use Statamic\Facades\Stache;
 beforeEach(function () {
     $this->addPlaceholderFieldToAssetBlueprint();
 
-    $this->assetJpg = $this->uploadTestImageToTestContainer('test.jpg');
-    $this->assetJpg2 = $this->uploadTestImageToTestContainer('test.jpg', 'test2.jpg');
-    $this->assetSvg = $this->uploadTestImageToTestContainer('test.svg');
-    $this->assetGif = $this->uploadTestImageToTestContainer('test.gif');
+    $this->jpg = $this->uploadTestImageToTestContainer('test.jpg');
+    $this->png = $this->uploadTestImageToTestContainer('test.png');
 
     $this->tag = $this->app->make(PlaceholderTag::class)
-        ->setContext(['asset' => $this->assetJpg])
+        ->setContext(['asset' => $this->jpg])
         ->setParameters([]);
 
     Stache::clear();
@@ -52,4 +50,11 @@ test('returns available data', function () {
 
     expect($data)->toBeArray()->toHaveKeys(['uri', 'hash', 'type', 'exists']);
     expect($data)->toMatchObjectSnapshot();
+});
+
+test('accepts asset param', function () {
+    $uri = $this->tag->setParameters(['asset' => '/test/test.png'])->uri();
+
+    expect($uri)->toBeString();
+    expect($uri)->toMatchTextSnapshot();
 });
