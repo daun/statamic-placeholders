@@ -48,8 +48,8 @@
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^8.21",
         "pestphp/pest-plugin-laravel": "^2.3",
-        "pestphp/pest": "^2.34",
-        "spatie/phpunit-snapshot-assertions": "^5.1"
+        "spatie/pest-plugin-snapshots": "^2.1",
+        "pestphp/pest": "^2.34"
     },
     "scripts": {
         "format": "./vendor/bin/pint",

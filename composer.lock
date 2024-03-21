@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5e50e358cdf289ab735f9c6312bc61b",
+    "content-hash": "bd1dd0e95d8be6187dd79924b27453eb",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -12393,6 +12393,68 @@
                 "source": "https://github.com/spatie/macroable/tree/2.0.0"
             },
             "time": "2021-03-26T22:39:02+00:00"
+        },
+        {
+            "name": "spatie/pest-plugin-snapshots",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/pest-plugin-snapshots.git",
+                "reference": "32c99071724a904be1843acdb39089fe20d24b60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/pest-plugin-snapshots/zipball/32c99071724a904be1843acdb39089fe20d24b60",
+                "reference": "32c99071724a904be1843acdb39089fe20d24b60",
+                "shasum": ""
+            },
+            "require": {
+                "pestphp/pest": "^2.0",
+                "php": "^8.1",
+                "spatie/phpunit-snapshot-assertions": "^5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Functions.php"
+                ],
+                "psr-4": {
+                    "Spatie\\Snapshots\\Concerns\\": "./src/Concerns/"
+                },
+                "exclude-from-classmap": [
+                    "../phpunit-snapshot-assertions/src/Concerns/SnapshotDirectoryAware.php",
+                    "../phpunit-snapshot-assertions/src/Concerns/SnapshotIdAware.php",
+                    "vendor/spatie/phpunit-snapshot-assertions/src/Concerns/SnapshotDirectoryAware.php",
+                    "vendor/spatie/phpunit-snapshot-assertions/src/Concerns/SnapshotIdAware.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A package for snapshot testing in Pest",
+            "homepage": "https://github.com/spatie/pest-plugin-snapshots",
+            "keywords": [
+                "pest",
+                "plugin",
+                "snapshots",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/pest-plugin-snapshots/issues",
+                "source": "https://github.com/spatie/pest-plugin-snapshots/tree/2.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-09-11T14:41:58+00:00"
         },
         {
             "name": "spatie/phpunit-snapshot-assertions",

@@ -95,12 +95,9 @@ trait DealsWithAssets
         return fixtures_path('tmp', 'testfiles', ...$paths);
     }
 
-    public function getTestFileData(string $filename): array
+    public function getTestFileContents(string $filename): string
     {
-        $content = file_get_contents(fixtures_path("testfiles/{$filename}"));
-        $expected = json_decode(file_get_contents(snapshots_path("placeholders/{$filename}.json")), true);
-
-        return [$content, $expected];
+        return file_get_contents(fixtures_path("testfiles/{$filename}"));
     }
 
     public function uploadTestImageToTestContainer(string $image, ?string $filename = null)

@@ -20,9 +20,8 @@ beforeEach(function () {
 
 test('renders uri', function () {
     $uri = $this->tag->uri();
-
     expect($uri)->toBeString()->toContain('data:image/');
-    $this->assertMatchesSnapshot($uri);
+    expect($uri)->toMatchTextSnapshot();
 
     $index = $this->tag->index();
     expect($index)->toBe($uri);
@@ -30,28 +29,27 @@ test('renders uri', function () {
 
 test('renders hash', function () {
     $hash = $this->tag->hash();
-
     expect($hash)->toBeString();
-    $this->assertMatchesSnapshot($hash);
+    expect($hash)->toMatchTextSnapshot();
 });
 
 test('renders img', function () {
     $img = $this->tag->img();
 
     expect($img)->toBeString()->toContain('<img src="data:image/');
-    $this->assertMatchesSnapshot($img);
+    expect($img)->toMatchTextSnapshot();
 });
 
 test('renders img attributes', function () {
     $img = $this->tag->setParameters(['data-lazyload' => 'yes'])->img();
 
     expect($img)->toBeString()->toContain('<img src="data:image/')->toContain('data-lazyload="yes"');
-    $this->assertMatchesSnapshot($img);
+    expect($img)->toMatchTextSnapshot();
 });
 
 test('returns available data', function () {
     $data = $this->tag->data();
 
     expect($data)->toBeArray()->toHaveKeys(['uri', 'hash', 'type', 'exists']);
-    $this->assertMatchesObjectSnapshot($data);
+    expect($data)->toMatchObjectSnapshot();
 });

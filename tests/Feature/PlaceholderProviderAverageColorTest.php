@@ -5,22 +5,22 @@ use Daun\StatamicPlaceholders\Providers\AverageColor;
 test('extracts the average color', function () {
     $provider = $this->app->make(AverageColor::class);
 
-    [$content, $expected] = $this->getTestFileData('test.jpg');
-    ['hash' => $hash, 'uri' => $uri] = $expected[$provider::$handle];
+    $content = $this->getTestFileContents('test.jpg');
+    $hash = $provider->encode($content);
 
     expect($hash)->toBeString()->not->toBeEmpty();
-    expect($provider->encode($content))->toBe($hash);
+    expect($hash)->toMatchTextSnapshot();
 });
 
 test('creates a data uri', function () {
     $provider = $this->app->make(AverageColor::class);
 
-    [$content, $expected] = $this->getTestFileData('test.jpg');
-    ['hash' => $hash, 'uri' => $uri] = $expected[$provider::$handle];
+    $content = $this->getTestFileContents('test.jpg');
+    $hash = $provider->encode($content);
+    $uri = $provider->decode($hash);
 
-    expect($hash)->toBeString()->not->toBeEmpty();
     expect($uri)->toBeString()->not->toBeEmpty();
-    expect($provider->decode($hash))->toEqual($uri);
+    expect($uri)->toMatchTextSnapshot();
 });
 
 test('generates a thumb and calculates average', function () {
