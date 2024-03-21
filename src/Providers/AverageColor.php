@@ -42,6 +42,7 @@ class AverageColor extends PlaceholderProvider
             $pixel = $this->manager->make($contents)->resize(1, 1);
             $color = $pixel->pickColor(0, 0);
             $pixel->destroy();
+
             return $color;
         } else {
             return [];

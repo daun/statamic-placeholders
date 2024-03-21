@@ -98,6 +98,7 @@ trait DealsWithAssets
     {
         $content = file_get_contents(fixtures_path("testfiles/{$filename}"));
         $expected = json_decode(file_get_contents(snapshots_path("placeholders/{$filename}.json")), true);
+
         return [$content, $expected];
     }
 

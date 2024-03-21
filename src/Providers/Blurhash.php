@@ -51,7 +51,7 @@ class Blurhash extends PlaceholderProvider
             throw new \Exception("Error decoding blurhash: {$e->getMessage()}");
         }
 
-       return $this->recreateImage($pixels, $width, $height);
+        return $this->recreateImage($pixels, $width, $height);
     }
 
     protected function extractPixels(?string $contents): array
@@ -98,6 +98,7 @@ class Blurhash extends PlaceholderProvider
 
         $uri = (string) $image->encode('data-url');
         $image->destroy();
+
         return $uri;
     }
 }
