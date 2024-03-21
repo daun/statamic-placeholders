@@ -19,6 +19,7 @@ beforeEach(function () {
 
 test('returns a collection of providers', function () {
     expect($this->providers->all())->toBeInstanceOf(Collection::class);
+    expect($this->providers->all())->each->toBeInstanceOf(PlaceholderProvider::class);
 });
 
 test('returns the core providers', function () {

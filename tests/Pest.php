@@ -46,6 +46,11 @@ function fixtures_path(...$paths): string
     return join_paths(__DIR__, '__fixtures__', ...$paths);
 }
 
+function snapshots_path(...$paths): string
+{
+    return join_paths(__DIR__, '__snapshots__', ...$paths);
+}
+
 function statamic_package_path(...$paths): string
 {
     return join_paths(__DIR__, '../vendor/statamic/cms', ...$paths);
