@@ -99,11 +99,7 @@ class PlaceholderTag extends Tags
                 'type' => $placeholder->type(),
             ];
 
-            if ($asset instanceof Augmentable) {
-                return array_merge($asset->toAugmentedArray(), $data);
-            } else {
-                return $data;
-            }
+            return $data;
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
         }
