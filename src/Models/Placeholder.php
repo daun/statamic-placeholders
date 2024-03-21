@@ -140,7 +140,7 @@ abstract class Placeholder
     /**
      * Save the hash to cache or storage.
      */
-    protected function save(string $hash): void
+    protected function save(?string $hash): void
     {
         /* not implemented */
     }

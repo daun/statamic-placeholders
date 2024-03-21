@@ -26,7 +26,7 @@ trait WritesToCache
         return Cache::get($this->key());
     }
 
-    protected function save(string $hash): void
+    protected function save(?string $hash): void
     {
         Cache::set($this->key(), $hash);
     }

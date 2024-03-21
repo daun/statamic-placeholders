@@ -29,7 +29,7 @@ class AssetPlaceholder extends Placeholder
         return PlaceholderData::getHash($this->asset, $this->provider()::$handle);
     }
 
-    protected function save(string $hash): void
+    protected function save(?string $hash): void
     {
         PlaceholderData::addHash($this->asset, $hash, $this->provider()::$handle);
     }
