@@ -34,7 +34,7 @@ test('returns a default provider', function () {
 });
 
 test('returns a provider by handle or class', function () {
-    expect($this->providers->find('BlurHash'))->toBeInstanceOf(BlurHash::class);
+    expect($this->providers->find('blurhash'))->toBeInstanceOf(BlurHash::class);
     expect($this->providers->find(BlurHash::class))->toBeInstanceOf(BlurHash::class);
 });
 
@@ -43,7 +43,7 @@ test('returns null for nonexisting providers', function () {
 });
 
 test('can fail for nonexisting providers', function () {
-    expect(fn () => $this->providers->findOrFail('BlurHash'))->not->toThrow(\Exception::class);
+    expect(fn () => $this->providers->findOrFail('blurhash'))->not->toThrow(\Exception::class);
     expect(fn () => $this->providers->findOrFail('doesntexist'))->toThrow(\Exception::class);
 });
 
@@ -52,7 +52,7 @@ test('falls back to default provider', function () {
 });
 
 test('makes default provider configurable', function () {
-    config(['placeholders.default_provider' => 'BlurHash']);
+    config(['placeholders.default_provider' => 'blurhash']);
     expect($this->providers->default())->toBeInstanceOf(BlurHash::class);
 });
 

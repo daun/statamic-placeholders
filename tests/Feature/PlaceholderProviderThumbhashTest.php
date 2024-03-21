@@ -1,9 +1,9 @@
 <?php
 
-use Daun\StatamicPlaceholders\Providers\BlurHash;
+use Daun\StatamicPlaceholders\Providers\ThumbHash;
 
-test('creates a BlurHash', function () {
-    $provider = $this->app->make(BlurHash::class);
+test('creates a thumbhash', function () {
+    $provider = $this->app->make(ThumbHash::class);
 
     [$content, $expected] = $this->getTestFileData('test.jpg');
     ['hash' => $hash, 'uri' => $uri] = $expected[$provider::$handle];
@@ -13,7 +13,7 @@ test('creates a BlurHash', function () {
 });
 
 test('creates a data uri', function () {
-    $provider = $this->app->make(BlurHash::class);
+    $provider = $this->app->make(ThumbHash::class);
 
     [$content, $expected] = $this->getTestFileData('test.jpg');
     ['hash' => $hash, 'uri' => $uri] = $expected[$provider::$handle];
@@ -23,13 +23,13 @@ test('creates a data uri', function () {
     expect($provider->decode($hash))->toEqual($uri);
 });
 
-test('generates a thumb and pixel matrix', function () {
-    $provider = Mockery::mock(BlurHash::class)->makePartial()->shouldAllowMockingProtectedMethods();
+test('generates a thumb and extracts pixels', function () {
+    $provider = Mockery::mock(ThumbHash::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
     $content = file_get_contents(fixtures_path('testfiles/test.jpg'));
 
     $provider->shouldReceive('thumb')->once()->withArgs([$content])->andReturn($content);
-    $provider->shouldReceive('extractPixels')->withArgs([$content])->once()->andReturn([[[0, 0, 0]]]);
+    $provider->shouldReceive('extractSizeAndPixels')->once()->andReturn([1, 1, [0, 0, 0, 0]]);
 
     $provider->encode($content);
 });

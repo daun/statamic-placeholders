@@ -2,7 +2,7 @@
 
 use Daun\StatamicPlaceholders\Providers\AverageColor;
 
-test('creates a AverageColor', function () {
+test('extracts the average color', function () {
     $provider = $this->app->make(AverageColor::class);
 
     [$content, $expected] = $this->getTestFileData('test.jpg');
@@ -23,7 +23,7 @@ test('creates a data uri', function () {
     expect($provider->decode($hash))->toEqual($uri);
 });
 
-test('generates a thumb and pixel matrix', function () {
+test('generates a thumb and calculates average', function () {
     $provider = Mockery::mock(AverageColor::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
     $content = file_get_contents(fixtures_path('testfiles/test.jpg'));

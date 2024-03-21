@@ -3,6 +3,7 @@
 namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
+use Daun\StatamicPlaceholders\Support\Color;
 
 class AverageColor extends PlaceholderProvider
 {
@@ -16,7 +17,7 @@ class AverageColor extends PlaceholderProvider
             $thumb = $this->thumb($contents);
             $rgba = $this->calculateAverage($thumb);
 
-            return $this->rgbaToHex($rgba);
+            return Color::rgbaToHex($rgba);
         } catch (\Exception $e) {
             throw new \Exception("Error encoding average color: {$e->getMessage()}");
         }
@@ -28,7 +29,7 @@ class AverageColor extends PlaceholderProvider
             return null;
         }
 
-        $rgba = $this->hexToRgba($hex);
+        $rgba = Color::hexToRgba($hex);
         if (count($rgba) < 3) {
             return null;
         }
@@ -52,21 +53,5 @@ class AverageColor extends PlaceholderProvider
     protected function rgbaToDataUri(array $rgba): string
     {
         return (string) $this->manager->canvas(1, 1, $rgba)->encode('data-url');
-    }
-
-    protected function rgbaToHex(array $rgba): string
-    {
-        return vsprintf('#%02X%02X%02X%02X', $rgba);
-    }
-
-    protected function hexToRgba(string $hex): array
-    {
-        $hex = ltrim($hex, '#');
-        $channels = array_map(
-            fn ($c) => hexdec(str_pad($c, 2, $c)),
-            str_split($hex, strlen($hex) > 3 ? 2 : 1)
-        );
-
-        return array_pad($channels, 4, 255);
     }
 }
