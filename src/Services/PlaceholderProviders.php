@@ -12,8 +12,8 @@ use Illuminate\Support\Collection;
 class PlaceholderProviders
 {
     protected array $coreProviders = [
-        Providers\Thumbhash::class,
-        Providers\Blurhash::class,
+        Providers\ThumbHash::class,
+        Providers\BlurHash::class,
         Providers\AverageColor::class,
         // Providers\None::class,
     ];

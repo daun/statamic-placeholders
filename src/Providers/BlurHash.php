@@ -4,9 +4,9 @@ namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Support\Dimensions;
-use kornrunner\Blurhash\Blurhash as BlurhashService;
+use kornrunner\Blurhash\Blurhash as BlurhashLib;
 
-class Blurhash extends PlaceholderProvider
+class BlurHash extends PlaceholderProvider
 {
     public static string $handle = 'blurhash';
 
@@ -30,7 +30,7 @@ class Blurhash extends PlaceholderProvider
             return null;
         }
 
-        return BlurhashService::encode($pixels, $this->compX, $this->compY);
+        return BlurhashLib::encode($pixels, $this->compX, $this->compY);
         try {
         } catch (\Exception $e) {
             throw new \Exception("Error encoding blurhash: {$e->getMessage()}");
@@ -46,7 +46,7 @@ class Blurhash extends PlaceholderProvider
         [$width, $height] = Dimensions::contain($width, $height, $this->calcSize);
 
         try {
-            $pixels = BlurhashService::decode($hash, $width, $height);
+            $pixels = BlurhashLib::decode($hash, $width, $height);
         } catch (\Exception $e) {
             throw new \Exception("Error decoding blurhash: {$e->getMessage()}");
         }

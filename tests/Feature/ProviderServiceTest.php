@@ -2,17 +2,17 @@
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Providers;
-use Daun\StatamicPlaceholders\Providers\Blurhash;
-use Daun\StatamicPlaceholders\Providers\Thumbhash;
+use Daun\StatamicPlaceholders\Providers\BlurHash;
+use Daun\StatamicPlaceholders\Providers\ThumbHash;
 use Daun\StatamicPlaceholders\Services\PlaceholderProviders;
 use Illuminate\Support\Collection;
 
 beforeEach(function () {
     $this->providers = $this->app->make(PlaceholderProviders::class);
-    $this->defaultProvider = Thumbhash::class;
+    $this->defaultProvider = ThumbHash::class;
     $this->coreProviders = collect([
-        Providers\Thumbhash::class,
-        Providers\Blurhash::class,
+        Providers\ThumbHash::class,
+        Providers\BlurHash::class,
         Providers\AverageColor::class,
     ])->keyBy(fn ($provider) => $provider::$handle);
 });
@@ -34,8 +34,8 @@ test('returns a default provider', function () {
 });
 
 test('returns a provider by handle or class', function () {
-    expect($this->providers->find('blurhash'))->toBeInstanceOf(Blurhash::class);
-    expect($this->providers->find(Blurhash::class))->toBeInstanceOf(Blurhash::class);
+    expect($this->providers->find('BlurHash'))->toBeInstanceOf(BlurHash::class);
+    expect($this->providers->find(BlurHash::class))->toBeInstanceOf(BlurHash::class);
 });
 
 test('returns null for nonexisting providers', function () {
@@ -43,7 +43,7 @@ test('returns null for nonexisting providers', function () {
 });
 
 test('can fail for nonexisting providers', function () {
-    expect(fn () => $this->providers->findOrFail('blurhash'))->not->toThrow(\Exception::class);
+    expect(fn () => $this->providers->findOrFail('BlurHash'))->not->toThrow(\Exception::class);
     expect(fn () => $this->providers->findOrFail('doesntexist'))->toThrow(\Exception::class);
 });
 
@@ -52,8 +52,8 @@ test('falls back to default provider', function () {
 });
 
 test('makes default provider configurable', function () {
-    config(['placeholders.default_provider' => 'blurhash']);
-    expect($this->providers->default())->toBeInstanceOf(Blurhash::class);
+    config(['placeholders.default_provider' => 'BlurHash']);
+    expect($this->providers->default())->toBeInstanceOf(BlurHash::class);
 });
 
 test('reads user providers', function () {

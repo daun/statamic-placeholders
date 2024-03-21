@@ -1,9 +1,9 @@
 <?php
 
-use Daun\StatamicPlaceholders\Providers\Thumbhash;
+use Daun\StatamicPlaceholders\Providers\ThumbHash;
 
-test('creates a Thumbhash', function () {
-    $provider = $this->app->make(Thumbhash::class);
+test('creates a ThumbHash', function () {
+    $provider = $this->app->make(ThumbHash::class);
 
     [$content, $expected] = $this->getTestFileData('test.jpg');
     ['hash' => $hash, 'uri' => $uri] = $expected[$provider::$handle];
@@ -13,7 +13,7 @@ test('creates a Thumbhash', function () {
 });
 
 test('creates a data uri', function () {
-    $provider = $this->app->make(Thumbhash::class);
+    $provider = $this->app->make(ThumbHash::class);
 
     [$content, $expected] = $this->getTestFileData('test.jpg');
     ['hash' => $hash, 'uri' => $uri] = $expected[$provider::$handle];
@@ -24,7 +24,7 @@ test('creates a data uri', function () {
 });
 
 test('generates a thumb and pixel matrix', function () {
-    $provider = Mockery::mock(Thumbhash::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    $provider = Mockery::mock(ThumbHash::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
     $content = file_get_contents(fixtures_path('testfiles/test.jpg'));
 

@@ -8,7 +8,7 @@ use Thumbhash\Thumbhash as ThumbhashLib;
 use function Thumbhash\extract_size_and_pixels_with_gd;
 use function Thumbhash\extract_size_and_pixels_with_imagick;
 
-class Thumbhash extends PlaceholderProvider
+class ThumbHash extends PlaceholderProvider
 {
     public static string $handle = 'thumbhash';
 
