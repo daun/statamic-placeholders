@@ -13,6 +13,7 @@ class ServiceProvider extends AddonServiceProvider
 {
     protected $commands = [
         Commands\Generate::class,
+        Commands\Clear::class,
     ];
 
     protected $listen = [

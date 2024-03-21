@@ -5,7 +5,6 @@ namespace Daun\StatamicPlaceholders\Commands;
 use Daun\StatamicPlaceholders\Commands\Concerns\HasOutputStyles;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
-use Daun\StatamicPlaceholders\Support\Queue;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Statamic\Assets\Asset;
@@ -14,59 +13,36 @@ use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Asset as AssetFacade;
 use Statamic\Facades\AssetContainer as AssetContainerFacade;
 
-class Generate extends Command
+class Clear extends Command
 {
     use HasOutputStyles;
     use RunsInPlease;
 
-    protected $signature = 'statamic:placeholders:generate
-                        {--container= : Limit the command to a specific asset container}
-                        {--force : Regenerate placeholders even if they already exist}
-                        {--queue : Queue the placeholder generation}';
+    protected $signature = 'statamic:placeholders:clear
+                        {--container= : Limit the command to a specific asset container}';
 
-    protected $description = 'Generate placeholder images';
+    protected $description = 'Remove existing placeholder images';
 
     protected $container;
 
-    protected $force;
-
-    protected $shouldQueue;
-
     public function handle(PlaceholderService $service)
     {
-        if (! $service->enabled()) {
-            $this->components->error('The placeholder feature is disabled from <info>config/placeholders.php</info>.');
-
-            return 1;
-        }
-
         $this->container = $this->option('container');
-        $this->force = $this->option('force');
-        $this->shouldQueue = $this->option('queue');
-
-        if ($this->shouldQueue && Queue::connection() === 'sync') {
-            $this->components->error('The queue connection is set to "sync". Queueing will be disabled.');
-            $this->shouldQueue = false;
-        }
 
         $containers = $this->getContainers();
         if ($containers->count()) {
             $containers->each(function ($container) use ($service) {
-                $this->generatePlaceholders($container, $service);
+                $this->clearPlaceholders($container, $service);
                 $this->newLine();
             });
 
-            $this->components->info(
-                $this->shouldQueue
-                    ? 'All placeholders have been queued for generation.'
-                    : 'All placeholders have been generated.'
-            );
+            $this->components->info('All placeholders have been removed.');
         }
 
         return 0;
     }
 
-    protected function generatePlaceholders(AssetContainer $container, PlaceholderService $service): void
+    protected function clearPlaceholders(AssetContainer $container, PlaceholderService $service): void
     {
         $assets = AssetFacade::whereContainer($container->handle())
             ->filter(fn ($asset) => PlaceholderField::supportsAssetType($asset));
@@ -76,23 +52,17 @@ class Generate extends Command
 
             return;
         } else {
-            $this->components->info("Generating placeholders for container <info>{$container->title()}</info>");
+            $this->components->info("Removing placeholders in container <info>{$container->title()}</info>");
         }
 
         $assets->each(function (Asset $asset) use ($service) {
             $exists = $service->exists($asset);
             $name = "<bold>{$asset->path()}</bold>";
-            if ($exists && ! $this->force) {
-                $this->components->twoColumnDetail($name, '<exists>✓ Found</exists>');
-
-                return;
-            }
-            if ($this->shouldQueue) {
-                $service->dispatch($asset, $this->force);
-                $this->components->twoColumnDetail($name, '<success>✓ Queued</success>');
+            if ($exists) {
+                $service->delete($asset);
+                $this->components->twoColumnDetail($name, '<success>✓ Removed</success>');
             } else {
-                $service->generate($asset, $this->force);
-                $this->components->twoColumnDetail($name, '<success>✓ Generated</success>');
+                $this->components->twoColumnDetail($name, '<exists>✓ Empty</exists>');
             }
         });
     }

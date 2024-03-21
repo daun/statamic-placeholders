@@ -146,6 +146,14 @@ abstract class Placeholder
     }
 
     /**
+     * Delete the hash from cache or storage.
+     */
+    public function delete(): void
+    {
+        /* not implemented */
+    }
+
+    /**
      * Convert the blob contents to a placeholder hash.
      */
     final protected function encode(): ?string

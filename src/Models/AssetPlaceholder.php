@@ -34,6 +34,11 @@ class AssetPlaceholder extends Placeholder
         PlaceholderData::addHash($this->asset, $hash, $this->provider()::$handle);
     }
 
+    public function delete(): void
+    {
+        PlaceholderData::clear($this->asset);
+    }
+
     public function contents(): ?string
     {
         return $this->asset->contents();

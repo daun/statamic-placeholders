@@ -76,7 +76,7 @@ class PlaceholderService
     }
 
     /**
-     * Generate a placeholder for the given asset or url. Returns the generated hash.
+     * Generate a placeholder for the given asset. Returns the generated hash.
      */
     public function generate(Asset $asset, bool $force = false): ?string
     {
@@ -89,5 +89,13 @@ class PlaceholderService
     public function dispatch(Asset $asset, bool $force = false): void
     {
         GeneratePlaceholderJob::dispatch($asset, $force);
+    }
+
+    /**
+     * Remove a placeholder from the given asset.
+     */
+    public function delete(Asset $asset): void
+    {
+        $this->make($asset)->delete();
     }
 }
