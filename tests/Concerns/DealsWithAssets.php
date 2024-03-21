@@ -152,13 +152,14 @@ trait DealsWithAssets
         ]);
     }
 
-    protected function addPlaceholderFieldToAssetBlueprint()
+    protected function addPlaceholderFieldToAssetBlueprint(array $params = [])
     {
         $this->setAssetContainerBlueprint([
             'alt' => [
                 'type' => 'text',
             ],
             'placeholder' => [
+                ...$params,
                 'type' => PlaceholderFieldtype::handle(),
             ],
         ]);
