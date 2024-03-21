@@ -70,7 +70,7 @@ abstract class Placeholder
     /**
      * Whether this placeholder should generate missing placeholders.
      */
-    final public static function generates(): bool
+    final public function generates(): bool
     {
         return Placeholders::enabled();
     }
@@ -80,7 +80,7 @@ abstract class Placeholder
      */
     final public function uri(): string
     {
-        return $this->provider()->decode($this->hash()) ?? static::fallback();
+        return $this->provider()->decode($this->hash()) ?? $this->fallback();
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class Placeholder
     /**
      * Get the fallback uri to use if no placeholder exists.
      */
-    public static function fallback(): string
+    public function fallback(): string
     {
         return (string) config('placeholders.fallback_uri', '');
     }
