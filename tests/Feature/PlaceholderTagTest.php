@@ -19,29 +19,40 @@ beforeEach(function () {
 });
 
 test('renders uri', function() {
-    $output = $this->tag->uri();
+    $uri = $this->tag->uri();
 
-    expect($output)->toBeString()->toContain('data:image/');
-    $this->assertMatchesSnapshot($output);
+    expect($uri)->toBeString()->toContain('data:image/');
+    $this->assertMatchesSnapshot($uri);
+
+    $index = $this->tag->index();
+    expect($index)->toBe($uri);
 });
 
 test('renders hash', function() {
-    $output = $this->tag->hash();
+    $hash = $this->tag->hash();
 
-    expect($output)->toBeString();
-    $this->assertMatchesSnapshot($output);
+    expect($hash)->toBeString();
+    $this->assertMatchesSnapshot($hash);
 });
 
 test('renders img', function() {
-    $output = $this->tag->img();
+    $img = $this->tag->img();
 
-    expect($output)->toBeString()->toContain('<img src="data:image/');
-    $this->assertMatchesSnapshot($output);
+    expect($img)->toBeString()->toContain('<img src="data:image/');
+    $this->assertMatchesSnapshot($img);
 });
 
 test('renders img attributes', function() {
-    $output = $this->tag->setParameters(['data-lazyload' => 'yes'])->img();
+    $img = $this->tag->setParameters(['data-lazyload' => 'yes'])->img();
 
-    expect($output)->toBeString()->toContain('<img src="data:image/')->toContain('data-lazyload="yes"');
-    $this->assertMatchesSnapshot($output);
+    expect($img)->toBeString()->toContain('<img src="data:image/')->toContain('data-lazyload="yes"');
+    $this->assertMatchesSnapshot($img);
+});
+
+test('returns available data', function() {
+    $data = $this->tag->data();
+    // dd($data);
+
+    expect($data)->toBeArray()->toHaveKeys(['uri', 'hash', 'type', 'exists']);
+    $this->assertMatchesObjectSnapshot($data);
 });
