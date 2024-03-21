@@ -11,11 +11,11 @@ class Dimensions
 
         $ratio = $width / $height;
         if ($width >= $height) {
-            $width = $max;
-            $height = floor($max / $ratio);
+            $width = min($width, $max);
+            $height = floor($width / $ratio);
         } else {
-            $width = floor($max * $ratio);
-            $height = $max;
+            $height = min($height, $max);
+            $width = floor($height * $ratio);
         }
 
         return [$width, $height];

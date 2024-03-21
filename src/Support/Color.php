@@ -6,7 +6,7 @@ class Color
 {
     public static function rgbaToHex(array $rgba): string
     {
-        return vsprintf('#%02X%02X%02X%02X', $rgba);
+        return strtolower(vsprintf('#%02X%02X%02X%02X', $rgba));
     }
 
     public static function hexToRgba(string $hex): array
