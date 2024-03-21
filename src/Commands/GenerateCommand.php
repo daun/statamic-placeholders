@@ -14,7 +14,7 @@ use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Asset as AssetFacade;
 use Statamic\Facades\AssetContainer as AssetContainerFacade;
 
-class Generate extends Command
+class GenerateCommand extends Command
 {
     use HasOutputStyles;
     use RunsInPlease;
@@ -37,7 +37,7 @@ class Generate extends Command
         if (! $service->enabled()) {
             $this->components->error('The placeholder feature is disabled from <info>config/placeholders.php</info>.');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $this->container = $this->option('container');
@@ -63,7 +63,7 @@ class Generate extends Command
             );
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function generatePlaceholders(AssetContainer $container, PlaceholderService $service): void
@@ -82,16 +82,16 @@ class Generate extends Command
         $assets->each(function (Asset $asset) use ($service) {
             $exists = $service->exists($asset);
             $name = "<bold>{$asset->path()}</bold>";
+
             if ($exists && ! $this->force) {
                 $this->components->twoColumnDetail($name, '<exists>✓ Found</exists>');
 
                 return;
             }
+            $service->dispatch($asset, $this->force);
             if ($this->shouldQueue) {
-                $service->dispatch($asset, $this->force);
                 $this->components->twoColumnDetail($name, '<success>✓ Queued</success>');
             } else {
-                $service->generate($asset, $this->force);
                 $this->components->twoColumnDetail($name, '<success>✓ Generated</success>');
             }
         });

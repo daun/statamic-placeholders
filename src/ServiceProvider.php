@@ -12,8 +12,8 @@ use Statamic\Providers\AddonServiceProvider;
 class ServiceProvider extends AddonServiceProvider
 {
     protected $commands = [
-        Commands\Generate::class,
-        Commands\Clear::class,
+        Commands\GenerateCommand::class,
+        Commands\ClearCommand::class,
     ];
 
     protected $listen = [

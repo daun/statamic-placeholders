@@ -5,7 +5,6 @@ namespace Daun\StatamicPlaceholders\Tags;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Tags\Concerns\GetsAssetFromContext;
 use Daun\StatamicPlaceholders\Tags\Concerns\GetsUrlFromContext;
-use Statamic\Contracts\Data\Augmentable;
 use Statamic\Tags\Concerns\RendersAttributes;
 use Statamic\Tags\Tags;
 

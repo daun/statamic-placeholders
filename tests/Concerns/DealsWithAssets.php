@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Statamic\Assets\Asset;
 use Statamic\Assets\AssetContainer;
 use Statamic\Console\Commands\GlideClear;
+use Statamic\Facades\Blink;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Stache;
 use Statamic\Statamic;
@@ -131,12 +132,15 @@ trait DealsWithAssets
 
     protected function setAssetContainerBlueprint(array $fields)
     {
+        $this->assetContainer->blueprint()->delete();
+
         Blueprint::makeFromFields($fields)
             ->setHandle($this->assetContainer->handle())
             ->setNamespace('assets')
             ->save();
 
         Stache::clear();
+        Blink::flush();
     }
 
     protected function restoreDefaultAssetBlueprint()

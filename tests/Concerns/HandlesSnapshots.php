@@ -2,9 +2,9 @@
 
 namespace Tests\Concerns;
 
+use Illuminate\Support\Str;
 use ReflectionClass;
 use Spatie\Snapshots\MatchesSnapshots;
-use Illuminate\Support\Str;
 
 trait HandlesSnapshots
 {
@@ -20,7 +20,7 @@ trait HandlesSnapshots
         return vsprintf('%s--%s--%d', [
             (new ReflectionClass($this))->getShortName(),
             $this->cleanupTestName($this->name()),
-            $this->snapshotIncrementor
+            $this->snapshotIncrementor,
         ]);
     }
 

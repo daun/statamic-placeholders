@@ -13,7 +13,7 @@ use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Asset as AssetFacade;
 use Statamic\Facades\AssetContainer as AssetContainerFacade;
 
-class Clear extends Command
+class ClearCommand extends Command
 {
     use HasOutputStyles;
     use RunsInPlease;

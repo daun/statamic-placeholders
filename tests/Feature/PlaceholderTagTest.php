@@ -18,7 +18,7 @@ beforeEach(function () {
     Stache::clear();
 });
 
-test('renders uri', function() {
+test('renders uri', function () {
     $uri = $this->tag->uri();
 
     expect($uri)->toBeString()->toContain('data:image/');
@@ -28,30 +28,29 @@ test('renders uri', function() {
     expect($index)->toBe($uri);
 });
 
-test('renders hash', function() {
+test('renders hash', function () {
     $hash = $this->tag->hash();
 
     expect($hash)->toBeString();
     $this->assertMatchesSnapshot($hash);
 });
 
-test('renders img', function() {
+test('renders img', function () {
     $img = $this->tag->img();
 
     expect($img)->toBeString()->toContain('<img src="data:image/');
     $this->assertMatchesSnapshot($img);
 });
 
-test('renders img attributes', function() {
+test('renders img attributes', function () {
     $img = $this->tag->setParameters(['data-lazyload' => 'yes'])->img();
 
     expect($img)->toBeString()->toContain('<img src="data:image/')->toContain('data-lazyload="yes"');
     $this->assertMatchesSnapshot($img);
 });
 
-test('returns available data', function() {
+test('returns available data', function () {
     $data = $this->tag->data();
-    // dd($data);
 
     expect($data)->toBeArray()->toHaveKeys(['uri', 'hash', 'type', 'exists']);
     $this->assertMatchesObjectSnapshot($data);
