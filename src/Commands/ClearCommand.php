@@ -3,6 +3,7 @@
 namespace Daun\StatamicPlaceholders\Commands;
 
 use Daun\StatamicPlaceholders\Commands\Concerns\HasOutputStyles;
+use Daun\StatamicPlaceholders\Jobs\ClearPlaceholderJob;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Illuminate\Console\Command;
@@ -59,7 +60,7 @@ class ClearCommand extends Command
             $exists = $service->exists($asset);
             $name = "<bold>{$asset->path()}</bold>";
             if ($exists) {
-                $service->delete($asset);
+                ClearPlaceholderJob::dispatchSync($asset);
                 $this->components->twoColumnDetail($name, '<success>✓ Removed</success>');
             } else {
                 $this->components->twoColumnDetail($name, '<exists>✓ Empty</exists>');

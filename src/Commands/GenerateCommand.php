@@ -3,6 +3,7 @@
 namespace Daun\StatamicPlaceholders\Commands;
 
 use Daun\StatamicPlaceholders\Commands\Concerns\HasOutputStyles;
+use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Daun\StatamicPlaceholders\Support\Queue;
@@ -88,10 +89,11 @@ class GenerateCommand extends Command
 
                 return;
             }
-            $service->dispatch($asset, $this->force);
             if ($this->shouldQueue) {
+                GeneratePlaceholderJob::dispatch($asset, $this->force);
                 $this->components->twoColumnDetail($name, '<success>✓ Queued</success>');
             } else {
+                GeneratePlaceholderJob::dispatchSync($asset, $this->force);
                 $this->components->twoColumnDetail($name, '<success>✓ Generated</success>');
             }
         });
