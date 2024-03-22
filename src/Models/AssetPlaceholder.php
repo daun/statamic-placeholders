@@ -4,7 +4,7 @@ namespace Daun\StatamicPlaceholders\Models;
 
 use Daun\StatamicPlaceholders\Support\PlaceholderData;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
-use Statamic\Contracts\Assets\Asset;
+use Statamic\Assets\Asset;
 
 /**
  * A placeholder for an image asset.

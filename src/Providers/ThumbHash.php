@@ -44,9 +44,10 @@ class ThumbHash extends PlaceholderProvider
 
     protected function extractSizeAndPixels(string $contents): array
     {
-        return match ($this->manager->driver()) {
+        return match ($driver = $this->manager->driver()) {
             $this->manager::DRIVER_IMAGICK => extract_size_and_pixels_with_imagick($contents),
             $this->manager::DRIVER_GD => extract_size_and_pixels_with_gd($contents),
+            default => throw new \Exception("Unsupported driver: {$driver}"),
         };
     }
 }

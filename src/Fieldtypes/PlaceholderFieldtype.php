@@ -7,7 +7,7 @@ use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Illuminate\Support\Number;
-use Statamic\Contracts\Assets\Asset;
+use Statamic\Assets\Asset;
 use Statamic\Fields\Fieldtype;
 
 class PlaceholderFieldtype extends Fieldtype

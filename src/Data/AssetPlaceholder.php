@@ -14,6 +14,8 @@ class AssetPlaceholder implements Augmentable
     use ContainsData;
     use HasAugmentedInstance;
 
+    protected Placeholder $placeholder;
+
     public function __construct(protected Asset $asset)
     {
         $this->placeholder = Placeholder::make($asset);

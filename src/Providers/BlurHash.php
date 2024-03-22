@@ -30,8 +30,8 @@ class BlurHash extends PlaceholderProvider
             return null;
         }
 
-        return BlurhashLib::encode($pixels, $this->compX, $this->compY);
         try {
+            return BlurhashLib::encode($pixels, $this->compX, $this->compY);
         } catch (\Exception $e) {
             throw new \Exception("Error encoding blurhash: {$e->getMessage()}");
         }
@@ -81,7 +81,7 @@ class BlurHash extends PlaceholderProvider
 
     protected function recreateImage(array $pixels, int $width, int $height): ?string
     {
-        if (! $pixels || ! count($pixels)) {
+        if (! ($pixels && count($pixels))) {
             return null;
         }
 

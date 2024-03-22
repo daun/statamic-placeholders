@@ -53,10 +53,10 @@ class PlaceholderTag extends Tags
      *
      * Return the placeholder data uri of an asset.
      */
-    public function uri(): ?string
+    public function uri($asset = null): ?string
     {
         return Placeholders::uri(
-            $this->getAssetFromContext() ?? $this->getUrlFromContext(),
+            $this->getAssetFromContext($asset) ?? $this->getUrlFromContext(),
             $this->params->get('type')
         );
     }
@@ -66,10 +66,10 @@ class PlaceholderTag extends Tags
      *
      * Return the placeholder hash of an asset.
      */
-    public function hash(): ?string
+    public function hash($asset = null): ?string
     {
         return Placeholders::hash(
-            $this->getAssetFromContext() ?? $this->getUrlFromContext(),
+            $this->getAssetFromContext($asset) ?? $this->getUrlFromContext(),
             $this->params->get('type')
         );
     }
@@ -87,8 +87,8 @@ class PlaceholderTag extends Tags
         }
 
         try {
-            $provider = $this->params->get('type');
-            $placeholder = Placeholders::make($asset, $provider);
+            $placeholder = Placeholders::make($asset)
+                ->usingProvider($this->params->get('type'));
 
             $data = [
                 'hash' => $placeholder->hash(),

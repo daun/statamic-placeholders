@@ -8,7 +8,7 @@ namespace Daun\StatamicPlaceholders\Models;
  */
 class EmptyPlaceholder extends Placeholder
 {
-    public function __construct(...$args)
+    public function __construct(protected mixed $value)
     {
     }
 
