@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/daun/statamic-placeholders.svg)](https://packagist.org/packages/daun/statamic-placeholders)
 [![Test Status](https://img.shields.io/github/actions/workflow/status/daun/statamic-placeholders/ci.yml?label=tests)](https://github.com/daun/statamic-placeholders/actions/workflows/ci.yml)
-<!-- [![Code Coverage](https://img.shields.io/codecov/c/github/daun/statamic-placeholders)](https://app.codecov.io/gh/daun/statamic-placeholders) -->
+[![Code Coverage](https://img.shields.io/codecov/c/github/daun/statamic-placeholders)](https://app.codecov.io/gh/daun/statamic-placeholders)
 [![License](https://img.shields.io/github/license/daun/statamic-placeholders.svg)](https://github.com/daun/statamic-placeholders/blob/master/LICENSE)
 
 **Generate image placeholders of Statamic assets for smoother lazyloading.**
