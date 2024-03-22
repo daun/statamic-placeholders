@@ -6,6 +6,8 @@ use Daun\StatamicPlaceholders\Providers\BlurHash;
 use Daun\StatamicPlaceholders\Providers\ThumbHash;
 use Daun\StatamicPlaceholders\Services\PlaceholderProviders;
 use Illuminate\Support\Collection;
+use Tests\Fixtures\InvalidProvider;
+use Tests\Fixtures\TestProvider;
 
 beforeEach(function () {
     $this->providers = $this->app->make(PlaceholderProviders::class);
@@ -14,6 +16,7 @@ beforeEach(function () {
         Providers\ThumbHash::class,
         Providers\BlurHash::class,
         Providers\AverageColor::class,
+        // Providers\None::class,
     ])->keyBy(fn ($provider) => $provider::$handle);
 });
 
@@ -72,27 +75,3 @@ test('fails for invalid user providers', function () {
     config(['placeholders.providers' => [InvalidProvider::class]]);
     expect(fn () => $this->providers->all())->toThrow(\Exception::class);
 });
-
-class TestProvider extends PlaceholderProvider
-{
-    public static string $handle = 'test';
-
-    public static string $name = 'Test';
-
-    public function encode(string $contents): ?string
-    {
-        return 'test-hash';
-    }
-
-    public function decode(string $placeholder, int $width = 0, int $height = 0): ?string
-    {
-        return 'test-uri';
-    }
-}
-
-class InvalidProvider
-{
-    public static string $handle = 'invalid';
-
-    public static string $name = 'Invalid';
-}
