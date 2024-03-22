@@ -7,6 +7,7 @@ use Daun\StatamicPlaceholders\Models\EmptyPlaceholder;
 use Daun\StatamicPlaceholders\Models\Placeholder;
 use Daun\StatamicPlaceholders\Models\UrlPlaceholder;
 use Daun\StatamicPlaceholders\Providers\AverageColor;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\Fixtures\TestProvider;
 
@@ -96,11 +97,23 @@ test('creates appropriate placeholder type', function () {
 });
 
 test('fetches url content', function () {
-    $url = 'https://example.com/image.jpg';
     Http::fake(['*' => Http::response('content', 200)]);
 
+    $url = 'https://example.com/image.jpg';
     $placeholder = new UrlPlaceholder($url);
 
     expect($placeholder->contents())->toBe('content');
     Http::assertSent(fn ($request) => $request->url() === $url);
+});
+
+test('caches url hashes', function () {
+    Http::fake(['*' => Http::response('content', 200)]);
+
+    $url = 'https://example.com/image.jpg';
+    $placeholder = (new UrlPlaceholder($url))->usingProvider('test');
+
+    expect($placeholder->hash())->toBe('test-hash');
+    expect($placeholder->hash())->toBe('test-hash');
+
+    Http::assertSentCount(1);
 });

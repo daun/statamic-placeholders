@@ -18,12 +18,16 @@ trait WritesToCache
 
     public function exists(): bool
     {
-        return Cache::has($this->key());
+        return (bool) Cache::has($this->key());
     }
 
     protected function load(): ?string
     {
-        return Cache::get($this->key());
+        if (Cache::has($key = $this->key())) {
+            return Cache::get($key);
+        } else {
+            return null;
+        }
     }
 
     protected function save(?string $hash): void
