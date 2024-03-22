@@ -4,7 +4,7 @@ namespace Daun\StatamicPlaceholders\Models;
 
 use Daun\StatamicPlaceholders\Models\Concerns\WritesToCache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use Statamic\Support\Str;
 
 /**
  * A placeholder for a URL pointing to an image.

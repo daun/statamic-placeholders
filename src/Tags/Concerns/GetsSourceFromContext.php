@@ -2,10 +2,10 @@
 
 namespace Daun\StatamicPlaceholders\Tags\Concerns;
 
-use Illuminate\Support\Str;
 use Statamic\Assets\Asset;
 use Statamic\Facades\Asset as AssetFacade;
 use Statamic\Fields\Value;
+use Statamic\Support\Str;
 
 trait GetsSourceFromContext
 {
