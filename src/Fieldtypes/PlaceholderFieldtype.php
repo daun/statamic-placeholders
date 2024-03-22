@@ -51,7 +51,7 @@ class PlaceholderFieldtype extends Fieldtype
         return $this->config('placeholder_type');
     }
 
-    protected function asset(): ?Asset
+    public function asset(): ?Asset
     {
         if ($this->field?->parent() instanceof Asset) {
             return $this->field->parent();

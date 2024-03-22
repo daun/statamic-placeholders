@@ -8,11 +8,6 @@ class AugmentedAssetPlaceholder extends AbstractAugmented
 {
     public function keys()
     {
-        return [
-            'uri',
-            'hash',
-            'type',
-            'exists',
-        ];
+        return ['uri', 'hash', 'type', 'exists'];
     }
 }
