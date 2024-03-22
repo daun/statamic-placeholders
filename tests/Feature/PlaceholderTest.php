@@ -116,3 +116,13 @@ test('caches url hashes', function () {
 
     Http::assertSentCount(1);
 });
+
+test('returns blob content', function () {
+    expect((new BlobPlaceholder('test'))->contents())->toBe('test');
+});
+
+test('returns empty content', function () {
+    expect((new EmptyPlaceholder(null))->contents())->toBe(null);
+    expect((new EmptyPlaceholder(''))->contents())->toBe(null);
+    expect((new EmptyPlaceholder([]))->contents())->toBe(null);
+});
