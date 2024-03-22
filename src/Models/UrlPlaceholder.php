@@ -3,6 +3,7 @@
 namespace Daun\StatamicPlaceholders\Models;
 
 use Daun\StatamicPlaceholders\Models\Concerns\WritesToCache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 /**
@@ -29,12 +30,11 @@ class UrlPlaceholder extends Placeholder
 
     public function contents(): ?string
     {
-        $data = @file_get_contents($this->url);
-        if ($data !== false) {
-            return $data;
+        $response = Http::get($this->url);
+        if ($response->successful()) {
+            return $response->body() ?: null;
         } else {
-            $error = error_get_last();
-            throw new \Exception($error['message'] ?? 'Failed loading url contents.');
+            throw new \Exception('Failed loading url contents.');
         }
     }
 }
