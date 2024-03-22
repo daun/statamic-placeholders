@@ -39,7 +39,7 @@ abstract class Placeholder
     /**
      * Set the placeholder provider to use.
      */
-    final public function usingProvider(?string $provider = null): self
+    public function usingProvider(?string $provider = null): self
     {
         $this->provider = $provider;
 
@@ -49,7 +49,7 @@ abstract class Placeholder
     /**
      * Get the placeholder provider instance to use.
      */
-    final public function provider(): PlaceholderProvider
+    public function provider(): PlaceholderProvider
     {
         return Placeholders::providers()->findOrFail($this->provider);
     }
@@ -57,7 +57,7 @@ abstract class Placeholder
     /**
      * Get the placeholder type, i.e. the placeholder provider's handle.
      */
-    final public function type(): string
+    public function type(): string
     {
         return $this->provider()::$handle;
     }
@@ -70,7 +70,7 @@ abstract class Placeholder
     /**
      * Whether this placeholder should generate missing placeholders.
      */
-    final public function generates(): bool
+    public function generates(): bool
     {
         return Placeholders::enabled();
     }
@@ -78,15 +78,21 @@ abstract class Placeholder
     /**
      * Get a data uri for this placeholder.
      */
-    final public function uri(): string
+    public function uri(): string
     {
-        return $this->provider()->decode($this->hash()) ?? $this->fallback();
+        if ($hash = $this->hash()) {
+            if ($uri = $this->provider()->decode($hash)) {
+                return $uri;
+            }
+        }
+
+        return $this->fallback();
     }
 
     /**
      * Get the placeholder hash. Generates and saves if not found.
      */
-    final public function hash(): ?string
+    public function hash(): ?string
     {
         return $this->load() ?: $this->generate() ?: null;
     }
@@ -110,17 +116,19 @@ abstract class Placeholder
     /**
      * Generate and return the placeholder hash.
      */
-    final public function generate(bool $force = false): ?string
+    public function generate(bool $force = false): ?string
     {
         $shouldGenerate = $this->generates() && (! $this->exists() || $force);
-        if ($shouldGenerate) {
-            $hash = $this->encode();
-            $this->save($hash);
-
-            return $hash;
-        } else {
+        if (! $shouldGenerate) {
             return $this->load();
         }
+
+        if ($contents = $this->contents()) {
+            $hash = $this->encode($contents);
+            $this->save($hash);
+        }
+
+        return $hash ?? null;
     }
 
     /**
@@ -156,12 +164,8 @@ abstract class Placeholder
     /**
      * Convert the blob contents to a placeholder hash.
      */
-    final protected function encode(): ?string
+    protected function encode(string $contents): ?string
     {
-        if ($contents = $this->contents()) {
-            return $this->provider()->encode($contents);
-        } else {
-            return null;
-        }
+        return $this->provider()->encode($contents);
     }
 }

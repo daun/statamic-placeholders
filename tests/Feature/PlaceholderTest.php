@@ -13,7 +13,7 @@ use Tests\Fixtures\TestProvider;
 beforeEach(function () {
     config(['placeholders.providers' => [TestProvider::class]]);
 
-    $this->placeholder = Mockery::spy(Placeholder::class)->shouldAllowMockingProtectedMethods();
+    $this->placeholder = Mockery::mock(Placeholder::class)->makePartial()->shouldAllowMockingProtectedMethods();
     $this->placeholder->usingProvider('test');
 });
 
@@ -45,8 +45,7 @@ test('does not generate if disabled', function () {
 });
 
 test('generates a hash', function () {
-    $this->placeholder->shouldReceive('load')->twice()->andReturn(null, null);
-    $this->placeholder->shouldReceive('contents')->once()->andReturn('content');
+    $this->placeholder->shouldReceive('load')->once();
     $this->placeholder->shouldReceive('generate')->once()->andReturn('test-hash');
 
     expect($this->placeholder->hash())->toBe('test-hash');
@@ -60,7 +59,7 @@ test('attempts to load a hash first', function () {
 });
 
 test('falls back to fallback uri', function () {
-    $this->placeholder->shouldReceive('hash')->once();
+    $this->placeholder->shouldReceive('hash')->once()->andReturn(null);
     $this->placeholder->shouldReceive('fallback')->once()->andReturn('fallback');
 
     expect($this->placeholder->uri())->toBe('fallback');
