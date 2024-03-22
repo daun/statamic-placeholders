@@ -7,7 +7,6 @@ use Daun\StatamicPlaceholders\Models\EmptyPlaceholder;
 use Daun\StatamicPlaceholders\Models\Placeholder;
 use Daun\StatamicPlaceholders\Models\UrlPlaceholder;
 use Daun\StatamicPlaceholders\Providers\AverageColor;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\Fixtures\TestProvider;
 

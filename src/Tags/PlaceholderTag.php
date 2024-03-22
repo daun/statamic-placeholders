@@ -3,15 +3,13 @@
 namespace Daun\StatamicPlaceholders\Tags;
 
 use Daun\StatamicPlaceholders\Facades\Placeholders;
-use Daun\StatamicPlaceholders\Tags\Concerns\GetsAssetFromContext;
-use Daun\StatamicPlaceholders\Tags\Concerns\GetsUrlFromContext;
+use Daun\StatamicPlaceholders\Tags\Concerns\GetsSourceFromContext;
 use Statamic\Tags\Concerns\RendersAttributes;
 use Statamic\Tags\Tags;
 
 class PlaceholderTag extends Tags
 {
-    use GetsAssetFromContext;
-    use GetsUrlFromContext;
+    use GetsSourceFromContext;
     use RendersAttributes;
 
     protected static $handle = 'placeholder';
@@ -56,7 +54,7 @@ class PlaceholderTag extends Tags
     public function uri($asset = null): ?string
     {
         return Placeholders::uri(
-            $this->getAssetFromContext($asset) ?? $this->getUrlFromContext(),
+            $this->getPlaceholderSourceFromContext($asset),
             $this->params->get('type')
         );
     }
@@ -69,7 +67,7 @@ class PlaceholderTag extends Tags
     public function hash($asset = null): ?string
     {
         return Placeholders::hash(
-            $this->getAssetFromContext($asset) ?? $this->getUrlFromContext(),
+            $this->getPlaceholderSourceFromContext($asset),
             $this->params->get('type')
         );
     }
@@ -81,7 +79,7 @@ class PlaceholderTag extends Tags
      */
     public function data($asset = null): array
     {
-        $asset = $this->getAssetFromContext($asset) ?? $this->getUrlFromContext($asset);
+        $asset = $this->getPlaceholderSourceFromContext($asset);
         if (! $asset) {
             return [];
         }
@@ -113,7 +111,7 @@ class PlaceholderTag extends Tags
      */
     public function img(): ?string
     {
-        $asset = $this->getAssetFromContext() ?? $this->getUrlFromContext();
+        $asset = $this->getPlaceholderSourceFromContext();
         if (! $asset) {
             return '';
         }

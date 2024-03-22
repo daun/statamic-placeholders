@@ -1,6 +1,7 @@
 <?php
 
 use Daun\StatamicPlaceholders\Tags\PlaceholderTag;
+use Illuminate\Support\Facades\Http;
 use Statamic\Facades\Stache;
 
 beforeEach(function () {
@@ -57,4 +58,17 @@ test('accepts asset param', function () {
 
     expect($uri)->toBeString();
     expect($uri)->toMatchTextSnapshot();
+});
+
+test('accepts url param', function () {
+    Http::fake(['*' => Http::response($this->getTestFileContents('test.png'), 200)]);
+
+    $uri = $this->tag->setParameters(['url' => 'https://example.net/asset.jpg'])->uri();
+
+    expect($uri)->toBeString();
+    expect($uri)->toMatchTextSnapshot();
+});
+
+test('rejects invalid url param', function () {
+    expect(fn () => $this->tag->setParameters(['url' => 3])->uri())->toThrow(\Exception::class);
 });
