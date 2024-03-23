@@ -3,6 +3,7 @@
 use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
 use Daun\StatamicPlaceholders\Fieldtypes\PlaceholderFieldtype;
 use Statamic\Assets\Asset;
+use Statamic\Facades\Antlers;
 use Statamic\Fields\Field;
 use Tests\Fixtures\TestProvider;
 
@@ -57,4 +58,16 @@ test('placeholder object augments to array', function () {
     $data = $augmented->toArray();
     expect($data)->toHaveKeys(['uri', 'hash', 'type', 'exists']);
     expect($data)->toMatchYamlSnapshot();
+});
+
+test('allows tag access to subproperties', function () {
+    $data = ['placeholder_field' => $this->fieldtype->augment([])];
+    $output = (string) $this->antlers('{{ placeholder_field }}{{ hash }} {{ uri }}{{ /placeholder_field }}', $data);
+    expect($output)->toBeString()->toBe('test-hash test-uri');
+});
+
+test('allows direct access to subkeys', function () {
+    $data = ['placeholder_field' => $this->fieldtype->augment([])];
+    $output = (string) $this->antlers('{{ placeholder_field:hash }} {{ placeholder_field:uri }}', $data);
+    expect($output)->toBeString()->toBe('test-hash test-uri');
 });

@@ -9,6 +9,7 @@ use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
 use Statamic\Statamic;
 use Tests\Concerns\DealsWithAssets;
+use Tests\Concerns\InteractsWithAntlersViews;
 use Tests\Concerns\PreventSavingStacheItemsToDisk;
 use Tests\Concerns\ResolvesStatamicConfig;
 use Wilderborn\Partyline\ServiceProvider as PartyLineServiceProvider;
@@ -17,6 +18,7 @@ abstract class TestCase extends OrchestraTestCase
 {
     use DealsWithAssets;
     use InteractsWithViews;
+    use InteractsWithAntlersViews;
     use PreventSavingStacheItemsToDisk;
     use ResolvesStatamicConfig;
 
