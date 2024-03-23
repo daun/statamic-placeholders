@@ -23,6 +23,7 @@
     "support": {
         "email": "post@philippdaun.net"
     },
+    "license": "MIT",
     "extra": {
         "statamic": {
             "name": "Placeholder Images",
