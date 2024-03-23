@@ -20,7 +20,7 @@ class UrlPlaceholder extends Placeholder
 
     public static function accepts(mixed $input): bool
     {
-        return Str::isUrl($input, ['http', 'https']);
+        return Str::isUrl($input);
     }
 
     public function identifier(): string

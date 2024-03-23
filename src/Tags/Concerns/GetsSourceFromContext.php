@@ -63,7 +63,7 @@ trait GetsSourceFromContext
             $url = $url->value();
         }
 
-        if (Str::isUrl($url, ['http', 'https'])) {
+        if (Str::isUrl($url)) {
             return $url;
         } elseif ($url) {
             throw new \Exception("Invalid URL: {$url}");
