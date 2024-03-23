@@ -182,6 +182,31 @@ You can also remove all placeholder data from your assets using the cli:
 php please placeholders:clear
 ```
 
+## Generate Placeholders for External Assets and URLs
+
+If you have non-image assets or external assets you want to render placeholders for, you can do that
+as long as you have access to a public URL to a thumbnail of the asset. The obvious example would be
+external videos embedded from YouTube or Vimeo. You can render placeholders for these by passing a
+thumbnail URL into the `Placeholder` facade:
+
+```php
+<?php
+
+use Daun\StatamicPlaceholders\Facades\Placeholders;
+use Illuminate\Support\Facades\Http;
+
+$videoUrl = 'https://vimeo.com/158115405';
+$response = Http::get("https://vimeo.com/api/oembed.json?url={$videoUrl}");
+$thumbnailUrl = $response->json('thumbnail_url');
+$placeholder = Placeholders::uri($thumbnailUrl);
+```
+
+Inside an Antlers template, you can use the `placeholder:*` tags with urls as well:
+
+```antlers
+{{ placeholder:uri url="https://i.vimeocdn.com/video/158115405_640.jpg" }}
+```
+
 ## Queueing
 
 If your site is configured to use queues, the placeholders will also be generated asynchronously
