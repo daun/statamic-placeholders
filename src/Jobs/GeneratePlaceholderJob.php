@@ -38,7 +38,6 @@ class GeneratePlaceholderJob implements ShouldQueue
         return $this->service->enabled()
             && PlaceholderField::supportsAssetType($asset)
             && PlaceholderField::existsInBlueprint($asset)
-            && PlaceholderField::generatesOnUpload()
             && (
                 $this->force || ! $this->service->exists($asset)
             );
