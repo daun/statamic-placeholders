@@ -37,7 +37,7 @@ return [
     | The default placeholder type to use. Each `placeholder` field can
     | choose to either use this default provider or pick a different provider
     | than the default. If you manually generate placeholders for URLs, this
-    |  default provider will also be used unless specified otherwise.
+    | default provider will also be used unless specified otherwise.
     |
     | Available options: 'thumbhash', 'blurhash', 'average'
     |
