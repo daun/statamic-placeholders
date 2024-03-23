@@ -3,7 +3,6 @@
 use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
 use Daun\StatamicPlaceholders\Fieldtypes\PlaceholderFieldtype;
 use Statamic\Assets\Asset;
-use Statamic\Facades\Antlers;
 use Statamic\Fields\Field;
 use Tests\Fixtures\TestProvider;
 

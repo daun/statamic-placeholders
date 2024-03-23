@@ -17,8 +17,8 @@ use Wilderborn\Partyline\ServiceProvider as PartyLineServiceProvider;
 abstract class TestCase extends OrchestraTestCase
 {
     use DealsWithAssets;
-    use InteractsWithViews;
     use InteractsWithAntlersViews;
+    use InteractsWithViews;
     use PreventSavingStacheItemsToDisk;
     use ResolvesStatamicConfig;
 
