@@ -161,6 +161,27 @@ you can generate any missing placeholders for existing assets by running the fol
 php please placeholders:generate
 ```
 
+This will generate placeholders immediately. For a large amount of existing images, it's recommended
+to process the placeholder generation in your app's configured queue:
+
+```sh
+php please placeholders:generate --queue
+```
+
+To force regenerating existing placeholder, pass a `force` flag:
+
+```sh
+php please placeholders:generate --force
+```
+
+## Remove Existing Placeholders
+
+You can also remove all placeholder data from your assets using the cli:
+
+```sh
+php please placeholders:clear
+```
+
 ## Queueing
 
 If your site is configured to use queues, the placeholders will also be generated asynchronously
