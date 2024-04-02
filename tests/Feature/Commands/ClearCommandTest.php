@@ -9,8 +9,8 @@ use Statamic\Facades\Stache;
 
 beforeEach(function () {
     $this->addPlaceholderFieldToAssetBlueprint();
-    $this->asset1 = $this->uploadTestImageToTestContainer('test.jpg');
-    $this->asset2 = $this->uploadTestImageToTestContainer('test.png');
+    $this->asset1 = $this->uploadTestFileToTestContainer('test.jpg');
+    $this->asset2 = $this->uploadTestFileToTestContainer('test.png');
     PlaceholderData::clear($this->asset1);
     PlaceholderData::clear($this->asset2);
     Stache::clear();

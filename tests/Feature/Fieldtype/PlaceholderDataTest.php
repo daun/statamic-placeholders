@@ -5,7 +5,7 @@ use Statamic\Facades\Stache;
 
 beforeEach(function () {
     $this->addPlaceholderFieldToAssetBlueprint();
-    $this->asset = $this->uploadTestImageToTestContainer('test.jpg');
+    $this->asset = $this->uploadTestFileToTestContainer('test.jpg');
     Stache::clear();
 });
 

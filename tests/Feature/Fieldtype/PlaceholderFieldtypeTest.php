@@ -10,7 +10,7 @@ beforeEach(function () {
     config(['placeholders.providers' => [TestProvider::class]]);
     $this->addPlaceholderFieldToAssetBlueprint(['placeholder_type' => 'test']);
 
-    $this->asset = $this->uploadTestImageToTestContainer('test.jpg');
+    $this->asset = $this->uploadTestFileToTestContainer('test.jpg');
     $this->field = $this->asset->blueprint()->fields()->all()->first(
         fn (Field $field) => $field->type() === PlaceholderFieldtype::handle()
     );

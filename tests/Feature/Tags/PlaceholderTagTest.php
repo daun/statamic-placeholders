@@ -7,8 +7,8 @@ use Statamic\Facades\Stache;
 beforeEach(function () {
     $this->addPlaceholderFieldToAssetBlueprint();
 
-    $this->jpg = $this->uploadTestImageToTestContainer('test.jpg');
-    $this->png = $this->uploadTestImageToTestContainer('test.png');
+    $this->jpg = $this->uploadTestFileToTestContainer('test.jpg');
+    $this->png = $this->uploadTestFileToTestContainer('test.png');
 
     $this->tag = $this->app->make(PlaceholderTag::class)
         ->setContext(['asset' => $this->jpg])

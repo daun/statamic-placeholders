@@ -19,18 +19,18 @@ test('checks asset support', function () {
 });
 
 test('checks blueprint for fieldtype', function () {
-    $asset = $this->uploadTestImageToTestContainer('test.jpg');
+    $asset = $this->uploadTestFileToTestContainer('test.jpg');
     expect(PlaceholderField::existsInBlueprint($asset))->toBeFalse();
     expect(fn () => PlaceholderField::assertExistsInBlueprint($asset))->toThrow(\Exception::class);
 
     $this->addPlaceholderFieldToAssetBlueprint();
-    $asset = $this->uploadTestImageToTestContainer('test.jpg');
+    $asset = $this->uploadTestFileToTestContainer('test.jpg');
     expect(PlaceholderField::existsInBlueprint($asset))->toBeTrue();
 });
 
 test('gets field object from blueprint', function () {
     $this->addPlaceholderFieldToAssetBlueprint();
-    $asset = $this->uploadTestImageToTestContainer('test.jpg');
+    $asset = $this->uploadTestFileToTestContainer('test.jpg');
     $field = PlaceholderField::getFromBlueprint($asset);
 
     expect($field)->toBeInstanceOf(Field::class);
@@ -39,10 +39,10 @@ test('gets field object from blueprint', function () {
 
 test('gets configured provider from blueprint', function () {
     $this->addPlaceholderFieldToAssetBlueprint();
-    $asset = $this->uploadTestImageToTestContainer('test.jpg');
+    $asset = $this->uploadTestFileToTestContainer('test.jpg');
     expect(PlaceholderField::getProvider($asset))->toBe(null);
 
     $this->addPlaceholderFieldToAssetBlueprint(['placeholder_type' => 'blurhash']);
-    $asset = $this->uploadTestImageToTestContainer('test.jpg');
+    $asset = $this->uploadTestFileToTestContainer('test.jpg');
     expect(PlaceholderField::getProvider($asset))->toBe('blurhash');
 });

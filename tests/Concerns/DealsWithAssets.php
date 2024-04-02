@@ -100,9 +100,9 @@ trait DealsWithAssets
         return file_get_contents(fixtures_path("testfiles/{$filename}"));
     }
 
-    public function uploadTestImageToTestContainer(string $image, ?string $filename = null)
+    public function uploadTestFileToTestContainer(string $path, ?string $filename = null)
     {
-        $path = $this->getTestFilesDirectory($image);
+        $path = $this->getTestFilesDirectory($path);
         $filename ??= basename($path);
 
         // Duplicate file because in Statamic 3.4 the source asset is deleted after upload
