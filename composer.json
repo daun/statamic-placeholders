@@ -1,18 +1,17 @@
 {
     "name": "daun/statamic-placeholders",
     "description": "Generate low-quality image placeholders for lazyloading Statamic assets",
-    "keywords": [ "statamic", "image", "placeholder", "lqip", "blurhash", "thumbhash", "lazyloading" ],
+    "license": "MIT",
     "type": "statamic-addon",
-    "autoload": {
-        "psr-4": {
-            "Daun\\StatamicPlaceholders\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-          "Tests\\": "tests/"
-        }
-    },
+    "keywords": [
+        "statamic",
+        "image",
+        "placeholder",
+        "lqip",
+        "blurhash",
+        "thumbhash",
+        "lazyloading"
+    ],
     "authors": [
         {
             "name": "Philipp Daun",
@@ -23,48 +22,57 @@
     "support": {
         "email": "post@philippdaun.net"
     },
-    "license": "MIT",
-    "extra": {
-        "statamic": {
-            "name": "Placeholder Images",
-            "description": "Generate low-quality image placeholders for lazyloading."
-        },
-        "laravel": {
-            "providers": [
-                "Daun\\StatamicPlaceholders\\ServiceProvider"
-            ]
-        }
-    },
     "require": {
         "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.8",
         "intervention/image": "^2.7",
         "kornrunner/blurhash": "^1.2",
         "laravel/framework": "^9.21 || ^10.0",
         "srwiez/thumbhash": "^1.2",
-        "statamic/cms": "^4.0",
-        "guzzlehttp/guzzle": "^7.8"
+        "statamic/cms": "^4.0"
     },
     "require-dev": {
         "larastan/larastan": "^2.9",
         "laravel/pint": "^1.14",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^8.21",
+        "pestphp/pest": "^2.34",
         "pestphp/pest-plugin-laravel": "^2.3",
-        "spatie/pest-plugin-snapshots": "^2.1",
-        "pestphp/pest": "^2.34"
+        "spatie/pest-plugin-snapshots": "^2.1"
     },
-    "scripts": {
-        "format": "./vendor/bin/pint",
-        "lint": "./vendor/bin/pint --test",
-        "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
-        "test": "./vendor/bin/pest",
-        "test:coverage": "./vendor/bin/pest --coverage",
-        "test:ci": "./vendor/bin/pest --coverage-clover coverage.xml"
+    "autoload": {
+        "psr-4": {
+            "Daun\\StatamicPlaceholders\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "pixelfear/composer-dist-plugin": true
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Daun\\StatamicPlaceholders\\ServiceProvider"
+            ]
+        },
+        "statamic": {
+            "description": "Generate low-quality image placeholders for lazyloading.",
+            "name": "Placeholder Images"
+        }
+    },
+    "scripts": {
+        "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
+        "format": "./vendor/bin/pint",
+        "lint": "./vendor/bin/pint --test",
+        "test": "./vendor/bin/pest",
+        "test:ci": "./vendor/bin/pest --coverage-clover coverage.xml",
+        "test:coverage": "./vendor/bin/pest --coverage"
     }
 }
