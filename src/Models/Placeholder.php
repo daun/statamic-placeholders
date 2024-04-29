@@ -199,7 +199,12 @@ abstract class Placeholder
         $manager = app()->make(ImageManager::class);
 
         /** @var \Intervention\Image\Image */
-        $base = $manager->make($contents);
+        try {
+            $base = $manager->make($contents);
+        } catch (\Throwable $th) {
+            // not a valid image? return uncompressed
+            return $contents;
+        }
 
         try {
             switch ($format) {
