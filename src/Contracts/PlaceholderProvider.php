@@ -41,7 +41,7 @@ abstract class PlaceholderProvider
     protected function thumb(string $contents): string
     {
         $thumb = $this->manager->make($contents);
-        $thumb =  $this->manager->fit($thumb, $this->maxThumbSize)->encode();
+        $thumb = $this->manager->fit($thumb, $this->maxThumbSize)->encode();
 
         $result = (string) $thumb;
         $thumb->destroy();

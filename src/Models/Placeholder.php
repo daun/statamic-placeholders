@@ -183,6 +183,7 @@ abstract class Placeholder
             "placeholder-uri--{$this->type()}--{$format}--{$hash}",
             function () use ($hash, $format) {
                 $png = $this->provider()->decode($hash, $this->width(), $this->height());
+
                 return $png ? $this->compress($png, $format) : null;
             }
         );
