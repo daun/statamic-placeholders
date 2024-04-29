@@ -4,6 +4,9 @@ namespace Daun\StatamicPlaceholders\Models;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
+use Daun\StatamicPlaceholders\Services\ImageManager;
+use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Exception\NotSupportedException;
 
 /**
  * Abstract placeholder class.
@@ -78,10 +81,10 @@ abstract class Placeholder
     /**
      * Get a data uri for this placeholder.
      */
-    public function uri(): string
+    public function uri(?string $format = null): string
     {
         if ($hash = $this->hash()) {
-            if ($uri = $this->provider()->decode($hash)) {
+            if ($uri = $this->decode($hash, $format)) {
                 return $uri;
             }
         }
@@ -167,5 +170,73 @@ abstract class Placeholder
     protected function encode(string $contents): ?string
     {
         return $this->provider()->encode($contents);
+    }
+
+    /**
+     * Convert the placeholder hash to a data uri.
+     */
+    protected function decode(string $hash, ?string $format = null): ?string
+    {
+        $format = $format ?? config('placeholders.uri_format', 'png');
+
+        $uri = Cache::rememberForever(
+            "placeholder-uri--{$this->type()}--{$format}--{$hash}",
+            function () use ($hash, $format) {
+                $png = $this->provider()->decode($hash, $this->width(), $this->height());
+                return $png ? $this->compress($png, $format) : null;
+            }
+        );
+
+        return $uri ?: null;
+    }
+
+    /**
+     * Compress and resize a data uri.
+     */
+    protected function compress(string $contents, ?string $format = null): string
+    {
+        $manager = app()->make(ImageManager::class);
+
+        /** @var \Intervention\Image\Image */
+        $base = $manager->make($contents);
+
+        try {
+            switch ($format) {
+                case 'webp':
+                    $compressed = $manager->fit($base, 32)->encode('webp');
+                    $compressed->mime = 'image/webp';
+                    break;
+                case 'avif':
+                    $compressed = $manager->fit($base, 32)->encode('avif');
+                    $compressed->mime = 'image/avif';
+                    break;
+                default:
+                    $compressed = $manager->fit($base, 16)->encode('png');
+                    break;
+            }
+        } catch (NotSupportedException $th) {
+            $compressed = $manager->fit($base, 16)->encode('png');
+        }
+
+        $result = (string) $compressed->encode('data-url');
+        $compressed->destroy();
+
+        return $result;
+    }
+
+    /**
+     * Width of the original image.
+     */
+    protected function width(): int
+    {
+        return 0;
+    }
+
+    /**
+     * Height of the original image.
+     */
+    protected function height(): int
+    {
+        return 0;
     }
 }

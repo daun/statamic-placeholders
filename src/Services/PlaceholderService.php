@@ -45,9 +45,9 @@ class PlaceholderService
      * Get a placeholder data uri for the given asset, url or file blob.
      * Ready to use as image source.
      */
-    public function uri(mixed $input, ?string $provider = null): ?string
+    public function uri(mixed $input, ?string $provider = null, ?string $format = null): ?string
     {
-        return $this->make($input)->usingProvider($provider)->uri();
+        return $this->make($input)->usingProvider($provider)->uri(format: $format);
     }
 
     /**
