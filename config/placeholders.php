@@ -31,7 +31,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Provider
+    | Placeholder Provider
     |--------------------------------------------------------------------------
     |
     | The default placeholder type to use. Each `placeholder` field can
@@ -47,7 +47,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Placeholder Providers
+    | Custom Placeholder Providers
     |--------------------------------------------------------------------------
     |
     | The addon ships with a set of default placeholder providers to pick from:
