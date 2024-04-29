@@ -43,4 +43,14 @@ class AssetPlaceholder extends Placeholder
     {
         return $this->asset->contents();
     }
+
+    protected function width(): int
+    {
+        return $this->asset->width();
+    }
+
+    protected function height(): int
+    {
+        return $this->asset->height();
+    }
 }

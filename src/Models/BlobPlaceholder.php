@@ -2,7 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\Models;
 
-use Daun\StatamicPlaceholders\Models\Concerns\WritesToCache;
+use Daun\StatamicPlaceholders\Models\Concerns\WritesHashToCache;
 
 /**
  * A placeholder for a raw file blob.
@@ -10,7 +10,7 @@ use Daun\StatamicPlaceholders\Models\Concerns\WritesToCache;
  */
 class BlobPlaceholder extends Placeholder
 {
-    use WritesToCache;
+    use WritesHashToCache;
 
     public function __construct(protected string $blob)
     {

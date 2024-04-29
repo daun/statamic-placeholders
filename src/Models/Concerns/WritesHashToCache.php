@@ -4,7 +4,7 @@ namespace Daun\StatamicPlaceholders\Models\Concerns;
 
 use Illuminate\Support\Facades\Cache;
 
-trait WritesToCache
+trait WritesHashToCache
 {
     public function identifier(): string
     {
@@ -23,6 +23,7 @@ trait WritesToCache
 
     protected function load(): ?string
     {
+        ray('Check for existence', $this->key());
         if (Cache::has($key = $this->key())) {
             return Cache::get($key);
         } else {

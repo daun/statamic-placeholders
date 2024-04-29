@@ -2,7 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\Models;
 
-use Daun\StatamicPlaceholders\Models\Concerns\WritesToCache;
+use Daun\StatamicPlaceholders\Models\Concerns\WritesHashToCache;
 use Illuminate\Support\Facades\Http;
 use Statamic\Support\Str;
 
@@ -12,7 +12,7 @@ use Statamic\Support\Str;
  */
 class UrlPlaceholder extends Placeholder
 {
-    use WritesToCache;
+    use WritesHashToCache;
 
     public function __construct(protected string $url)
     {
