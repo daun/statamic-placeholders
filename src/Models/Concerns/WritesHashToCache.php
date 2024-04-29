@@ -23,7 +23,6 @@ trait WritesHashToCache
 
     protected function load(): ?string
     {
-        ray('Check for existence', $this->key());
         if (Cache::has($key = $this->key())) {
             return Cache::get($key);
         } else {
