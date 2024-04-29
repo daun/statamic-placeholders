@@ -40,11 +40,8 @@ abstract class PlaceholderProvider
      */
     protected function thumb(string $contents): string
     {
-        $thumb = $this->manager->make($contents)
-            ->resize($this->maxThumbSize, $this->maxThumbSize, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->encode();
+        $thumb = $this->manager->make($contents);
+        $thumb =  $this->manager->fit($thumb, $this->maxThumbSize)->encode();
 
         $result = (string) $thumb;
         $thumb->destroy();
