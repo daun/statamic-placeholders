@@ -15,5 +15,6 @@ export default {
     },
     corePlugins: {
         preflight: false,
+        display: false,
     },
 }
