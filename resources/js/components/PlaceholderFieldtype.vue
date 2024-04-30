@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!isAsset || !isSupported" class="help-block flex items-center">
+        <div v-if="!isAsset || !isSupported" class="help-block mb-0 flex items-center">
             <svg-icon name="hidden" class="h-4" />
             <span class="ml-2">
                 {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_generated') }}:
@@ -13,7 +13,7 @@
             </span>
         </div>
         <div v-else-if="!uri">
-            <div class="help-block flex items-center">
+            <div class="help-block mb-0 flex items-center">
                 <svg-icon name="close" class="h-4" />
                 <span class="ml-2">
                     <template v-if="generateOnUpload">
@@ -32,7 +32,7 @@
             </div> -->
         </div>
         <div v-else>
-            <div v-if="!showPreview" class="help-block flex items-center">
+            <div v-if="!showPreview" class="help-block mb-0 flex items-center">
                 <svg-icon name="synchronize" class="h-4" />
                 <span :title="this.value.id" class="ml-2">
                     {{ __('statamic-placeholders::fieldtypes.placeholder.field.generated') }}
@@ -67,7 +67,7 @@
                 </div>
             </div>
             <!-- <div v-if="allowRegenerate" class="flex items-center mt-3">
-                <label for="upload-asset" class="help-block flex items-center cursor-pointer font-normal">
+                <label for="upload-asset" class="help-block mb-0 flex items-center cursor-pointer font-normal">
                     <input type="checkbox" name="remember" id="upload-asset" v-model="value.upload">
                     <span class="ml-2">{{ __('statamic-placeholders::fieldtypes.placeholder.field.reupload_on_save') }}</span>
                 </label>
