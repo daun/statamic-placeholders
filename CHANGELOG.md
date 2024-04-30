@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.2] - 2024-04-30
+
+- Fix asset field spacing
+
 ## [2.0.1] - 2024-04-29
 
 - Remove debug statements
@@ -17,6 +21,7 @@
 
 - Initial release
 
+[2.0.2]: https://github.com/daun/statamic-placeholders/releases/tag/2.0.2
 [2.0.1]: https://github.com/daun/statamic-placeholders/releases/tag/2.0.1
 [2.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/2.0.0
 [1.0.1]: https://github.com/daun/statamic-placeholders/releases/tag/1.0.1
