@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!isAsset || !isSupported" class="help-block flex items-center mb-3">
+        <div v-if="!isAsset || !isSupported" class="help-block flex items-center">
             <svg-icon name="hidden" class="h-4" />
             <span class="ml-2">
                 {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_generated') }}:
@@ -13,7 +13,7 @@
             </span>
         </div>
         <div v-else-if="!uri">
-            <div class="help-block flex items-center mb-3">
+            <div class="help-block flex items-center">
                 <svg-icon name="close" class="h-4" />
                 <span class="ml-2">
                     <template v-if="generateOnUpload">
@@ -24,7 +24,7 @@
                     </template>
                 </span>
             </div>
-            <!-- <div v-if="allowGenerate" class="flex items-center">
+            <!-- <div v-if="allowGenerate" class="flex items-center mt-3">
                 <label for="upload-asset" class="flex items-center cursor-pointer">
                     <input type="checkbox" name="remember" id="generate-placeholder" v-model="value.generate">
                     <span class="ml-2">{{ __('statamic-placeholders::fieldtypes.placeholder.field.generate_on_save') }}</span>
