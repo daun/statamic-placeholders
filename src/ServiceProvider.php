@@ -8,6 +8,7 @@ use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Statamic\Events\AssetReuploaded;
 use Statamic\Events\AssetUploaded;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -43,26 +44,46 @@ class ServiceProvider extends AddonServiceProvider
 
     public function register()
     {
-        $this->registerServices();
-        $this->registerAddonConfig();
-    }
-
-    protected function registerServices()
-    {
         $this->app->singleton(PlaceholderProviders::class);
-
         $this->app->singleton(PlaceholderService::class);
-
         $this->app->singleton(ImageManager::class);
     }
 
-    protected function registerAddonConfig()
+    public function bootAddon(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/placeholders.php', 'placeholders');
+        $this->autoPublishConfig();
+    }
+
+    /**
+     * Modified version of parent `bootConfig` method to customize
+     * the config file name.
+     */
+    protected function bootConfig()
+    {
+        $filename = 'placeholders';
+        $directory = $this->getAddon()->directory();
+        $origin = "{$directory}config/{$filename}.php";
+
+        if (! $this->config || ! file_exists($origin)) {
+            return $this;
+        }
+
+        $this->mergeConfigFrom($origin, $filename);
 
         $this->publishes([
-            __DIR__.'/../config/placeholders.php' => config_path('placeholders.php'),
-        ], 'statamic-placeholders');
+            $origin => config_path("{$filename}.php"),
+        ], "{$filename}-config");
+
+        return parent::bootConfig();
+    }
+
+    protected function autoPublishConfig(): self
+    {
+        Statamic::afterInstalled(function ($command) {
+            $command->call('vendor:publish', ['--tag' => 'placeholders-config']);
+        });
+
+        return $this;
     }
 
     public function provides(): array
