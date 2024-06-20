@@ -12,7 +12,7 @@ jobs:
       fail-fast: true
       matrix:
         php: [ '8.1', '8.2', '8.3' ]
-        laravel: [ '9', '10' ]
+        laravel: [ '9', '10', '11' ]
         # exclude:
         #   - php: '8.0'
         #     laravel: '10'
@@ -49,6 +49,14 @@ jobs:
           max_attempts: 3
           command: composer require "laravel/framework:10.*" "orchestra/testbench:^8.21" "pestphp/pest:^2.34" "pestphp/pest-plugin-laravel:^2.3" "spatie/pest-plugin-snapshots:^2.1" --no-update --no-interaction
 
+      - name: Select Laravel 11
+        uses: nick-invision/retry@v3
+        if: ${{ matrix.laravel == '11' }}
+        with:
+          timeout_minutes: 3
+          max_attempts: 3
+          command: composer require "laravel/framework:11.*" "orchestra/testbench:^9.1" "pestphp/pest:^2.34" "pestphp/pest-plugin-laravel:^2.3" "spatie/pest-plugin-snapshots:^2.1" --no-update --no-interaction
+
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v3
         with:
@@ -64,7 +72,7 @@ jobs:
 
       - name: Check code coverage
         uses: codecov/codecov-action@v4
-        if: ${{ matrix.php == '8.3' && matrix.laravel == '10' }}
+        if: ${{ matrix.php == '8.3' && matrix.laravel == '11' }}
         with:
           file: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
