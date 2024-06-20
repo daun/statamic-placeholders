@@ -12,9 +12,7 @@ abstract class PlaceholderProvider
 
     protected int $maxThumbSize = 100;
 
-    public function __construct(protected ImageManager $manager)
-    {
-    }
+    public function __construct(protected ImageManager $manager) {}
 
     /**
      * Generate a placeholder string from the contents of an image file.

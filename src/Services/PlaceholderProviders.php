@@ -20,9 +20,7 @@ class PlaceholderProviders
 
     protected ?Collection $providers;
 
-    public function __construct(protected Application $app, protected Repository $config)
-    {
-    }
+    public function __construct(protected Application $app, protected Repository $config) {}
 
     protected function providers(): Collection
     {

@@ -14,8 +14,7 @@ class PlaceholderService
         protected PlaceholderProviders $providers,
         protected Application $app,
         protected Repository $config
-    ) {
-    }
+    ) {}
 
     /**
      * Whether the placeholder feature is enabled.

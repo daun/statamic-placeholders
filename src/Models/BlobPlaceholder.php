@@ -12,9 +12,7 @@ class BlobPlaceholder extends Placeholder
 {
     use WritesHashToCache;
 
-    public function __construct(protected string $blob)
-    {
-    }
+    public function __construct(protected string $blob) {}
 
     public static function accepts(mixed $input): bool
     {

@@ -8,9 +8,7 @@ namespace Daun\StatamicPlaceholders\Models;
  */
 class EmptyPlaceholder extends Placeholder
 {
-    public function __construct(protected mixed $value)
-    {
-    }
+    public function __construct(protected mixed $value) {}
 
     public static function accepts(mixed $input): bool
     {
