@@ -14,9 +14,7 @@ class UrlPlaceholder extends Placeholder
 {
     use WritesHashToCache;
 
-    public function __construct(protected string $url)
-    {
-    }
+    public function __construct(protected string $url) {}
 
     public static function accepts(mixed $input): bool
     {

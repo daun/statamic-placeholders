@@ -10,9 +10,7 @@ use Statamic\Events\AssetUploaded;
 
 class GeneratePlaceholder
 {
-    public function __construct(protected PlaceholderService $service)
-    {
-    }
+    public function __construct(protected PlaceholderService $service) {}
 
     public function handle(AssetSaved|AssetUploaded|AssetReuploaded $event)
     {
