@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.1.1] - 2024-07-23
+
+- Reduce addon style specificity
+
 ## [2.1.0] - 2024-06-20
 
 - Support Statamic 5
