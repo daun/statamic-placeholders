@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.1.1] - 2024-07-23
+
+- Reduce addon style specificity
+
+## [2.1.0] - 2024-06-20
+
+- Support Statamic 5
+- Support Laravel 11
+
 ## [2.0.5] - 2024-05-01
 
 - Fix config overwrite on install
@@ -33,6 +42,7 @@
 
 - Initial release
 
+[2.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/2.1.0
 [2.0.5]: https://github.com/daun/statamic-placeholders/releases/tag/2.0.5
 [2.0.4]: https://github.com/daun/statamic-placeholders/releases/tag/2.0.4
 [2.0.3]: https://github.com/daun/statamic-placeholders/releases/tag/2.0.3
