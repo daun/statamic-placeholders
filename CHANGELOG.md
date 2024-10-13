@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.1] - 2024-10-13
+
+- Add GraphQL type descriptions
+
 ## [3.0.0] - 2024-10-13
 
 - Add GraphQL subfields for `type`, `hash` and `uri`
@@ -47,6 +51,7 @@
 
 - Initial release
 
+[3.0.1]: https://github.com/daun/statamic-placeholders/releases/tag/3.0.1
 [3.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/3.0.0
 [2.1.1]: https://github.com/daun/statamic-placeholders/releases/tag/2.1.1
 [2.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/2.1.0
