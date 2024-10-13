@@ -4,10 +4,12 @@ namespace Daun\StatamicPlaceholders\Fieldtypes;
 
 use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
+use Daun\StatamicPlaceholders\GraphQL\AssetPlaceholderType;
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
 use Illuminate\Support\Number;
 use Statamic\Assets\Asset;
+use Statamic\Facades\GraphQL;
 use Statamic\Fields\Fieldtype;
 
 class PlaceholderFieldtype extends Fieldtype
@@ -112,5 +114,15 @@ class PlaceholderFieldtype extends Fieldtype
         } else {
             return $value;
         }
+    }
+
+    public function toGqlType()
+    {
+        return GraphQL::type(AssetPlaceholderType::NAME);
+    }
+
+    public function addGqlTypes()
+    {
+        GraphQL::addType(AssetPlaceholderType::class);
     }
 }
