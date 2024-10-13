@@ -2,7 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\GraphQL;
 
-use Daun\StatamicPlaceholders\Fieldtypes\PlaceholderFieldtype;
+use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
 use Statamic\Facades\GraphQL;
 
 class AssetPlaceholderType extends \Rebing\GraphQL\Support\Type
@@ -18,19 +18,15 @@ class AssetPlaceholderType extends \Rebing\GraphQL\Support\Type
         return [
             'type' => [
                 'type' => GraphQL::string(),
-                'resolve' => fn (PlaceholderFieldtype $field) => $field->augment('type'),
+                'resolve' => fn (AssetPlaceholder $item) => $item->augmentedValue('type'),
             ],
             'hash' => [
                 'type' => GraphQL::string(),
-                'resolve' => fn (PlaceholderFieldtype $field) => $field->augment('hash'),
+                'resolve' => fn (AssetPlaceholder $item) => $item->augmentedValue('hash'),
             ],
             'uri' => [
                 'type' => GraphQL::string(),
-                'resolve' => fn (PlaceholderFieldtype $field) => $field->augment('uri'),
-            ],
-            'exists' => [
-                'type' => GraphQL::boolean(),
-                'resolve' => fn (PlaceholderFieldtype $field) => $field->augment('exists'),
+                'resolve' => fn (AssetPlaceholder $item) => $item->augmentedValue('uri'),
             ],
         ];
     }
