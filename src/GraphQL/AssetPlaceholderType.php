@@ -11,6 +11,7 @@ class AssetPlaceholderType extends \Rebing\GraphQL\Support\Type
 
     protected $attributes = [
         'name' => self::NAME,
+        'description' => 'Low-quality image placeholder (LQIP)',
     ];
 
     public function fields(): array
@@ -19,14 +20,17 @@ class AssetPlaceholderType extends \Rebing\GraphQL\Support\Type
             'type' => [
                 'type' => GraphQL::string(),
                 'resolve' => fn (AssetPlaceholder $item) => $item->augmentedValue('type'),
+                'description' => 'Type of placeholder used, e.g. thumbhash or blurhash',
             ],
             'hash' => [
                 'type' => GraphQL::string(),
                 'resolve' => fn (AssetPlaceholder $item) => $item->augmentedValue('hash'),
+                'description' => 'Short textual representation of the image',
             ],
             'uri' => [
                 'type' => GraphQL::string(),
                 'resolve' => fn (AssetPlaceholder $item) => $item->augmentedValue('uri'),
+                'description' => 'Ready-to-use data URI of the placeholder image',
             ],
         ];
     }
