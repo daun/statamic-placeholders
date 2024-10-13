@@ -207,6 +207,41 @@ Inside an Antlers template, you can use the `placeholder:*` tags with urls as we
 {{ placeholder:uri url="https://i.vimeocdn.com/video/158115405_640.jpg" }}
 ```
 
+## GraphQL
+
+Placeholder fields can be queried via GraphQL. Each field provides three subfields for the `type` of
+placeholder, the placeholder `hash` and the ready-to-use image data `uri`.
+
+You can query the data uri directly to insert into each image src attribute, adding around 1-2KB of
+payload for each image. That's fine in most cases, but when you're dealing with hundreds of images
+you might want to only fetch the much smaller placeholder `hash` and generate the image data uri on
+the frontend to save on bandwith. You'll need to integrate the official npm packages
+[thumbhash](https://www.npmjs.com/package/thumbhash) or [blurhash](https://www.npmjs.com/package/blurhash)
+yourself in that case.
+
+### Query placeholder data uri
+
+```graphql
+... on Asset_Assets {
+  alt
+  lqip {
+    uri
+  }
+}
+```
+
+### Query placeholder hash
+
+```graphql
+... on Asset_Assets {
+  alt
+  lqip {
+    type
+    hash
+  }
+}
+```
+
 ## Queueing
 
 If your site is configured to use queues, the placeholders will also be generated asynchronously
