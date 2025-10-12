@@ -38,8 +38,9 @@ abstract class PlaceholderProvider
      */
     protected function thumb(string $contents): string
     {
-        $thumb = $this->service->make($contents);
-
-        return $thumb->scaleDown($this->maxThumbSize)->encode('png')->__toString();
+        return $this->service->make($contents)
+            ->scaleDown($this->maxThumbSize, $this->maxThumbSize)
+            ->toPng()
+            ->toString();
     }
 }

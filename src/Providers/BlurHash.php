@@ -60,7 +60,7 @@ class BlurHash extends PlaceholderProvider
             return [];
         }
 
-        $image = $this->manager->make($contents);
+        $image = $this->service->manager()->read($contents);
         $width = $image->width();
         $height = $image->height();
 
@@ -68,13 +68,11 @@ class BlurHash extends PlaceholderProvider
         for ($y = 0; $y < $height; $y++) {
             $row = [];
             for ($x = 0; $x < $width; $x++) {
-                [$r, $g, $b] = $image->pickColor($x, $y);
+                [$r, $g, $b] = $image->pickColor($x, $y)->convertTo('rgb')->toArray();
                 $row[] = [$r, $g, $b];
             }
             $pixels[] = $row;
         }
-
-        $image->destroy();
 
         return $pixels;
     }
@@ -87,18 +85,15 @@ class BlurHash extends PlaceholderProvider
 
         [$width, $height] = Dimensions::contain($width, $height, $this->calcSize);
 
-        $image = $this->manager->canvas($width, $height);
+        $image = $this->service->manager()->create($width, $height);
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 [$r, $g, $b] = $pixels[$y][$x];
                 $rgb = [max(0, min(255, $r)), max(0, min(255, $g)), max(0, min(255, $b))];
-                $image->pixel($rgb, $x, $y);
+                $image->drawPixel($x, $y, $rgb);
             }
         }
 
-        $uri = (string) $image->encode('data-url');
-        $image->destroy();
-
-        return $uri;
+        return $image->toPng()->toDataUri();
     }
 }

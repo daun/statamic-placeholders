@@ -15,9 +15,7 @@ class AverageColor extends PlaceholderProvider
     {
         try {
             $thumb = $this->thumb($contents);
-            $rgba = $this->calculateAverage($thumb);
-
-            return Color::rgbaToHex($rgba);
+            return $this->calculateAverage($thumb);
         } catch (\Exception $e) {
             throw new \Exception("Error encoding average color: {$e->getMessage()}");
         }
@@ -37,20 +35,24 @@ class AverageColor extends PlaceholderProvider
         return $this->rgbaToDataUri($rgba);
     }
 
-    protected function calculateAverage(?string $contents): array
+    protected function calculateAverage(?string $contents): ?string
     {
-        if ($contents) {
-            $pixel = $this->service->make($contents)->resize(1, 1);
-            $color = $pixel->pickColor(0, 0);
-
-            return $color;
-        } else {
-            return [];
+        if (! $contents) {
+            return null;
         }
+
+        return $this->service->manager()->read($contents)
+            ->resize(1, 1)
+            ->pickColor(0, 0)
+            ->toHex();
     }
 
     protected function rgbaToDataUri(array $rgba): string
     {
-        return $this->service->manager()->create(1, 1)->fill($rgba)->toPng()->toDataUri();
+        return $this->service->manager()
+            ->create(1, 1)
+            ->fill($rgba)
+            ->toPng()
+            ->toDataUri();
     }
 }
