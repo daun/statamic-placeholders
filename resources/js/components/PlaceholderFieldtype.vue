@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div v-if="!isAsset || !isSupported" class="help-block mb-0 flex items-center">
-            <svg-icon name="hidden" class="h-4" />
-            <span class="ml-2">
+        <div v-if="!isAsset || !isSupported">
+            <DescriptionWithIcon icon="eye-slash">
                 {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_generated') }}:
                 <template v-if="!isSupported">
                     {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_supported') }}
@@ -10,20 +9,17 @@
                 <template v-else>
                     {{ __('statamic-placeholders::fieldtypes.placeholder.field.no_asset') }}
                 </template>
-            </span>
+            </DescriptionWithIcon>
         </div>
         <div v-else-if="!uri">
-            <div class="help-block mb-0 flex items-center">
-                <svg-icon name="close" class="h-4" />
-                <span class="ml-2">
-                    <template v-if="generateOnUpload">
-                        {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_yet_generated') }}
-                    </template>
-                    <template v-else>
-                        {{ __('statamic-placeholders::fieldtypes.placeholder.field.generated_on_request') }}
-                    </template>
-                </span>
-            </div>
+            <DescriptionWithIcon icon="time-clock">
+                <template v-if="generateOnUpload">
+                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_yet_generated') }}
+                </template>
+                <template v-else>
+                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.generated_on_request') }}
+                </template>
+            </DescriptionWithIcon>
             <!-- <div v-if="allowGenerate" class="flex items-center mt-3">
                 <label for="upload-asset" class="flex items-center cursor-pointer">
                     <input type="checkbox" name="remember" id="generate-placeholder" v-model="value.generate">
@@ -32,36 +28,41 @@
             </div> -->
         </div>
         <div v-else>
-            <div v-if="!showPreview" class="help-block mb-0 flex items-center">
-                <svg-icon name="synchronize" class="h-4" />
-                <span :title="this.value.id" class="ml-2">
+            <DescriptionWithIcon v-if="!showPreview" icon="focus">
+                <span :title="this.value.id">
                     {{ __('statamic-placeholders::fieldtypes.placeholder.field.generated') }}
                 </span>
-            </div>
+            </DescriptionWithIcon>
             <div v-if="showPreview" class="mt-3">
                 <div v-if="!showingPreview" class="flex gap-2">
-                    <img @click="showingPreview = !showingPreview" :src="uri" class="btn btn-flat btn-sm p-0 overflow-hidden w-auto" :class="{ 'opacity-25': showingPreview }" />
-                    <button @click="showingPreview = !showingPreview" type="button" class="btn btn-flat btn-sm">
+                    <Button size="sm" class="p-0 overflow-hidden w-auto" @click="showingPreview = !showingPreview">
+                        <img :src="uri" class="h-8" />
+                    </Button>
+                    <Button size="sm" @click="showingPreview = !showingPreview">
                         <template v-if="showingPreview">
-                            {{ __('statamic-placeholders::fieldtypes.placeholder.field.hide_preview') }}
+                            {{ __('statamic-placeholders::fieldtypes.placeholder.field.hide_preview_btn') }}
                         </template>
                         <template v-else>
-                            {{ __('statamic-placeholders::fieldtypes.placeholder.field.show_preview') }}
+                            {{ __('statamic-placeholders::fieldtypes.placeholder.field.show_preview_btn') }}
                         </template>
-                    </button>
+                    </Button>
                 </div>
                 <div v-else class="flex flex-wrap gap-4">
-                    <div @click="showingPreview = false" class="grow-0 shrink-0 relative group inline-block">
-                        <img :src="uri" class="btn p-0 h-8 min-h-40 w-auto rounded-md" />
-                        <button
-                            aria-label="Hide Preview"
-                            class="btn-close absolute top-2 rtl:left-2.5 ltr:right-2.5 opacity-0 group-hover:opacity-100"
-                            style="--tw-bg-opacity: 0;"
-                        >×</button>
+                    <div class="grow-0 shrink-0 relative group/thumb inline-block">
+                        <img :src="uri" class="btn p-0 h-8 min-h-40 w-auto rounded-md cursor-pointer" @click="showingPreview = false" />
+                        <div class="absolute top-0 rtl:left-0 ltr:right-0 opacity-0 group-hover/thumb:opacity-50">
+                            <Button
+                                text="×"
+                                variant="ghost"
+                                style="--tw-bg-opacity: 0;"
+                                :aria-label="__('statamic-placeholders::fieldtypes.placeholder.field.hide_preview')"
+                                @click="showingPreview = false"
+                            />
+                        </div>
                     </div>
-                    <div class="grow shrink basis-40 overflow-hidden text-xs text-gray-700 font-mono">
+                    <div class="grow shrink basis-40 overflow-hidden text-xs text-gray-500 font-mono">
                         <div v-if="provider">{{ provider.name }}</div>
-                        <div v-if="hash" title="hash" class="truncate">{{ hash }}</div>
+                        <div v-if="hash" class="truncate">{{ hash }}</div>
                         <div v-if="size">{{ size }}</div>
                     </div>
                 </div>
@@ -77,8 +78,18 @@
 </template>
 
 <script>
+import { FieldtypeMixin as Fieldtype } from '@statamic/cms';
+import { Button, Description, Icon } from '@statamic/cms/ui';
+import DescriptionWithIcon from './DescriptionWithIcon.vue';
+
 export default {
     mixins: [Fieldtype],
+    components: {
+        Button,
+        Description,
+        DescriptionWithIcon,
+        Icon
+    },
     data() {
         return {
             showingPreview: false
