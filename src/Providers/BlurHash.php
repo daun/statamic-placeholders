@@ -4,6 +4,8 @@ namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Support\Dimensions;
+use Intervention\Image\Colors\Rgb\Color as ColorRgb;
+use Intervention\Image\Colors\Rgb\Colorspace as ColorspaceRgb;
 use kornrunner\Blurhash\Blurhash as BlurhashLib;
 
 class BlurHash extends PlaceholderProvider
@@ -68,7 +70,7 @@ class BlurHash extends PlaceholderProvider
         for ($y = 0; $y < $height; $y++) {
             $row = [];
             for ($x = 0; $x < $width; $x++) {
-                [$r, $g, $b] = $image->pickColor($x, $y)->convertTo('rgb')->toArray();
+                [$r, $g, $b] = $image->pickColor($x, $y)->convertTo(ColorspaceRgb::class)->toArray();
                 $row[] = [$r, $g, $b];
             }
             $pixels[] = $row;
@@ -86,11 +88,17 @@ class BlurHash extends PlaceholderProvider
         [$width, $height] = Dimensions::contain($width, $height, $this->calcSize);
 
         $image = $this->service->manager()->create($width, $height);
+
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 [$r, $g, $b] = $pixels[$y][$x];
-                $rgb = [max(0, min(255, $r)), max(0, min(255, $g)), max(0, min(255, $b))];
-                $image->drawPixel($x, $y, $rgb);
+                $color = new ColorRgb(
+                    max(0, min(255, $r)),
+                    max(0, min(255, $g)),
+                    max(0, min(255, $b)),
+                    255
+                );
+                $image->drawPixel($x, $y, $color);
             }
         }
 
