@@ -71,7 +71,7 @@ fields:
     field:
       type: placeholder
       display: Placeholder
-+     show_preview: false
++     preview_placeholder: false
 ```
 
 ![Text-only placeholder fieldtype in edit form](art/fieldtype-embedded-hidden.png)

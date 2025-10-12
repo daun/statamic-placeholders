@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.1.0] - 2025-03-06
+
+- Add support for Laravel 12
+
 ## [3.0.1] - 2024-10-13
 
 - Add GraphQL type descriptions
@@ -51,6 +55,7 @@
 
 - Initial release
 
+[3.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/3.1.0
 [3.0.1]: https://github.com/daun/statamic-placeholders/releases/tag/3.0.1
 [3.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/3.0.0
 [2.1.1]: https://github.com/daun/statamic-placeholders/releases/tag/2.1.1
