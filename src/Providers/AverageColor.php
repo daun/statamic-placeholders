@@ -44,7 +44,7 @@ class AverageColor extends PlaceholderProvider
         return $this->service->manager()->read($contents)
             ->resize(1, 1)
             ->pickColor(0, 0)
-            ->toHex();
+            ->toHex('#');
     }
 
     protected function rgbaToDataUri(array $rgba): string

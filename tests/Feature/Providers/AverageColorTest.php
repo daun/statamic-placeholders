@@ -12,6 +12,16 @@ test('extracts the average color', function () {
     expect($hash)->toMatchTextSnapshot();
 });
 
+test('extracts the average color with alpha', function () {
+    $provider = $this->app->make(AverageColor::class);
+
+    $content = $this->getTestFileContents('test.png');
+    $hash = $provider->encode($content);
+
+    expect($hash)->toBeString()->not->toBeEmpty();
+    expect($hash)->toMatchTextSnapshot();
+});
+
 test('creates a data uri', function () {
     $provider = $this->app->make(AverageColor::class);
 
