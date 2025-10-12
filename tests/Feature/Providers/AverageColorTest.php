@@ -39,7 +39,7 @@ test('generates a thumb and calculates average', function () {
     $content = file_get_contents(fixtures_path('testfiles/test.jpg'));
 
     $provider->shouldReceive('thumb')->once()->withArgs([$content])->andReturn($content);
-    $provider->shouldReceive('calculateAverage')->once()->andReturn([0, 0, 0, 0]);
+    $provider->shouldReceive('calculateAverage')->once()->andReturn('#00000000');
 
     $provider->encode($content);
 });

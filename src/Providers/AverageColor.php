@@ -3,7 +3,6 @@
 namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
-use Daun\StatamicPlaceholders\Support\Color;
 
 class AverageColor extends PlaceholderProvider
 {
@@ -23,16 +22,9 @@ class AverageColor extends PlaceholderProvider
 
     public function decode(string $hex, int $width = 0, int $height = 0): ?string
     {
-        if (! $hex) {
-            return null;
-        }
-
-        $rgba = Color::hexToRgba($hex);
-        if (count($rgba) < 3) {
-            return null;
-        }
-
-        return $this->rgbaToDataUri($rgba);
+        return $hex
+            ? $this->toDataUri($hex)
+            : null;
     }
 
     protected function calculateAverage(?string $contents): ?string
@@ -41,17 +33,18 @@ class AverageColor extends PlaceholderProvider
             return null;
         }
 
-        return $this->service->manager()->read($contents)
+        return $this->service->manager()
+            ->read($contents)
             ->resize(1, 1)
             ->pickColor(0, 0)
             ->toHex('#');
     }
 
-    protected function rgbaToDataUri(array $rgba): string
+    protected function toDataUri(string $hex): string
     {
         return $this->service->manager()
             ->create(1, 1)
-            ->fill($rgba)
+            ->fill($hex)
             ->toPng()
             ->toDataUri();
     }
