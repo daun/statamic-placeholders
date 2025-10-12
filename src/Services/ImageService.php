@@ -9,6 +9,7 @@ use Intervention\Image\Interfaces\ImageInterface;
 class ImageService
 {
     const DRIVER_GD = 'gd';
+
     const DRIVER_IMAGICK = 'imagick';
 
     protected ImageManager $manager;

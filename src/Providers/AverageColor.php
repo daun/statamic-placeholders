@@ -14,6 +14,7 @@ class AverageColor extends PlaceholderProvider
     {
         try {
             $thumb = $this->thumb($contents);
+
             return $this->calculateAverage($thumb);
         } catch (\Exception $e) {
             throw new \Exception("Error encoding average color: {$e->getMessage()}");
