@@ -9,13 +9,10 @@
         "vue": "^3.0"
     },
     "devDependencies": {
-        "@tailwindcss/container-queries": "^0.1.1",
-        "@tailwindcss/typography": "^0.5.9",
         "@statamic/cms": "file:./vendor/statamic/cms/resources/dist-package",
-        "autoprefixer": "^10.4.5",
-        "laravel-vite-plugin": "^1.0",
-        "postcss": "^8.4.12",
-        "tailwindcss": "^3.0.24",
-        "vite": "^6.0"
+        "laravel-vite-plugin": "^2.0",
+        "postcss": "^8.0",
+        "tailwindcss": "^4.0",
+        "vite": "^7.0"
     }
 }
