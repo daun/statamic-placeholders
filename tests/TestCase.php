@@ -5,6 +5,7 @@ namespace Tests;
 use Daun\StatamicPlaceholders\ServiceProvider as AddonServiceProvider;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Statamic\Addons\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
 use Statamic\Statamic;
 use Tests\Concerns\DealsWithAssets;
@@ -86,19 +87,7 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function registerStatamicAddon($app)
     {
-        try {
-            // Statamic 6
-            $manifest = $app->make(\Statamic\Addons\Manifest::class);
-        } catch (\Throwable $th) {
-            try {
-                // Statamic 5
-                $manifest = $app->make(\Statamic\Extend\Manifest::class);
-            } catch (\Throwable $th) {
-                throw $th;
-            }
-        }
-
-        $manifest->manifest = [
+        $app->make(Manifest::class)->manifest = [
             'daun/statamic-placeholders' => [
                 'id' => 'daun/statamic-placeholders',
                 'namespace' => 'Daun\\StatamicPlaceholders',
