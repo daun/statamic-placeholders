@@ -2,7 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\Contracts;
 
-use Daun\StatamicPlaceholders\Services\ImageManager;
+use Daun\StatamicPlaceholders\Services\ImageService;
 
 abstract class PlaceholderProvider
 {
@@ -12,7 +12,7 @@ abstract class PlaceholderProvider
 
     protected int $maxThumbSize = 100;
 
-    public function __construct(protected ImageManager $manager) {}
+    public function __construct(protected ImageService $service) {}
 
     /**
      * Generate a placeholder string from the contents of an image file.
@@ -38,12 +38,8 @@ abstract class PlaceholderProvider
      */
     protected function thumb(string $contents): string
     {
-        $thumb = $this->manager->make($contents);
-        $thumb = $this->manager->fit($thumb, $this->maxThumbSize)->encode();
+        $thumb = $this->service->make($contents);
 
-        $result = (string) $thumb;
-        $thumb->destroy();
-
-        return $result;
+        return $thumb->scaleDown($this->maxThumbSize)->encode('png')->__toString();
     }
 }

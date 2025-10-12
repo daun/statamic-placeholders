@@ -40,9 +40,8 @@ class AverageColor extends PlaceholderProvider
     protected function calculateAverage(?string $contents): array
     {
         if ($contents) {
-            $pixel = $this->manager->make($contents)->resize(1, 1);
+            $pixel = $this->service->make($contents)->resize(1, 1);
             $color = $pixel->pickColor(0, 0);
-            $pixel->destroy();
 
             return $color;
         } else {
@@ -52,6 +51,6 @@ class AverageColor extends PlaceholderProvider
 
     protected function rgbaToDataUri(array $rgba): string
     {
-        return (string) $this->manager->canvas(1, 1, $rgba)->encode('data-url');
+        return $this->service->manager()->create(1, 1)->fill($rgba)->toPng()->toDataUri();
     }
 }
