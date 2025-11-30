@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center" v-if="isAsset && isSupported">
         <ui-icon v-if="isGenerated" name="checkmark" class="text-green-600" />
-        <ui-icon v-else name="x-square" class="text-gray-400 dark:text-gray-600" />
+        <ui-icon v-else name="x-square" class="text-gray-300 dark:text-gray-600" />
     </div>
 </template>
 
