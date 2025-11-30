@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center" v-if="isAsset && isSupported">
-        <ui-icon v-if="isGenerated" name="checkmark" class="text-green-600" v-tooltip="t('generated')" />
-        <ui-icon v-else name="x-square" class="text-gray-400 dark:text-gray-600" v-tooltip="t('not_yet_generated')" />
+        <ui-icon v-if="isGenerated" name="checkmark" class="text-green-600" />
+        <ui-icon v-else name="x-square" class="text-gray-400 dark:text-gray-600" />
     </div>
 </template>
 
@@ -21,13 +21,8 @@ export default {
             return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'svg'].includes(this.extension);
         },
         isGenerated() {
-            return this.value?.hash || false;
+            return Object.keys(this.value || {}).length > 0;
         },
-    },
-    methods: {
-        t(key, replacements = {}) {
-            return __(`statamic-placeholders::fieldtypes.placeholder.field.${key}`, replacements);
-        }
     },
 };
 </script>
