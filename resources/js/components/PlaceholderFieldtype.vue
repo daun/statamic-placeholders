@@ -1,79 +1,49 @@
 <template>
-    <div>
-        <div v-if="!isAsset || !isSupported">
-            <DescriptionWithIcon icon="eye-slash">
-                {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_generated') }}:
-                <template v-if="!isSupported">
-                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_supported') }}
-                </template>
-                <template v-else>
-                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.no_asset') }}
-                </template>
-            </DescriptionWithIcon>
-        </div>
-        <div v-else-if="!uri">
-            <DescriptionWithIcon icon="time-clock">
-                <template v-if="generateOnUpload">
-                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.not_yet_generated') }}
-                </template>
-                <template v-else>
-                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.generated_on_request') }}
-                </template>
-            </DescriptionWithIcon>
-            <!-- <div v-if="allowGenerate" class="flex items-center mt-3">
-                <label for="upload-asset" class="flex items-center cursor-pointer">
-                    <input type="checkbox" name="remember" id="generate-placeholder" v-model="value.generate">
-                    <span class="ml-2">{{ __('statamic-placeholders::fieldtypes.placeholder.field.generate_on_save') }}</span>
-                </label>
-            </div> -->
-        </div>
-        <div v-else>
-            <DescriptionWithIcon v-if="!showPreview" icon="focus">
-                <span :title="this.value.id">
-                    {{ __('statamic-placeholders::fieldtypes.placeholder.field.generated') }}
-                </span>
-            </DescriptionWithIcon>
-            <div v-if="showPreview" class="mt-3">
-                <div v-if="!showingPreview" class="flex gap-2">
-                    <Button size="sm" class="p-0 overflow-hidden w-auto" @click="showingPreview = !showingPreview">
-                        <img :src="uri" class="h-8" />
-                    </Button>
-                    <Button size="sm" @click="showingPreview = !showingPreview">
-                        <template v-if="showingPreview">
-                            {{ __('statamic-placeholders::fieldtypes.placeholder.field.hide_preview_btn') }}
-                        </template>
-                        <template v-else>
-                            {{ __('statamic-placeholders::fieldtypes.placeholder.field.show_preview_btn') }}
-                        </template>
-                    </Button>
+    <div class="flex flex-column gap-2">
+        <ui-badge v-if="!isAsset" pill icon="focus" color="white" v-tooltip="t('unmirrored_no_asset')">
+            {{ t('ungenerated') }}
+        </ui-badge>
+        <ui-badge v-else-if="!isSupported" pill icon="focus" color="white" v-tooltip="t('ungenerated_no_image')">
+            {{ t('ungenerated') }}
+        </ui-badge>
+        <ui-badge v-else-if="!isGenerated && generateOnUpload" pill icon="time-clock" color="white">
+            {{ t('not_yet_generated') }}
+        </ui-badge>
+        <ui-badge v-else-if="!isGenerated" pill icon="time-clock" color="white">
+            {{ t('generated_on_request') }}
+        </ui-badge>
+        <ui-badge v-else-if="isGenerated && !showPreview" pill icon="checkmark" color="green">
+            {{ t('generated') }}
+        </ui-badge>
+        <template v-else-if="isGenerated && showPreview">
+            <div v-if="!showingPreview" class="flex gap-2">
+                <ui-button size="sm" class="p-0! overflow-hidden w-auto" @click="showingPreview = !showingPreview">
+                    <img :src="uri" class="h-8" />
+                </ui-button>
+                <ui-button size="sm" @click="showingPreview = !showingPreview">
+                    {{ t(showingPreview ? 'hide_preview_btn' : 'show_preview_btn') }}
+                </ui-button>
+            </div>
+            <div v-else class="flex flex-wrap gap-4">
+                <div class="grow-0 shrink-0 relative group/thumb inline-block">
+                    <img :src="uri" class="btn p-0 h-8 min-h-40 w-auto rounded-lg cursor-pointer" @click="showingPreview = false" />
+                    <div class="absolute top-0 rtl:left-0 ltr:right-0 opacity-0 group-hover/thumb:opacity-50">
+                        <ui-button
+                            text="×"
+                            variant="ghost"
+                            style="--tw-bg-opacity: 0;"
+                            :aria-label="t('hide_preview')"
+                            @click="showingPreview = false"
+                        />
+                    </div>
                 </div>
-                <div v-else class="flex flex-wrap gap-4">
-                    <div class="grow-0 shrink-0 relative group/thumb inline-block">
-                        <img :src="uri" class="btn p-0 h-8 min-h-40 w-auto rounded-md cursor-pointer" @click="showingPreview = false" />
-                        <div class="absolute top-0 rtl:left-0 ltr:right-0 opacity-0 group-hover/thumb:opacity-50">
-                            <Button
-                                text="×"
-                                variant="ghost"
-                                style="--tw-bg-opacity: 0;"
-                                :aria-label="__('statamic-placeholders::fieldtypes.placeholder.field.hide_preview')"
-                                @click="showingPreview = false"
-                            />
-                        </div>
-                    </div>
-                    <div class="grow shrink basis-40 overflow-hidden text-xs text-gray-500 font-mono">
-                        <div v-if="provider">{{ provider.name }}</div>
-                        <div v-if="hash" class="truncate">{{ hash }}</div>
-                        <div v-if="size">{{ size }}</div>
-                    </div>
+                <div class="grow shrink basis-40 overflow-hidden text-xs text-gray-500 font-mono">
+                    <div v-if="provider">{{ provider.name }}</div>
+                    <div v-if="hash" class="truncate">{{ hash }}</div>
+                    <div v-if="size">{{ size }}</div>
                 </div>
             </div>
-            <!-- <div v-if="allowRegenerate" class="flex items-center mt-3">
-                <label for="upload-asset" class="help-block mb-0 flex items-center cursor-pointer font-normal">
-                    <input type="checkbox" name="remember" id="upload-asset" v-model="value.upload">
-                    <span class="ml-2">{{ __('statamic-placeholders::fieldtypes.placeholder.field.reupload_on_save') }}</span>
-                </label>
-            </div> -->
-        </div>
+        </template>
     </div>
 </template>
 
@@ -96,12 +66,6 @@ export default {
         }
     },
     computed: {
-        allowGenerate() {
-            return this.config?.allow_generate;
-        },
-        allowRegenerate() {
-            return this.config?.allow_regenerate ?? this.config?.allow_generate;
-        },
         generateOnUpload() {
             return this.meta?.generate_on_upload;
         },
@@ -113,6 +77,9 @@ export default {
         },
         isSupported() {
             return this.meta?.is_supported || false;
+        },
+        isGenerated() {
+            return !! this.hash;
         },
         uri() {
             return this.meta?.uri;
@@ -126,6 +93,11 @@ export default {
         size() {
             return this.meta?.size;
         }
-    }
+    },
+    methods: {
+        t(key, replacements = {}) {
+            return __(`statamic-placeholders::fieldtypes.placeholder.field.${key}`, replacements);
+        }
+    },
 };
 </script>
