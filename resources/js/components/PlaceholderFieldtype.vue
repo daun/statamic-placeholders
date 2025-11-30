@@ -49,17 +49,9 @@
 
 <script>
 import { FieldtypeMixin as Fieldtype } from '@statamic/cms';
-import { Button, Description, Icon } from '@statamic/cms/ui';
-import DescriptionWithIcon from './DescriptionWithIcon.vue';
 
 export default {
     mixins: [Fieldtype],
-    components: {
-        Button,
-        Description,
-        DescriptionWithIcon,
-        Icon
-    },
     data() {
         return {
             showingPreview: false
