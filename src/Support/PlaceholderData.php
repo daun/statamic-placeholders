@@ -33,7 +33,7 @@ class PlaceholderData
         return static::load($asset)[$provider] ?? null;
     }
 
-    public static function addHash(Asset $asset, string $hash, string $provider): void
+    public static function addHash(Asset $asset, ?string $hash, string $provider): void
     {
         $data = static::load($asset);
         $data[$provider] = $hash;
