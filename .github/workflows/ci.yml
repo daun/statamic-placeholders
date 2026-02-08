@@ -55,7 +55,7 @@ jobs:
 
       - name: Check code coverage
         uses: codecov/codecov-action@v4
-        if: ${{ matrix.php == '8.4' && matrix.laravel == '12.*' }}
+        if: ${{ matrix.php == '8.5' && matrix.laravel == '12.*' }}
         with:
           file: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
