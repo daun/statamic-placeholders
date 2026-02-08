@@ -1,8 +1,10 @@
 # Changelog
 
-## [4.0.0] - 2025-10
+## [4.0.0] - 2026-02-08
 
-- Support Statamic 6
+- Add support for Statamic 6
+- Drop support for Statamic 4 and 5 (breaking change)
+- Drop support for Laravel 9, 10 and 11 (breaking change)
 
 ## [3.1.0] - 2025-03-06
 
@@ -23,8 +25,8 @@
 
 ## [2.1.0] - 2024-06-20
 
-- Support Statamic 5
-- Support Laravel 11
+- Add support for Statamic 5
+- Add support for Laravel 11
 
 ## [2.0.5] - 2024-05-01
 
