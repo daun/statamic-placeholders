@@ -3,7 +3,6 @@
 namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
-use Daun\StatamicPlaceholders\Support\Color;
 
 class AverageColor extends PlaceholderProvider
 {
@@ -15,9 +14,8 @@ class AverageColor extends PlaceholderProvider
     {
         try {
             $thumb = $this->thumb($contents);
-            $rgba = $this->calculateAverage($thumb);
 
-            return Color::rgbaToHex($rgba);
+            return $this->calculateAverage($thumb);
         } catch (\Exception $e) {
             throw new \Exception("Error encoding average color: {$e->getMessage()}");
         }
@@ -25,33 +23,30 @@ class AverageColor extends PlaceholderProvider
 
     public function decode(string $hex, int $width = 0, int $height = 0): ?string
     {
-        if (! $hex) {
+        return $hex
+            ? $this->toDataUri($hex)
+            : null;
+    }
+
+    protected function calculateAverage(?string $contents): ?string
+    {
+        if (! $contents) {
             return null;
         }
 
-        $rgba = Color::hexToRgba($hex);
-        if (count($rgba) < 3) {
-            return null;
-        }
-
-        return $this->rgbaToDataUri($rgba);
+        return $this->service->manager()
+            ->read($contents)
+            ->resize(1, 1)
+            ->pickColor(0, 0)
+            ->toHex('#');
     }
 
-    protected function calculateAverage(?string $contents): array
+    protected function toDataUri(string $hex): string
     {
-        if ($contents) {
-            $pixel = $this->manager->make($contents)->resize(1, 1);
-            $color = $pixel->pickColor(0, 0);
-            $pixel->destroy();
-
-            return $color;
-        } else {
-            return [];
-        }
-    }
-
-    protected function rgbaToDataUri(array $rgba): string
-    {
-        return (string) $this->manager->canvas(1, 1, $rgba)->encode('data-url');
+        return $this->service->manager()
+            ->create(1, 1)
+            ->fill($hex)
+            ->toPng()
+            ->toDataUri();
     }
 }

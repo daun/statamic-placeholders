@@ -53,6 +53,7 @@ fields:
 +   field:
 +     type: placeholder
 +     display: Placeholder
++     listable: false
 ```
 
 The field will display a small placeholder preview in the asset edit form. Clicking it reveals

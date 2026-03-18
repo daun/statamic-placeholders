@@ -4,9 +4,8 @@ namespace Daun\StatamicPlaceholders\Models;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
-use Daun\StatamicPlaceholders\Services\ImageManager;
+use Daun\StatamicPlaceholders\Services\ImageService;
 use Illuminate\Support\Facades\Cache;
-use Intervention\Image\Exception\NotSupportedException;
 
 /**
  * Abstract placeholder class.
@@ -196,38 +195,26 @@ abstract class Placeholder
      */
     protected function compress(string $contents, ?string $format = null): string
     {
-        $manager = app()->make(ImageManager::class);
+        $service = app(ImageService::class);
 
-        /** @var \Intervention\Image\Image */
+        if ($format && ! $service->supports($format)) {
+            $format = 'png';
+        }
+
         try {
-            $base = $manager->make($contents);
+            $image = app(ImageService::class)->make($contents);
         } catch (\Throwable $th) {
             // not a valid image? return uncompressed
             return $contents;
         }
 
-        try {
-            switch ($format) {
-                case 'webp':
-                    $compressed = $manager->fit($base, 32)->encode('webp');
-                    $compressed->mime = 'image/webp';
-                    break;
-                case 'avif':
-                    $compressed = $manager->fit($base, 32)->encode('avif');
-                    $compressed->mime = 'image/avif';
-                    break;
-                default:
-                    $compressed = $manager->fit($base, 16)->encode('png');
-                    break;
-            }
-        } catch (NotSupportedException $th) {
-            $compressed = $manager->fit($base, 16)->encode('png');
-        }
+        $compressed = match ($format) {
+            'webp' => $image->scaleDown(32)->toWebp(),
+            'avif' => $image->scaleDown(32)->toAvif(),
+            default => $image->scaleDown(16)->toPng(),
+        };
 
-        $result = (string) $compressed->encode('data-url');
-        $compressed->destroy();
-
-        return $result;
+        return $compressed->toDataUri();
     }
 
     /**

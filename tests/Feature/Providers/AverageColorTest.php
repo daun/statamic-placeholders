@@ -12,6 +12,16 @@ test('extracts the average color', function () {
     expect($hash)->toMatchTextSnapshot();
 });
 
+test('extracts the average color with alpha', function () {
+    $provider = $this->app->make(AverageColor::class);
+
+    $content = $this->getTestFileContents('test.png');
+    $hash = $provider->encode($content);
+
+    expect($hash)->toBeString()->not->toBeEmpty();
+    expect($hash)->toMatchTextSnapshot();
+});
+
 test('creates a data uri', function () {
     $provider = $this->app->make(AverageColor::class);
 
@@ -29,7 +39,7 @@ test('generates a thumb and calculates average', function () {
     $content = file_get_contents(fixtures_path('testfiles/test.jpg'));
 
     $provider->shouldReceive('thumb')->once()->withArgs([$content])->andReturn($content);
-    $provider->shouldReceive('calculateAverage')->once()->andReturn([0, 0, 0, 0]);
+    $provider->shouldReceive('calculateAverage')->once()->andReturn('#00000000');
 
     $provider->encode($content);
 });

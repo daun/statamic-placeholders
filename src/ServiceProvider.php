@@ -2,7 +2,7 @@
 
 namespace Daun\StatamicPlaceholders;
 
-use Daun\StatamicPlaceholders\Services\ImageManager;
+use Daun\StatamicPlaceholders\Services\ImageService;
 use Daun\StatamicPlaceholders\Services\PlaceholderProviders;
 use Daun\StatamicPlaceholders\Services\PlaceholderService;
 use Statamic\Events\AssetReuploaded;
@@ -46,7 +46,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->app->singleton(PlaceholderProviders::class);
         $this->app->singleton(PlaceholderService::class);
-        $this->app->singleton(ImageManager::class);
+        $this->app->singleton(ImageService::class);
     }
 
     public function bootAddon(): void
@@ -91,7 +91,7 @@ class ServiceProvider extends AddonServiceProvider
         return [
             PlaceholderProviders::class,
             PlaceholderService::class,
-            ImageManager::class,
+            ImageService::class,
         ];
     }
 }
