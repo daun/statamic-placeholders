@@ -7,14 +7,14 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.17",
-    "tailwindcss": "^4.1.17",
-    "vue": "^3.5.25"
+    "@tailwindcss/vite": "^4.1.18",
+    "tailwindcss": "^4.1.18",
+    "vue": "^3.5.27"
   },
   "devDependencies": {
     "@statamic/cms": "file:vendor/statamic/cms/resources/dist-package",
-    "laravel-vite-plugin": "^2.0.1",
+    "laravel-vite-plugin": "^2.1.0",
     "postcss": "^8.5.6",
-    "vite": "^7.2.4"
+    "vite": "^7.3.1"
   }
 }
