@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.0] - 2026-03-24
+
+- Add support for Laravel 13
+
 ## [4.0.0] - 2026-02-08
 
 - Add support for Statamic 6
