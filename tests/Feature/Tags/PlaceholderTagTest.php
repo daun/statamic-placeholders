@@ -70,5 +70,5 @@ test('accepts url param', function () {
 });
 
 test('rejects invalid url param', function () {
-    expect(fn () => $this->tag->setParameters(['url' => 3])->uri())->toThrow(\Exception::class);
+    expect(fn () => $this->tag->setParameters(['url' => 3])->uri())->toThrow(Exception::class);
 });

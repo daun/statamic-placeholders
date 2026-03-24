@@ -3,9 +3,10 @@
 namespace Daun\StatamicPlaceholders\GraphQL;
 
 use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
+use Rebing\GraphQL\Support\Type;
 use Statamic\Facades\GraphQL;
 
-class AssetPlaceholderType extends \Rebing\GraphQL\Support\Type
+class AssetPlaceholderType extends Type
 {
     const NAME = 'AssetPlaceholder';
 

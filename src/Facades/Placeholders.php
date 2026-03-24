@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void dispatch(\Statamic\Assets\Asset $asset, bool $force = false)
  * @method static void delete(\Statamic\Assets\Asset $asset)
  *
- * @see \Daun\StatamicPlaceholders\Services\PlaceholderService
+ * @see PlaceholderService
  */
 class Placeholders extends Facade
 {

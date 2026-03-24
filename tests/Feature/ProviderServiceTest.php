@@ -13,8 +13,8 @@ beforeEach(function () {
     $this->providers = $this->app->make(PlaceholderProviders::class);
     $this->defaultProvider = ThumbHash::class;
     $this->coreProviders = collect([
-        Providers\ThumbHash::class,
-        Providers\BlurHash::class,
+        ThumbHash::class,
+        BlurHash::class,
         Providers\AverageColor::class,
         // Providers\None::class,
     ])->keyBy(fn ($provider) => $provider::$handle);
@@ -46,8 +46,8 @@ test('returns null for nonexisting providers', function () {
 });
 
 test('can fail for nonexisting providers', function () {
-    expect(fn () => $this->providers->findOrFail('blurhash'))->not->toThrow(\Exception::class);
-    expect(fn () => $this->providers->findOrFail('doesntexist'))->toThrow(\Exception::class);
+    expect(fn () => $this->providers->findOrFail('blurhash'))->not->toThrow(Exception::class);
+    expect(fn () => $this->providers->findOrFail('doesntexist'))->toThrow(Exception::class);
 });
 
 test('falls back to default provider', function () {
@@ -68,10 +68,10 @@ test('reads user providers', function () {
 
 test('fails for missing user providers', function () {
     config(['placeholders.providers' => ['\Missing\Provider\Class']]);
-    expect(fn () => $this->providers->all())->toThrow(\Exception::class);
+    expect(fn () => $this->providers->all())->toThrow(Exception::class);
 });
 
 test('fails for invalid user providers', function () {
     config(['placeholders.providers' => [InvalidProvider::class]]);
-    expect(fn () => $this->providers->all())->toThrow(\Exception::class);
+    expect(fn () => $this->providers->all())->toThrow(Exception::class);
 });
