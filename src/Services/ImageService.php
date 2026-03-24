@@ -3,6 +3,7 @@
 namespace Daun\StatamicPlaceholders\Services;
 
 use Illuminate\Contracts\Config\Repository;
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
 
@@ -31,7 +32,7 @@ class ImageService
     public function driverClass(): string
     {
         return match ($driver = $this->driver()) {
-            self::DRIVER_GD => \Intervention\Image\Drivers\Gd\Driver::class,
+            self::DRIVER_GD => Driver::class,
             self::DRIVER_IMAGICK => \Intervention\Image\Drivers\Imagick\Driver::class,
             default => throw new \Exception("Unsupported driver: {$driver}"),
         };

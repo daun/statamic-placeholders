@@ -21,7 +21,7 @@ test('checks asset support', function () {
 test('checks blueprint for fieldtype', function () {
     $asset = $this->uploadTestFileToTestContainer('test.jpg');
     expect(PlaceholderField::existsInBlueprint($asset))->toBeFalse();
-    expect(fn () => PlaceholderField::assertExistsInBlueprint($asset))->toThrow(\Exception::class);
+    expect(fn () => PlaceholderField::assertExistsInBlueprint($asset))->toThrow(Exception::class);
 
     $this->addPlaceholderFieldToAssetBlueprint();
     $asset = $this->uploadTestFileToTestContainer('test.jpg');
