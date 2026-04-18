@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.1] - 2026-04-18
+
+- Skip augmentation of unsupported assets
+
 ## [4.1.0] - 2026-03-24
 
 - Add support for Laravel 13
@@ -9,6 +13,11 @@
 - Add support for Statamic 6
 - Drop support for Statamic 4 and 5 (breaking change)
 - Drop support for Laravel 9, 10 and 11 (breaking change)
+
+## [3.1.1] - 2026-04-18
+
+- Skip augmentation of unsupported assets
+- Update tests for recent Statamic versions
 
 ## [3.1.0] - 2025-03-06
 
@@ -65,7 +74,10 @@
 
 - Initial release
 
+[4.1.1]: https://github.com/daun/statamic-placeholders/releases/tag/4.1.1
+[4.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/4.1.0
 [4.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/4.0.0
+[3.1.1]: https://github.com/daun/statamic-placeholders/releases/tag/3.1.1
 [3.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/3.1.0
 [3.0.1]: https://github.com/daun/statamic-placeholders/releases/tag/3.0.1
 [3.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/3.0.0
