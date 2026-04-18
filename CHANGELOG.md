@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.1.1] - 2026-04-18
+
+- Skip augmentation of unsupported assets
+- Update tests for recent Statamic versions
+
 ## [3.1.0] - 2025-03-06
 
 - Add support for Laravel 12
@@ -55,6 +60,7 @@
 
 - Initial release
 
+[3.1.1]: https://github.com/daun/statamic-placeholders/releases/tag/3.1.1
 [3.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/3.1.0
 [3.0.1]: https://github.com/daun/statamic-placeholders/releases/tag/3.0.1
 [3.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/3.0.0
