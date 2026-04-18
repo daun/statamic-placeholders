@@ -109,11 +109,11 @@ class PlaceholderFieldtype extends Fieldtype
 
     public function augment($value)
     {
-        if ($asset = $this->asset()) {
-            return new AssetPlaceholder($asset);
-        } else {
-            return $value;
-        }
+        $asset = $this->asset();
+
+        return $asset && PlaceholderField::supportsAssetType($asset)
+            ? new AssetPlaceholder($asset)
+            : $value;
     }
 
     public function toGqlType()
