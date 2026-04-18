@@ -14,8 +14,8 @@ test('checks if service is enabled', function () {
 
     $this->service->shouldReceive('enabled')->twice();
 
-    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($asset));
-    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($asset));
+    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($asset, $asset->basename()));
+    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($asset, $asset->basename()));
 });
 
 test('does not generate placeholders by default', function () {
@@ -24,8 +24,8 @@ test('does not generate placeholders by default', function () {
     $this->service->shouldReceive('enabled')->twice();
     $this->service->shouldReceive('dispatch')->never();
 
-    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($asset));
-    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($asset));
+    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($asset, $asset->basename()));
+    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($asset, $asset->basename()));
 });
 
 test('generates placeholders in enabled containers', function () {
@@ -37,8 +37,8 @@ test('generates placeholders in enabled containers', function () {
     $this->service->shouldReceive('exists')->twice()->andReturn(false);
     $this->service->shouldReceive('dispatch')->twice()->with($asset);
 
-    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($asset));
-    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($asset));
+    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($asset, $asset->basename()));
+    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($asset, $asset->basename()));
 });
 
 test('generates no placeholders for existing assets', function () {
@@ -50,8 +50,8 @@ test('generates no placeholders for existing assets', function () {
     $this->service->shouldReceive('exists')->twice()->andReturn(true);
     $this->service->shouldReceive('dispatch')->never();
 
-    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($asset));
-    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($asset));
+    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($asset, $asset->basename()));
+    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($asset, $asset->basename()));
 });
 
 test('generates no placeholders for unsupported assets', function () {
@@ -63,6 +63,6 @@ test('generates no placeholders for unsupported assets', function () {
     $this->service->shouldReceive('enabled')->twice()->andReturn(true);
     $this->service->shouldReceive('dispatch')->never();
 
-    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($txt));
-    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($svg));
+    (new GeneratePlaceholder($this->service))->handle(new AssetUploaded($txt, $txt->basename()));
+    (new GeneratePlaceholder($this->service))->handle(new AssetReuploaded($svg, $svg->basename()));
 });
