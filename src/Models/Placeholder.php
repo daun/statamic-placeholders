@@ -177,7 +177,7 @@ abstract class Placeholder
      */
     protected function decode(string $hash, ?string $format = null): ?string
     {
-        $format = $format ?? config('placeholders.uri_format', 'png');
+        $format = $this->resolveFormat($format);
 
         $uri = Cache::rememberForever(
             "placeholder-uri--{$this->type()}--{$format}--{$hash}",
@@ -189,6 +189,21 @@ abstract class Placeholder
         );
 
         return $uri ?: null;
+    }
+
+    /**
+     * Resolve the data uri format, expanding 'auto' to the smallest well-supported
+     * format the current image driver can encode (WebP, falling back to PNG).
+     */
+    protected function resolveFormat(?string $format): string
+    {
+        $format = $format ?? config('placeholders.format', 'auto');
+
+        if ($format === 'auto') {
+            $format = app(ImageService::class)->supports('webp') ? 'webp' : 'png';
+        }
+
+        return $format;
     }
 
     /**
