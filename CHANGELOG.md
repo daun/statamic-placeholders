@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.2.0] - 2026-07-21
+
+- Add support for Intervention Image 4
+- Require `intervention/image` explicitly
+
 ## [4.1.1] - 2026-04-18
 
 - Skip augmentation of unsupported assets
@@ -74,6 +79,7 @@
 
 - Initial release
 
+[4.2.0]: https://github.com/daun/statamic-placeholders/releases/tag/4.2.0
 [4.1.1]: https://github.com/daun/statamic-placeholders/releases/tag/4.1.1
 [4.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/4.1.0
 [4.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/4.0.0

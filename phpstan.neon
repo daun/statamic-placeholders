@@ -5,4 +5,22 @@ parameters:
     paths:
         - src/
     level: 5
-    checkGenericClassInNonGenericObjectType: false
+
+    # Intervention is supported in two major versions. Drop together
+    # with the shim class when dropping support for Intervention v3.
+    ignoreErrors:
+        - path: src/Support/Intervention.php
+          identifier: method.notFound
+          reportUnmatched: false
+        - path: src/Support/Intervention.php
+          identifier: property.private
+          reportUnmatched: false
+        - path: src/Support/Intervention.php
+          identifier: property.notFound
+          reportUnmatched: false
+        - path: src/Support/Intervention.php
+          identifier: function.alreadyNarrowedType
+          reportUnmatched: false
+        - path: src/Support/Intervention.php
+          identifier: function.impossibleType
+          reportUnmatched: false

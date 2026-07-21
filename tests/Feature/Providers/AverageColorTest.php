@@ -20,7 +20,7 @@ test('extracts the average color with alpha', function () {
 
     expect($hash)->toBeString()->not->toBeEmpty();
     expect($hash)->toMatchTextSnapshot();
-});
+})->with([intervention_version()]);
 
 test('creates a data uri', function () {
     $provider = $this->app->make(AverageColor::class);
@@ -31,7 +31,7 @@ test('creates a data uri', function () {
 
     expect($uri)->toBeString()->not->toBeEmpty();
     expect($uri)->toMatchTextSnapshot();
-});
+})->with([intervention_version()]);
 
 test('generates a thumb and calculates average', function () {
     $provider = Mockery::mock(AverageColor::class)->makePartial()->shouldAllowMockingProtectedMethods();

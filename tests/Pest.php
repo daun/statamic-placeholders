@@ -1,5 +1,6 @@
 <?php
 
+use Daun\StatamicPlaceholders\Support\Intervention;
 use Tests\TestCase;
 
 /*
@@ -42,6 +43,11 @@ expect()->extend('toBeOne', function () {
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
+
+function intervention_version(): string
+{
+    return Intervention::isV4() ? 'intervention 4' : 'intervention 3';
+}
 
 function fixtures_path(...$paths): string
 {

@@ -5,6 +5,7 @@ namespace Daun\StatamicPlaceholders\Models;
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\Services\ImageService;
+use Daun\StatamicPlaceholders\Support\Intervention;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -209,12 +210,12 @@ abstract class Placeholder
         }
 
         $compressed = match ($format) {
-            'webp' => $image->scaleDown(32)->toWebp(),
-            'avif' => $image->scaleDown(32)->toAvif(),
-            default => $image->scaleDown(16)->toPng(),
+            'webp' => Intervention::encodeByExtension($image->scaleDown(32), 'webp'),
+            'avif' => Intervention::encodeByExtension($image->scaleDown(32), 'avif'),
+            default => Intervention::encodeByExtension($image->scaleDown(16), 'png'),
         };
 
-        return $compressed->toDataUri();
+        return Intervention::toDataUri($compressed);
     }
 
     /**
