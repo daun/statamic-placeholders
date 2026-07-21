@@ -63,15 +63,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Data URI format
+    | Data URI Format
     |--------------------------------------------------------------------------
     |
-    | The format to use for the data URI of the generated placeholder images.
-    | Defaults to 'png', but can be set to 'webp' or 'avif' for smaller sizes.
+    | The image format to use for generated placeholder data URIs. The default
+    | value 'auto' uses the smallest supported format: WebP or PNG. You can
+    | set a specific format to force its use.
+    |
+    | Options: 'auto', 'webp', 'avif', 'png'
     |
     */
 
-    'uri_format' => 'png',
+    'format' => 'auto',
 
     /*
     |--------------------------------------------------------------------------

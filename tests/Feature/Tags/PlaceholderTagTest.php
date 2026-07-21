@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Http;
 use Statamic\Facades\Stache;
 
 beforeEach(function () {
+    // Pin PNG for byte-exact rendering snapshots across platforms
+    // WebP bytes can differ across libwebp builds
+    config(['placeholders.format' => 'png']);
+
     $this->addPlaceholderFieldToAssetBlueprint();
 
     $this->jpg = $this->uploadTestFileToTestContainer('test.jpg');
@@ -71,4 +75,23 @@ test('accepts url param', function () {
 
 test('rejects invalid url param', function () {
     expect(fn () => $this->tag->setParameters(['url' => 3])->uri())->toThrow(Exception::class);
+});
+
+test('ships with auto as the default format', function () {
+    $config = require __DIR__.'/../../../config/placeholders.php';
+
+    expect($config['format'])->toBe('auto');
+});
+
+test('auto format resolves to webp when the driver supports it', function () {
+    config(['placeholders.format' => 'auto']);
+    expect($this->tag->uri())->toStartWith('data:image/webp;base64,');
+});
+
+test('respects an explicit format', function () {
+    config(['placeholders.format' => 'webp']);
+    expect($this->tag->uri())->toStartWith('data:image/webp;base64,');
+
+    config(['placeholders.format' => 'png']);
+    expect($this->tag->uri())->toStartWith('data:image/png;base64,');
 });

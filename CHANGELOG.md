@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.0.0] - 2026-07-21
+
+- Default placeholder data URIs to WebP for smaller placeholders
+
 ## [4.2.0] - 2026-07-21
 
 - Add support for Intervention Image 4
