@@ -4,7 +4,7 @@ namespace Daun\StatamicPlaceholders\Support;
 
 use Daun\StatamicPlaceholders\Fieldtypes\PlaceholderFieldtype;
 use Statamic\Assets\Asset;
-use Statamic\Assets\AssetContainer;
+use Statamic\Contracts\Assets\AssetContainer;
 use Statamic\Fields\Field;
 
 class PlaceholderField

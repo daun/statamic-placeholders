@@ -2,6 +2,7 @@
 
 namespace Daun\StatamicPlaceholders\Services;
 
+use Daun\StatamicPlaceholders\Support\Intervention;
 use Illuminate\Contracts\Config\Repository;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -45,11 +46,16 @@ class ImageService
 
     public function make(mixed $image): ImageInterface
     {
-        return $this->manager->read($image);
+        return Intervention::decode($this->manager, $image);
+    }
+
+    public function create(int $width, int $height): ImageInterface
+    {
+        return Intervention::createImage($this->manager, $width, $height);
     }
 
     public function supports(mixed $image): bool
     {
-        return $this->manager->driver()->supports($image);
+        return Intervention::driver($this->manager)->supports($image);
     }
 }

@@ -3,6 +3,7 @@
 namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
+use Daun\StatamicPlaceholders\Support\Intervention;
 
 class AverageColor extends PlaceholderProvider
 {
@@ -34,19 +35,15 @@ class AverageColor extends PlaceholderProvider
             return null;
         }
 
-        return $this->service->manager()
-            ->read($contents)
-            ->resize(1, 1)
-            ->pickColor(0, 0)
-            ->toHex('#');
+        $pixel = $this->service->make($contents)->resize(1, 1);
+
+        return Intervention::toHex(Intervention::colorAt($pixel, 0, 0), '#');
     }
 
     protected function toDataUri(string $hex): string
     {
-        return $this->service->manager()
-            ->create(1, 1)
-            ->fill($hex)
-            ->toPng()
-            ->toDataUri();
+        $pixel = $this->service->create(1, 1)->fill($hex);
+
+        return Intervention::toDataUri(Intervention::encodeByExtension($pixel, 'png'));
     }
 }

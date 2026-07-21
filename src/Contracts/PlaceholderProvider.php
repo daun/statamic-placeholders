@@ -3,6 +3,7 @@
 namespace Daun\StatamicPlaceholders\Contracts;
 
 use Daun\StatamicPlaceholders\Services\ImageService;
+use Daun\StatamicPlaceholders\Support\Intervention;
 
 abstract class PlaceholderProvider
 {
@@ -38,9 +39,9 @@ abstract class PlaceholderProvider
      */
     protected function thumb(string $contents): string
     {
-        return $this->service->make($contents)
-            ->scaleDown($this->maxThumbSize, $this->maxThumbSize)
-            ->toPng()
-            ->toString();
+        $thumb = $this->service->make($contents)
+            ->scaleDown($this->maxThumbSize, $this->maxThumbSize);
+
+        return Intervention::encodeByExtension($thumb, 'png')->toString();
     }
 }

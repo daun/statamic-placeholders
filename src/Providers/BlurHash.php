@@ -4,6 +4,7 @@ namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Support\Dimensions;
+use Daun\StatamicPlaceholders\Support\Intervention;
 use Intervention\Image\Colors\Rgb\Color as ColorRgb;
 use Intervention\Image\Colors\Rgb\Colorspace as ColorspaceRgb;
 use kornrunner\Blurhash\Blurhash as BlurhashLib;
@@ -62,7 +63,7 @@ class BlurHash extends PlaceholderProvider
             return [];
         }
 
-        $image = $this->service->manager()->read($contents);
+        $image = $this->service->make($contents);
         $width = $image->width();
         $height = $image->height();
 
@@ -70,7 +71,8 @@ class BlurHash extends PlaceholderProvider
         for ($y = 0; $y < $height; $y++) {
             $row = [];
             for ($x = 0; $x < $width; $x++) {
-                [$r, $g, $b] = $image->pickColor($x, $y)->convertTo(ColorspaceRgb::class)->toArray();
+                $color = Intervention::toColorspace(Intervention::colorAt($image, $x, $y), ColorspaceRgb::class);
+                [$r, $g, $b] = Intervention::colorChannels($color);
                 $row[] = [$r, $g, $b];
             }
             $pixels[] = $row;
@@ -81,13 +83,13 @@ class BlurHash extends PlaceholderProvider
 
     protected function recreateImage(array $pixels, int $width, int $height): ?string
     {
-        if (! ($pixels && count($pixels))) {
+        if (! count($pixels)) {
             return null;
         }
 
         [$width, $height] = Dimensions::contain($width, $height, $this->calcSize);
 
-        $image = $this->service->manager()->create($width, $height);
+        $image = $this->service->create($width, $height);
 
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
@@ -95,13 +97,12 @@ class BlurHash extends PlaceholderProvider
                 $color = new ColorRgb(
                     max(0, min(255, $r)),
                     max(0, min(255, $g)),
-                    max(0, min(255, $b)),
-                    255
+                    max(0, min(255, $b))
                 );
                 $image->drawPixel($x, $y, $color);
             }
         }
 
-        return $image->toPng()->toDataUri();
+        return Intervention::toDataUri(Intervention::encodeByExtension($image, 'png'));
     }
 }

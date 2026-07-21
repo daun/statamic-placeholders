@@ -25,6 +25,7 @@
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.8",
+        "intervention/image": "^3.9 || ^4.0",
         "kornrunner/blurhash": "^1.2",
         "srwiez/thumbhash": "^1.2",
         "statamic/cms": "^6.0"
