@@ -21,7 +21,7 @@ test('creates a data uri', function () {
 
     expect($uri)->toBeString()->not->toBeEmpty();
     expect($uri)->toMatchTextSnapshot();
-});
+})->with([intervention_version()]);
 
 test('generates a thumb and extracts pixels', function () {
     $provider = Mockery::mock(BlurHash::class)->makePartial()->shouldAllowMockingProtectedMethods();
