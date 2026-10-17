@@ -1,0 +1,8 @@
+{
+    "$schema": "./vendor/phpbench/phpbench/phpbench.schema.json",
+    "runner.bootstrap": "vendor/autoload.php",
+    "runner.path": "tests/Benchmark",
+    "runner.file_pattern": "*Bench.php",
+    "runner.php_disable_ini": false,
+    "storage.xml_storage_path": ".phpbench"
+}

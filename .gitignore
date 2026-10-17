@@ -3,6 +3,7 @@ composer.lock
 .DS_Store
 .env
 .idea
+.phpbench
 .phpunit.result.cache
 .vscode
 node_modules
