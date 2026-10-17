@@ -4,8 +4,10 @@ namespace Daun\StatamicPlaceholders\Services;
 
 use Daun\StatamicPlaceholders\Support\Intervention;
 use Illuminate\Contracts\Config\Repository;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\DriverInterface;
 use Intervention\Image\Interfaces\ImageInterface;
 
 class ImageService
@@ -25,18 +27,33 @@ class ImageService
         );
     }
 
+    /**
+     * The image driver configured for Statamic: "gd", "imagick" or the class name of
+     * any other Intervention driver, e.g. the libvips driver.
+     */
     public function driver(): string
     {
-        return $this->config->get('statamic.assets.image_manipulation.driver');
+        $driver = $this->config->get('statamic.assets.image_manipulation.driver') ?? self::DRIVER_GD;
+
+        // Glide also accepts an array of driver options with the driver under the `driver` key
+        return is_array($driver) ? ($driver['driver'] ?? self::DRIVER_GD) : $driver;
     }
 
+    /**
+     * Resolve the configured driver to an Intervention driver class, the same way Statamic and Glide do.
+     */
     public function driverClass(): string
     {
         return match ($driver = $this->driver()) {
-            self::DRIVER_GD => Driver::class,
-            self::DRIVER_IMAGICK => \Intervention\Image\Drivers\Imagick\Driver::class,
-            default => throw new \Exception("Unsupported driver: {$driver}"),
+            self::DRIVER_GD => GdDriver::class,
+            self::DRIVER_IMAGICK => ImagickDriver::class,
+            default => $driver,
         };
+    }
+
+    public function driverInstance(): DriverInterface
+    {
+        return Intervention::driver($this->manager);
     }
 
     public function manager(): ImageManager
@@ -56,6 +73,6 @@ class ImageService
 
     public function supports(mixed $image): bool
     {
-        return Intervention::driver($this->manager)->supports($image);
+        return $this->driverInstance()->supports($image);
     }
 }

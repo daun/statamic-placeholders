@@ -3,6 +3,10 @@
 namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
+use Daun\StatamicPlaceholders\Support\Intervention;
+use Intervention\Image\Colors\Rgb\Colorspace as ColorspaceRgb;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Thumbhash\Thumbhash as ThumbhashLib;
 
 use function Thumbhash\extract_size_and_pixels_with_gd;
@@ -44,10 +48,32 @@ class ThumbHash extends PlaceholderProvider
 
     protected function extractSizeAndPixels(string $contents): array
     {
-        return match ($driver = $this->service->driver()) {
-            $this->service::DRIVER_IMAGICK => extract_size_and_pixels_with_imagick($contents),
-            $this->service::DRIVER_GD => extract_size_and_pixels_with_gd($contents),
-            default => throw new \Exception("Unsupported driver: {$driver}"),
+        $driver = $this->service->driverInstance();
+
+        return match (true) {
+            $driver instanceof GdDriver => extract_size_and_pixels_with_gd($contents),
+            $driver instanceof ImagickDriver => extract_size_and_pixels_with_imagick($contents),
+            default => $this->extractSizeAndPixelsWithIntervention($contents),
         };
+    }
+
+    /**
+     * Driver-agnostic fallback for drivers without a native helper, e.g. libvips.
+     */
+    protected function extractSizeAndPixelsWithIntervention(string $contents): array
+    {
+        $image = $this->service->make($contents);
+        $width = $image->width();
+        $height = $image->height();
+
+        $pixels = [];
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                $color = Intervention::toColorspace(Intervention::colorAt($image, $x, $y), ColorspaceRgb::class);
+                array_push($pixels, ...array_slice(Intervention::colorChannels($color), 0, 4));
+            }
+        }
+
+        return [$width, $height, $pixels];
     }
 }
