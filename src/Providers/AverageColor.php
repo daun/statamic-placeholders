@@ -4,6 +4,7 @@ namespace Daun\StatamicPlaceholders\Providers;
 
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Support\Intervention;
+use Intervention\Image\Interfaces\ImageInterface;
 
 class AverageColor extends PlaceholderProvider
 {
@@ -14,9 +15,7 @@ class AverageColor extends PlaceholderProvider
     public function encode(string $contents): ?string
     {
         try {
-            $thumb = $this->thumb($contents);
-
-            return $this->calculateAverage($thumb);
+            return $this->calculateAverage($this->thumbnail($contents));
         } catch (\Exception $e) {
             throw new \Exception("Error encoding average color: {$e->getMessage()}");
         }
@@ -29,13 +28,9 @@ class AverageColor extends PlaceholderProvider
             : null;
     }
 
-    protected function calculateAverage(?string $contents): ?string
+    protected function calculateAverage(ImageInterface $image): ?string
     {
-        if (! $contents) {
-            return null;
-        }
-
-        $pixel = $this->service->make($contents)->resize(1, 1);
+        $pixel = $image->resize(1, 1);
 
         return Intervention::toHex(Intervention::colorAt($pixel, 0, 0), '#');
     }

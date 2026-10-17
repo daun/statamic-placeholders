@@ -5,8 +5,7 @@ namespace Daun\StatamicPlaceholders\Providers;
 use Daun\StatamicPlaceholders\Contracts\PlaceholderProvider;
 use Daun\StatamicPlaceholders\Support\Dimensions;
 use Daun\StatamicPlaceholders\Support\Intervention;
-use Intervention\Image\Colors\Rgb\Color as ColorRgb;
-use Intervention\Image\Colors\Rgb\Colorspace as ColorspaceRgb;
+use Intervention\Image\Interfaces\ImageInterface;
 use kornrunner\Blurhash\Blurhash as BlurhashLib;
 
 class BlurHash extends PlaceholderProvider
@@ -24,8 +23,7 @@ class BlurHash extends PlaceholderProvider
     public function encode(string $contents): ?string
     {
         try {
-            $thumb = $this->thumb($contents);
-            $pixels = $this->extractPixels($thumb);
+            $pixels = $this->extractPixels($this->thumbnail($contents));
         } catch (\Throwable $th) {
         }
 
@@ -57,23 +55,20 @@ class BlurHash extends PlaceholderProvider
         return $this->recreateImage($pixels, $width, $height);
     }
 
-    protected function extractPixels(?string $contents): array
+    /**
+     * Extract the pixels of an image as rows of RGB values: [[[r, g, b], [r, g, b], ...], ...]
+     */
+    protected function extractPixels(ImageInterface $image): array
     {
-        if (! $contents) {
-            return [];
-        }
-
-        $image = $this->service->make($contents);
         $width = $image->width();
         $height = $image->height();
+        $rgba = $this->service->pixels($image);
 
         $pixels = [];
-        for ($y = 0; $y < $height; $y++) {
+        for ($y = 0, $i = 0; $y < $height; $y++) {
             $row = [];
-            for ($x = 0; $x < $width; $x++) {
-                $color = Intervention::toColorspace(Intervention::colorAt($image, $x, $y), ColorspaceRgb::class);
-                [$r, $g, $b] = Intervention::colorChannels($color);
-                $row[] = [$r, $g, $b];
+            for ($x = 0; $x < $width; $x++, $i += 4) {
+                $row[] = [$rgba[$i], $rgba[$i + 1], $rgba[$i + 2]];
             }
             $pixels[] = $row;
         }
@@ -81,27 +76,26 @@ class BlurHash extends PlaceholderProvider
         return $pixels;
     }
 
+    /**
+     * Recreate an image from rows of RGB values and return it as data uri.
+     */
     protected function recreateImage(array $pixels, int $width, int $height): ?string
     {
         if (! count($pixels)) {
             return null;
         }
 
-        [$width, $height] = Dimensions::contain($width, $height, $this->calcSize);
-
-        $image = $this->service->create($width, $height);
-
+        $rgb = [];
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 [$r, $g, $b] = $pixels[$y][$x];
-                $color = new ColorRgb(
-                    max(0, min(255, $r)),
-                    max(0, min(255, $g)),
-                    max(0, min(255, $b))
-                );
-                $image->drawPixel($x, $y, $color);
+                $rgb[] = max(0, min(255, (int) $r));
+                $rgb[] = max(0, min(255, (int) $g));
+                $rgb[] = max(0, min(255, (int) $b));
             }
         }
+
+        $image = $this->service->drawPixels($this->service->create($width, $height), $rgb);
 
         return Intervention::toDataUri(Intervention::encodeByExtension($image, 'png'));
     }

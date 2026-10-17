@@ -4,6 +4,7 @@ namespace Daun\StatamicPlaceholders\Contracts;
 
 use Daun\StatamicPlaceholders\Services\ImageService;
 use Daun\StatamicPlaceholders\Support\Intervention;
+use Intervention\Image\Interfaces\ImageInterface;
 
 abstract class PlaceholderProvider
 {
@@ -35,13 +36,24 @@ abstract class PlaceholderProvider
      * Scale down the image to thumbnail size for faster processing.
      *
      * @param  string  $contents  The contents of the image file
-     * @return string The contents of the thumbnail
+     * @return ImageInterface The thumbnail image
      */
-    protected function thumb(string $contents): string
+    protected function thumbnail(string $contents): ImageInterface
     {
         $thumb = $this->service->make($contents)
             ->scaleDown($this->maxThumbSize, $this->maxThumbSize);
 
-        return Intervention::encodeByExtension($thumb, 'png')->toString();
+        return $this->service->normalize($thumb);
+    }
+
+    /**
+     * Scale down the image to thumbnail size and encode it as png.
+     *
+     * @param  string  $contents  The contents of the image file
+     * @return string The contents of the thumbnail
+     */
+    protected function thumb(string $contents): string
+    {
+        return Intervention::encodeByExtension($this->thumbnail($contents), 'png')->toString();
     }
 }
