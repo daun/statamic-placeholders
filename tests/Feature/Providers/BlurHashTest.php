@@ -1,6 +1,7 @@
 <?php
 
 use Daun\StatamicPlaceholders\Providers\BlurHash;
+use Daun\StatamicPlaceholders\Services\ImageService;
 
 test('creates a blurhash', function () {
     $provider = $this->app->make(BlurHash::class);
@@ -23,13 +24,14 @@ test('creates a data uri', function () {
     expect($uri)->toMatchTextSnapshot();
 })->with([intervention_version()]);
 
-test('generates a thumb and extracts pixels', function () {
+test('generates a thumbnail and extracts pixels', function () {
     $provider = Mockery::mock(BlurHash::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
     $content = file_get_contents(fixtures_path('testfiles/test.jpg'));
+    $thumb = $this->app->make(ImageService::class)->create(1, 1);
 
-    $provider->shouldReceive('thumb')->once()->withArgs([$content])->andReturn($content);
-    $provider->shouldReceive('extractPixels')->withArgs([$content])->once()->andReturn([[[0, 0, 0]]]);
+    $provider->shouldReceive('thumbnail')->once()->withArgs([$content])->andReturn($thumb);
+    $provider->shouldReceive('extractPixels')->withArgs([$thumb])->once()->andReturn([[[0, 0, 0]]]);
 
     $provider->encode($content);
 });

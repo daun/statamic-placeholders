@@ -1,6 +1,7 @@
 <?php
 
 use Daun\StatamicPlaceholders\Providers\AverageColor;
+use Daun\StatamicPlaceholders\Services\ImageService;
 
 test('extracts the average color', function () {
     $provider = $this->app->make(AverageColor::class);
@@ -33,13 +34,14 @@ test('creates a data uri', function () {
     expect($uri)->toMatchTextSnapshot();
 })->with([intervention_version()]);
 
-test('generates a thumb and calculates average', function () {
+test('generates a thumbnail and calculates average', function () {
     $provider = Mockery::mock(AverageColor::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
     $content = file_get_contents(fixtures_path('testfiles/test.jpg'));
+    $thumb = $this->app->make(ImageService::class)->create(1, 1);
 
-    $provider->shouldReceive('thumb')->once()->withArgs([$content])->andReturn($content);
-    $provider->shouldReceive('calculateAverage')->once()->andReturn('#00000000');
+    $provider->shouldReceive('thumbnail')->once()->withArgs([$content])->andReturn($thumb);
+    $provider->shouldReceive('calculateAverage')->once()->withArgs([$thumb])->andReturn('#00000000');
 
     $provider->encode($content);
 });
