@@ -2,7 +2,7 @@
 
 ## [5.0.0] - 2026-10-18
 
-- Default placeholder data URIs to WebP for smaller placeholders
+- Default placeholder data URIs to WebP for smaller placeholders (breaking change)
 - Support custom Intervention drivers like libvips
 - Speed up placeholder generation by avoiding duplicate image processing
 
