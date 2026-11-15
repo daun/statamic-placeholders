@@ -28,7 +28,7 @@
         "intervention/image": "^3.9 || ^4.0",
         "kornrunner/blurhash": "^1.2",
         "srwiez/thumbhash": "^1.2",
-        "statamic/cms": "^6.0"
+        "statamic/cms": "^6.30"
     },
     "require-dev": {
         "larastan/larastan": "^2.9 || ^3.0",

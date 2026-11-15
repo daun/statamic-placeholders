@@ -19,7 +19,7 @@ return [
             'generated_on_request' => 'Will be generated on request',
             'ungenerated' => 'No placeholder',
             'ungenerated_no_asset' => 'Only assets generate placeholders',
-            'ungenerated_no_image' => 'Only images generate placeholders',
+            'ungenerated_unsupported' => 'Only images and videos generate placeholders',
             'no_asset' => 'not an asset',
             'not_supported' => 'unsupported filetype',
             'generate_on_save' => 'Generate on save',

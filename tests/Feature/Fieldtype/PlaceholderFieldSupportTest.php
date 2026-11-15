@@ -2,6 +2,7 @@
 
 use Daun\StatamicPlaceholders\Fieldtypes\PlaceholderFieldtype;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
+use Daun\StatamicPlaceholders\Support\VideoThumbnail;
 use Statamic\Fields\Field;
 
 test('checks asset support', function () {
@@ -14,8 +15,14 @@ test('checks asset support', function () {
     expect(PlaceholderField::supportsAssetType($jpg))->toBeTrue();
     expect(PlaceholderField::supportsAssetType($gif))->toBeTrue();
     expect(PlaceholderField::supportsAssetType($svg))->toBeFalse();
-    expect(PlaceholderField::supportsAssetType($mp4))->toBeFalse();
+    expect(PlaceholderField::supportsAssetType($mp4))->toBe(VideoThumbnail::available());
     expect(PlaceholderField::supportsAssetType($pdf))->toBeFalse();
+});
+
+test('does not support videos if video thumbnails are disabled', function () {
+    config(['statamic.assets.video_thumbnails' => false]);
+
+    expect(PlaceholderField::supportsAssetType($this->makeEmptyAsset('test.mp4')))->toBeFalse();
 });
 
 test('checks blueprint for fieldtype', function () {
