@@ -75,7 +75,7 @@ class ClearCommand extends Command
         if ($this->container) {
             $container = AssetContainerFacade::find($this->container);
             if ($container && PlaceholderField::existsInBlueprint($container)) {
-                return collect($container);
+                return collect([$container]);
             } elseif ($container) {
                 $this->components->error("Asset container '{$this->container}' is not configured to generate placeholders.");
             } else {

@@ -70,6 +70,27 @@ trait DealsWithAssets
             ->save();
     }
 
+    protected function createAssetContainerWithPlaceholderField(string $handle): AssetContainer
+    {
+        config(["filesystems.disks.{$handle}" => [
+            'driver' => 'local',
+            'root' => $this->getTempDirectory($handle),
+            'url' => "/{$handle}",
+        ]]);
+
+        $container = (new AssetContainer)->handle($handle)->disk($handle)->save();
+
+        Blueprint::makeFromFields(['placeholder' => ['type' => PlaceholderFieldtype::handle()]])
+            ->setHandle($handle)
+            ->setNamespace('assets')
+            ->save();
+
+        Stache::clear();
+        Blink::flush();
+
+        return $container;
+    }
+
     protected function setUpTempTestFiles()
     {
         $this->initializeDirectory($this->getTempDirectory());
@@ -103,6 +124,11 @@ trait DealsWithAssets
 
     public function uploadTestFileToTestContainer(string $path, ?string $filename = null)
     {
+        return $this->uploadTestFileToContainer($this->assetContainer, $path, $filename);
+    }
+
+    public function uploadTestFileToContainer(AssetContainer $container, string $path, ?string $filename = null)
+    {
         $path = $this->getTestFilesDirectory($path);
         $filename ??= basename($path);
 
@@ -112,7 +138,7 @@ trait DealsWithAssets
         $file = new UploadedFile($duplicate, $filename);
         $path = ltrim('/'.$file->getClientOriginalName(), '/');
 
-        return $this->assetContainer->makeAsset($path)->upload($file);
+        return $container->makeAsset($path)->upload($file);
     }
 
     protected function createFileDuplicate(string $path): string

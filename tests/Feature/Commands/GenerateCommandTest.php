@@ -67,3 +67,18 @@ it('requires force param to regenerate placeholders', function () {
 
     Queue::assertPushed(GeneratePlaceholderJob::class, 5);
 });
+
+it('limits jobs to a single container', function () {
+    $other = $this->createAssetContainerWithPlaceholderField('other_container');
+    $otherAsset = $this->uploadTestFileToContainer($other, 'test.jpg', 'other.jpg');
+    Queue::fake();
+
+    $this->artisan(GenerateCommand::class, ['--container' => 'test_container'])
+        ->expectsOutputToContain('Generating placeholders')
+        ->expectsOutputToContain($this->asset1->basename())
+        ->expectsOutputToContain($this->asset2->basename())
+        ->doesntExpectOutputToContain($otherAsset->basename())
+        ->assertSuccessful();
+
+    Queue::assertPushed(GeneratePlaceholderJob::class, 2);
+});

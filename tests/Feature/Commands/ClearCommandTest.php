@@ -38,3 +38,21 @@ it('dispatches jobs for all images', function () {
 
     Queue::assertPushed(ClearPlaceholderJob::class, 2);
 });
+
+it('limits jobs to a single container', function () {
+    $other = $this->createAssetContainerWithPlaceholderField('other_container');
+    $otherAsset = $this->uploadTestFileToContainer($other, 'test.jpg', 'other.jpg');
+    Placeholders::generate($this->asset1);
+    Placeholders::generate($this->asset2);
+    Placeholders::generate($otherAsset);
+    Queue::fake();
+
+    $this->artisan(ClearCommand::class, ['--container' => 'test_container'])
+        ->expectsOutputToContain('Removing placeholders')
+        ->expectsOutputToContain($this->asset1->basename())
+        ->expectsOutputToContain($this->asset2->basename())
+        ->doesntExpectOutputToContain($otherAsset->basename())
+        ->assertSuccessful();
+
+    Queue::assertPushed(ClearPlaceholderJob::class, 2);
+});
