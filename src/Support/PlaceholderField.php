@@ -11,7 +11,8 @@ class PlaceholderField
 {
     public static function supportsAssetType(Asset $asset): bool
     {
-        return $asset->isImage() && ! $asset->isSvg();
+        return ($asset->isImage() && ! $asset->isSvg())
+            || ($asset->isVideo() && VideoThumbnail::available());
     }
 
     public static function generatesOnUpload(): bool

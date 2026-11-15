@@ -42,6 +42,7 @@ trait DealsWithAssets
     {
         $app['config']->set('statamic.assets.image_manipulation.driver', 'gd');
         $app['config']->set('statamic.assets.image_manipulation.secure', false);
+        $app['config']->set('statamic.assets.ffmpeg.cache_path', $this->getTempDirectory('ffmpeg'));
     }
 
     protected function resolveStacheStoresForAssetTest($app)

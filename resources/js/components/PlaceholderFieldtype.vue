@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-column gap-2">
-        <ui-badge v-if="!isAsset" pill icon="focus" color="white" v-tooltip="t('unmirrored_no_asset')">
+        <ui-badge v-if="!isAsset" pill icon="focus" color="white" v-tooltip="t('ungenerated_no_asset')">
             {{ t('ungenerated') }}
         </ui-badge>
-        <ui-badge v-else-if="!isSupported" pill icon="focus" color="white" v-tooltip="t('ungenerated_no_image')">
+        <ui-badge v-else-if="!isSupported" pill icon="focus" color="white" v-tooltip="t('ungenerated_unsupported')">
             {{ t('ungenerated') }}
         </ui-badge>
         <ui-badge v-else-if="!isGenerated && generateOnUpload" pill icon="time-clock" color="white">
