@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.1.1] - 2026-11-16
+
+- Fix crash when limiting commands to a single container
+
 ## [5.1.0] - 2026-11-15
 
 - Generate placeholders for videos
@@ -89,6 +93,7 @@
 
 - Initial release
 
+[5.1.1]: https://github.com/daun/statamic-placeholders/releases/tag/5.1.1
 [5.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/5.1.0
 [5.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/5.0.0
 [4.2.0]: https://github.com/daun/statamic-placeholders/releases/tag/4.2.0
