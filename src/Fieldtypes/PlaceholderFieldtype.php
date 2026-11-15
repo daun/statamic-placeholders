@@ -7,6 +7,7 @@ use Daun\StatamicPlaceholders\Facades\Placeholders;
 use Daun\StatamicPlaceholders\GraphQL\AssetPlaceholderType;
 use Daun\StatamicPlaceholders\Jobs\GeneratePlaceholderJob;
 use Daun\StatamicPlaceholders\Support\PlaceholderField;
+use Daun\StatamicPlaceholders\Support\VideoThumbnail;
 use Illuminate\Support\Number;
 use Statamic\Assets\Asset;
 use Statamic\Facades\GraphQL;
@@ -77,6 +78,7 @@ class PlaceholderFieldtype extends Fieldtype
             'enabled' => $enabled,
             'is_asset' => (bool) $asset,
             'is_supported' => $supported,
+            'supports_videos' => VideoThumbnail::available(),
             'generate_on_upload' => PlaceholderField::generatesOnUpload(),
             'provider' => [
                 'handle' => $provider::$handle,

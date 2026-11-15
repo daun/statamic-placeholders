@@ -3,7 +3,7 @@
         <ui-badge v-if="!isAsset" pill icon="focus" color="white" v-tooltip="t('ungenerated_no_asset')">
             {{ t('ungenerated') }}
         </ui-badge>
-        <ui-badge v-else-if="!isSupported" pill icon="focus" color="white" v-tooltip="t('ungenerated_unsupported')">
+        <ui-badge v-else-if="!isSupported" pill icon="focus" color="white" v-tooltip="t(supportsVideos ? 'ungenerated_no_image_or_video' : 'ungenerated_no_image')">
             {{ t('ungenerated') }}
         </ui-badge>
         <ui-badge v-else-if="!isGenerated && generateOnUpload" pill icon="time-clock" color="white">
@@ -69,6 +69,9 @@ export default {
         },
         isSupported() {
             return this.meta?.is_supported || false;
+        },
+        supportsVideos() {
+            return this.meta?.supports_videos || false;
         },
         isGenerated() {
             return !! this.hash;

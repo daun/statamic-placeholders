@@ -2,6 +2,7 @@
 
 use Daun\StatamicPlaceholders\Data\AssetPlaceholder;
 use Daun\StatamicPlaceholders\Fieldtypes\PlaceholderFieldtype;
+use Daun\StatamicPlaceholders\Support\VideoThumbnail;
 use Statamic\Assets\Asset;
 use Statamic\Fields\Field;
 use Tests\Fixtures\TestProvider;
@@ -40,6 +41,7 @@ test('preloads placeholder data', function () {
     expect($preload)->toHaveKey('provider.handle', 'test');
     expect($preload)->toHaveKey('is_asset', true);
     expect($preload)->toHaveKey('is_supported', true);
+    expect($preload)->toHaveKey('supports_videos', VideoThumbnail::available());
 });
 
 test('augments to placeholder object', function () {
@@ -69,4 +71,10 @@ test('allows direct access to subkeys', function () {
     $data = ['placeholder_field' => $this->fieldtype->augment([])];
     $output = (string) $this->antlers('{{ placeholder_field:hash }} {{ placeholder_field:uri }}', $data);
     expect($output)->toBeString()->toBe('test-hash test-uri');
+});
+
+test('preloads video support', function () {
+    config(['statamic.assets.video_thumbnails' => false]);
+
+    expect($this->fieldtype->preload())->toHaveKey('supports_videos', false);
 });
