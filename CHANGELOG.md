@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.1.0] - 2026-11-15
+
+- Generate placeholders for videos
+
 ## [5.0.0] - 2026-10-18
 
 - Default placeholder data URIs to WebP for smaller placeholders (breaking change)
@@ -85,6 +89,8 @@
 
 - Initial release
 
+[5.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/5.1.0
+[5.0.0]: https://github.com/daun/statamic-placeholders/releases/tag/5.0.0
 [4.2.0]: https://github.com/daun/statamic-placeholders/releases/tag/4.2.0
 [4.1.1]: https://github.com/daun/statamic-placeholders/releases/tag/4.1.1
 [4.1.0]: https://github.com/daun/statamic-placeholders/releases/tag/4.1.0
